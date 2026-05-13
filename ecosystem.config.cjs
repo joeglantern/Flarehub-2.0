@@ -2,8 +2,8 @@ module.exports = {
   apps: [
     {
       name: 'flarehub-api',
-      script: './flarehub-backend/dist/server.js',
-      cwd: '/var/www/flarehub',
+      script: '/var/www/flarehub/flarehub-backend/dist/server.js',
+      cwd: '/var/www/flarehub/flarehub-backend',
       instances: 1,
       exec_mode: 'fork',
       node_args: '--experimental-vm-modules',

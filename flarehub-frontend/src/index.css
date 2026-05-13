@@ -1,0 +1,417 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Bricolage Grotesque", sans-serif;
+  --font-sans:    "Plus Jakarta Sans", sans-serif;
+  --font-mono:    "Geist Mono", monospace;
+
+  /* ── Core palette ─────────────────────────────────────────────── */
+  --color-bg-base:      #f7f6f3;
+  --color-bg-surface:   #ffffff;
+  --color-bg-elevated:  #f0ede8;
+  --color-bg-inset:     #e8e4de;
+
+  --color-border:        #e2ddd7;
+  --color-border-strong: #c8c2ba;
+
+  --color-text-primary:   #1a1916;
+  --color-text-secondary: #6b6560;
+  --color-text-muted:     #a39e98;
+  --color-text-inverse:   #ffffff;
+
+  /* ── Green / Forest ───────────────────────────────────────────── */
+  --color-green-50:  #edf7f1;
+  --color-green-100: #d0ecdb;
+  --color-green-500: #1d6f42;
+  --color-green-600: #185e38;
+  --color-green-700: #12472b;
+  --color-green-900: #0a2e1c;
+
+  /* Forest aliases — generate text-forest-*, bg-forest-* utilities */
+  --color-forest-50:  #edf7f1;
+  --color-forest-100: #d0ecdb;
+  --color-forest-200: #a8dcc0;
+  --color-forest-500: #1d6f42;
+  --color-forest-600: #185e38;
+  --color-forest-700: #12472b;
+  --color-forest-900: #0a2e1c;
+
+  /* ── Terra ────────────────────────────────────────────────────── */
+  --color-terra-50:  #fdf2ed;
+  --color-terra-100: #f9ddd1;
+  --color-terra-200: #f2bba3;
+  --color-terra-500: #c4522a;
+  --color-terra-600: #a8441f;
+
+  /* ── Sun / amber ─────────────────────────────────────────────── */
+  --color-sun: #e8a13a;
+
+  /* ── Ink scale — semantic text colours ───────────────────────── */
+  --color-ink:       #1a1916;
+  --color-ink-soft:  #3d3935;
+  --color-ink-mute:  #6b6560;
+  --color-ink-faint: #a39e98;
+
+  /* ── Surface aliases ─────────────────────────────────────────── */
+  --color-paper: #f7f6f3;
+  --color-elev:  #f0ede8;
+  --color-inset: #e8e4de;
+  --color-line:  #e2ddd7;
+
+  /* ── Semantic status ─────────────────────────────────────────── */
+  --color-success: #1d6f42;
+  --color-warning: #b5720e;
+  --color-error:   #b91c1c;
+  --color-info:    #1d4ed8;
+
+  /* ── Shadows ─────────────────────────────────────────────────── */
+  --shadow-sm:   0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md:   0 1px 4px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-lg:   0 4px 12px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+  --shadow-soft: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-pop:  0 4px 16px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.06);
+
+  /* ── Border radii ─────────────────────────────────────────────── */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-2xl:  20px;
+  --radius-3xl:  28px;
+  --radius-full: 9999px;
+
+  /* ── Motion ─────────────────────────────────────────────────────*/
+  --duration-fast:    100ms;
+  --duration-default: 150ms;
+  --duration-slow:    200ms;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ── Dot-grid page background ────────────────────────────────────────────── */
+body {
+  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='%231a1916' fill-opacity='0.045'/%3E%3C/svg%3E");
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--color-ink);
+  background-color: var(--color-paper);
+  margin: 0;
+}
+
+h1, h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  margin: 0;
+}
+
+p { margin: 0; }
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Focus ring */
+:focus-visible:not(input):not(textarea):not(select) {
+  outline: 2px solid var(--color-forest-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Global input reset ──────────────────────────────────────────────────── */
+input, textarea, select {
+  outline: none !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none !important;
+}
+
+/* ── Autofill ──────────────────────────────────────────────────────────────*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  box-shadow:         0 0 0 1000px transparent inset !important;
+  -webkit-text-fill-color: var(--color-ink) !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+/* ── Auth underline inputs ───────────────────────────────────────────────── */
+.auth-input {
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  box-shadow: none !important;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-ink-mute); }
+
+/* ── Skeleton shimmer ────────────────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-elev) 25%,
+    var(--color-inset) 50%,
+    var(--color-elev) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+/* ── New keyframes ───────────────────────────────────────────────────────── */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-4px); }
+}
+
+@keyframes ping2 {
+  0%   { transform: scale(1); opacity: 0.8; }
+  60%  { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+@keyframes sheen-sweep {
+  0%   { left: -80%; }
+  100% { left: 120%; }
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ── Animation utility classes ───────────────────────────────────────────── */
+.animate-rise {
+  animation: rise 0.2s ease-out both;
+}
+
+.animate-bob {
+  animation: bob 3s ease-in-out infinite;
+}
+
+/* ── iOS safe-area ───────────────────────────────────────────────────────── */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── .card — the universal surface ──────────────────────────────────────── */
+.card {
+  background: #ffffff;
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--color-line);
+  box-shadow: var(--shadow-soft);
+}
+
+/* ── Mesh gradients ──────────────────────────────────────────────────────── */
+.mesh-green {
+  background: linear-gradient(135deg, #1d6f42 0%, #12472b 100%);
+}
+
+.mesh-dark {
+  background: linear-gradient(135deg, #1a1916 0%, #2d2a26 80%, #3a1a0a 100%);
+}
+
+/* ── Shadow helpers ──────────────────────────────────────────────────────── */
+.shadow-soft { box-shadow: var(--shadow-soft); }
+.shadow-pop  { box-shadow: var(--shadow-pop); }
+
+/* ── .squiggle — wavy underline decoration ───────────────────────────────── */
+.squiggle {
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: var(--color-terra-500);
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
+}
+
+/* ── .chip — tiny mono pill ──────────────────────────────────────────────── */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  border: 1px solid currentColor;
+  opacity: 0.9;
+}
+
+/* ── .seg — segmented control ────────────────────────────────────────────── */
+.seg {
+  display: inline-flex;
+  align-items: center;
+  background: var(--color-elev);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  padding: 2px;
+  gap: 1px;
+}
+
+.seg button {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 9px;
+  border: none;
+  background: transparent;
+  color: var(--color-ink-mute);
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s;
+  white-space: nowrap;
+}
+
+.seg button[data-on="true"] {
+  background: #ffffff;
+  color: var(--color-ink);
+  box-shadow: var(--shadow-soft);
+}
+
+/* ── .tab-pill — filter tab ──────────────────────────────────────────────── */
+.tab-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-line);
+  background: transparent;
+  color: var(--color-ink-mute);
+  cursor: pointer;
+  transition: all 0.12s;
+  user-select: none;
+}
+
+.tab-pill:hover {
+  background: var(--color-elev);
+  color: var(--color-ink);
+}
+
+.tab-pill[data-on="true"] {
+  background: var(--color-ink);
+  color: #ffffff;
+  border-color: var(--color-ink);
+}
+
+/* ── .sheen — shimmer on hover ───────────────────────────────────────────── */
+.sheen {
+  position: relative;
+  overflow: hidden;
+}
+
+.sheen::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -80%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255,255,255,0.18) 50%,
+    transparent 60%
+  );
+  transform: skewX(-10deg);
+  transition: left 0s;
+  pointer-events: none;
+}
+
+.sheen:hover::after {
+  animation: sheen-sweep 0.55s ease-out forwards;
+}
+
+/* ── .rough — sketchy/torn card style ───────────────────────────────────── */
+.rough {
+  border: 1.5px dashed rgba(255,255,255,0.4);
+  border-radius: 10px;
+}
+
+/* ── .dotted — dot-grid chat background ─────────────────────────────────── */
+.dotted {
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='1' fill='%231a1916' fill-opacity='0.06'/%3E%3C/svg%3E");
+  background-color: var(--color-elev);
+}
+
+/* ── .live — pulsing status dot ──────────────────────────────────────────── */
+.live {
+  position: relative;
+  display: inline-block;
+}
+
+.live::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: inherit;
+  animation: ping2 1.4s ease-out infinite;
+}
+
+/* ── .page-enter — page transition ──────────────────────────────────────── */
+.page-enter {
+  animation: rise 0.22s ease-out both;
+}
+
+/* ── .av-stack — overlapping avatar row ──────────────────────────────────── */
+.av-stack {
+  display: flex;
+}
+
+.av-stack > * {
+  ring: 2px;
+  ring-color: white;
+}
+
+.av-stack > * + * {
+  margin-left: -8px;
+}

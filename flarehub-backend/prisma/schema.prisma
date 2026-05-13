@@ -1,0 +1,662 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ═══════════════════════════════════════════════════════
+//  ENUMS
+// ═══════════════════════════════════════════════════════
+
+enum UserRole {
+  entrepreneur
+  mentor
+  admin
+  super_admin
+}
+
+enum Gender {
+  Male
+  Female
+  Other
+  Unknown
+}
+
+enum BusinessStage {
+  Idea
+  Prototype
+  MVP
+  Revenue
+}
+
+enum ProgramStatus {
+  Active
+  Inactive
+}
+
+enum ApplicationStatus {
+  Pending
+  UnderReview
+  Approved
+  Rejected
+}
+
+enum EvidenceStatus {
+  pending
+  verified
+  rejected
+}
+
+enum DocumentStatus {
+  Pending
+  Reviewed
+  NeedsRevision
+  Approved
+}
+
+enum DocumentCategory {
+  milestone
+  survey
+  smart_goals
+  market_research
+  customer_feedback
+}
+
+enum Priority {
+  low
+  medium
+  high
+  urgent
+}
+
+enum TemplateType {
+  milestone
+  survey
+  smart_goals
+  market_research
+  customer_feedback
+}
+
+enum SubmissionStatus {
+  Draft
+  Submitted
+  UnderReview
+  Approved
+  NeedsRevision
+}
+
+enum MeetingStatus {
+  Scheduled
+  Completed
+  Cancelled
+}
+
+enum MeetingType {
+  Virtual
+  InPerson
+}
+
+enum NotificationType {
+  application_approved
+  application_rejected
+  application_under_review
+  mentor_assigned
+  mentor_unassigned
+  meeting_scheduled
+  meeting_cancelled
+  evidence_verified
+  evidence_rejected
+  smart_goal_commented
+  market_research_commented
+  milestone_plan_commented
+  submission_reviewed
+  new_program
+  new_message
+}
+
+enum AdminTargetType {
+  user
+  application
+  program
+  evidence
+  submission
+  template
+  system
+}
+
+// ═══════════════════════════════════════════════════════
+//  USERS
+// ═══════════════════════════════════════════════════════
+
+model User {
+  id                  String         @id
+  email               String         @unique
+  firstName           String
+  lastName            String
+  gender              Gender         @default(Unknown)
+  phone               String?
+  county              String?
+  profilePic          String?
+  businessName        String?
+  businessStage       BusinessStage?
+  businessDescription String?
+  role                UserRole       @default(entrepreneur)
+  isMentor            Boolean        @default(false)
+  isVerified          Boolean        @default(false)
+  profileComplete     Boolean        @default(false)
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+
+  applications              Application[]
+  smartGoal                 SmartGoal?
+  milestonePlan             MilestonePlan?
+  marketResearch            MarketResearch?
+  documents                 Document[]
+  evidence                  Evidence[]
+  userSubmissions           UserSubmission[]
+  businessPlan              BusinessPlan?
+  notifications             Notification[]
+  sentMessages              Message[]        @relation("sender")
+  receivedMessages          Message[]        @relation("receiver")
+  mentorRelationships       MentorMentee[]   @relation("mentor")
+  menteeRelationships       MentorMentee[]   @relation("mentee")
+  mentorMeetingsAsMentor    MentorMeeting[]  @relation("meetingMentor")
+  mentorMeetingsAsMentee    MentorMeeting[]  @relation("meetingMentee")
+  mentorNotes               MentorNote[]
+  adminTemplatesCreated     AdminTemplate[]
+  adminLogsActioned         AdminLog[]       @relation("adminActor")
+  applicationScores         ApplicationScore[] @relation("scoreAdmin")
+  announcements             Announcement[]
+  pushSubscriptions         PushSubscription[]
+
+  @@map("users")
+}
+
+// ═══════════════════════════════════════════════════════
+//  PROGRAMS
+// ═══════════════════════════════════════════════════════
+
+model Program {
+  id                      Int           @id @default(autoincrement())
+  name                    String
+  description             String?
+  applicationDeadline     DateTime?
+  status                  ProgramStatus @default(Active)
+  maxParticipants         Int?
+  grantAmount             Decimal?      @db.Decimal(12, 2)
+  eligibilityRequirements String?
+  tags                    String[]
+  applicationForm         Json?
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
+
+  applications            Application[]
+  evidence                Evidence[]
+
+  @@map("programs")
+}
+
+// ═══════════════════════════════════════════════════════
+//  APPLICATIONS
+// ═══════════════════════════════════════════════════════
+
+model Application {
+  id           Int               @id @default(autoincrement())
+  userId       String
+  programId    Int
+  status       ApplicationStatus @default(Pending)
+  isDraft      Boolean           @default(false)
+  responses    Json?
+  submittedAt  DateTime?
+  adminComment String?
+  appliedAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  program      Program           @relation(fields: [programId], references: [id])
+  score        ApplicationScore?
+
+  @@unique([userId, programId])
+  @@index([userId])
+  @@index([programId])
+  @@index([status])
+  @@index([isDraft])
+  @@map("applications")
+}
+
+// ═══════════════════════════════════════════════════════
+//  SMART GOALS
+// ═══════════════════════════════════════════════════════
+
+model SmartGoal {
+  id            Int       @id @default(autoincrement())
+  userId        String    @unique
+  goalStatement String
+  specific      String
+  measurable    String
+  achievable    String
+  relevant      String
+  timebound     String
+  adminComment  String?
+  commentedAt   DateTime?
+  commentedById String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("smart_goals")
+}
+
+// ═══════════════════════════════════════════════════════
+//  MILESTONE PLANS
+// ═══════════════════════════════════════════════════════
+
+model MilestonePlan {
+  id                   Int      @id @default(autoincrement())
+  userId               String   @unique
+  businessName         String
+  grantAmount          String?
+  implementationPeriod String?
+  stage                String?
+  milestones           Json
+  adminComment         String?
+  commentedAt          DateTime?
+  commentedById        String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("milestone_plans")
+}
+
+// ═══════════════════════════════════════════════════════
+//  MARKET RESEARCH
+// ═══════════════════════════════════════════════════════
+
+model MarketResearch {
+  id                   Int       @id @default(autoincrement())
+  userId               String    @unique
+  businessName         String
+  surveyDate           DateTime?
+  sampleSize           String?
+  surveyDuration       String?
+  surveyObjective      String?
+  ageDistribution      String?
+  genderBreakdown      String?
+  location             String?
+  otherCharacteristics String?
+  topChallenges        Json?
+  awareness            String?
+  interest             String?
+  avgWillingness       String?
+  priceRange           String?
+  currentSolutions     String?
+  openComments         String?
+  opportunity1         String?
+  opportunity2         String?
+  riskBarrier          String?
+  nextSteps            Json?
+  adminComment         String?
+  commentedAt          DateTime?
+  commentedById        String?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("market_research")
+}
+
+// ═══════════════════════════════════════════════════════
+//  DOCUMENTS
+// ═══════════════════════════════════════════════════════
+
+model Document {
+  id               Int              @id @default(autoincrement())
+  userId           String
+  filename         String
+  originalName     String
+  storagePath      String
+  fileSize         Int
+  fileType         String
+  status           DocumentStatus   @default(Pending)
+  documentCategory DocumentCategory @default(milestone)
+  description      String?
+  priority         Priority         @default(medium)
+  tags             String?
+  version          String           @default("1.0")
+  expiresAt        DateTime?
+  lastAccessedAt   DateTime?
+  uploadedAt       DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([documentCategory])
+  @@map("documents")
+}
+
+// ═══════════════════════════════════════════════════════
+//  EVIDENCE
+// ═══════════════════════════════════════════════════════
+
+model Evidence {
+  id              Int            @id @default(autoincrement())
+  userId          String
+  programId       Int?
+  milestoneNumber Int?
+  fileName        String
+  storagePath     String
+  fileType        String
+  fileSize        BigInt
+  mimeType        String
+  description     String?
+  category        String?
+  status          EvidenceStatus @default(pending)
+  verifiedById    String?
+  verifiedAt      DateTime?
+  notes           String?
+  uploadDate      DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  program         Program?       @relation(fields: [programId], references: [id])
+
+  @@index([userId])
+  @@index([programId])
+  @@index([status])
+  @@index([milestoneNumber])
+  @@index([verifiedById])
+  @@index([userId, status])
+  @@map("evidence")
+}
+
+// ═══════════════════════════════════════════════════════
+//  ADMIN TEMPLATES
+// ═══════════════════════════════════════════════════════
+
+model AdminTemplate {
+  id           Int          @id @default(autoincrement())
+  title        String
+  description  String?
+  filename     String
+  originalName String
+  storagePath  String
+  fileSize     Int
+  fileType     String
+  templateType TemplateType
+  isActive     Boolean      @default(true)
+  createdById  String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  createdBy    User         @relation(fields: [createdById], references: [id])
+  submissions  UserSubmission[]
+
+  @@index([templateType])
+  @@index([isActive])
+  @@map("admin_templates")
+}
+
+// ═══════════════════════════════════════════════════════
+//  USER SUBMISSIONS
+// ═══════════════════════════════════════════════════════
+
+model UserSubmission {
+  id             Int              @id @default(autoincrement())
+  templateId     Int
+  userId         String
+  submissionName String
+  filename       String
+  originalName   String
+  storagePath    String
+  fileSize       Int
+  fileType       String
+  status         SubmissionStatus @default(Draft)
+  notes          String?
+  submittedAt    DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  template       AdminTemplate    @relation(fields: [templateId], references: [id])
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([templateId])
+  @@index([status])
+  @@map("user_submissions")
+}
+
+// ═══════════════════════════════════════════════════════
+//  BUSINESS PLANS
+// ═══════════════════════════════════════════════════════
+
+model BusinessPlan {
+  id        Int      @id @default(autoincrement())
+  userId    String   @unique
+  planData  Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("business_plans")
+}
+
+// ═══════════════════════════════════════════════════════
+//  MENTOR SYSTEM
+// ═══════════════════════════════════════════════════════
+
+model MentorMentee {
+  id         Int      @id @default(autoincrement())
+  mentorId   String
+  menteeId   String
+  assignedAt DateTime @default(now())
+
+  mentor     User     @relation("mentor", fields: [mentorId], references: [id])
+  mentee     User     @relation("mentee", fields: [menteeId], references: [id])
+
+  @@unique([mentorId, menteeId])
+  @@index([mentorId])
+  @@index([menteeId])
+  @@map("mentor_mentees")
+}
+
+model MentorMeeting {
+  id          Int           @id @default(autoincrement())
+  mentorId    String
+  menteeId    String
+  meetingTime DateTime
+  status      MeetingStatus @default(Scheduled)
+  meetingType MeetingType   @default(Virtual)
+  link        String?
+  location    String?
+  notes       String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  mentor      User          @relation("meetingMentor", fields: [mentorId], references: [id])
+  mentee      User          @relation("meetingMentee", fields: [menteeId], references: [id])
+
+  @@index([mentorId])
+  @@index([menteeId])
+  @@index([meetingTime])
+  @@map("mentor_meetings")
+}
+
+model MentorNote {
+  id        Int      @id @default(autoincrement())
+  mentorId  String
+  menteeId  String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  mentor    User     @relation(fields: [mentorId], references: [id])
+
+  @@index([mentorId])
+  @@index([menteeId])
+  @@map("mentor_notes")
+}
+
+// ═══════════════════════════════════════════════════════
+//  MESSAGES
+// ═══════════════════════════════════════════════════════
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  senderId   String
+  receiverId String
+  content    String
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  sender     User     @relation("sender", fields: [senderId], references: [id])
+  receiver   User     @relation("receiver", fields: [receiverId], references: [id])
+
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([createdAt])
+  @@index([senderId, createdAt(sort: Desc)])
+  @@index([receiverId, createdAt(sort: Desc)])
+  @@index([receiverId, isRead])
+  @@map("messages")
+}
+
+// ═══════════════════════════════════════════════════════
+//  NOTIFICATIONS
+// ═══════════════════════════════════════════════════════
+
+model Notification {
+  id        Int              @id @default(autoincrement())
+  userId    String
+  type      NotificationType
+  title     String
+  body      String
+  isRead    Boolean          @default(false)
+  metadata  Json?
+  createdAt DateTime         @default(now())
+
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([createdAt])
+  @@index([userId, isRead])
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("notifications")
+}
+
+// ═══════════════════════════════════════════════════════
+//  ADMIN LOGS
+// ═══════════════════════════════════════════════════════
+
+model AdminLog {
+  id          Int              @id @default(autoincrement())
+  adminId     String
+  action      String
+  targetType  AdminTargetType?
+  targetId    String?
+  description String?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime         @default(now())
+
+  admin       User             @relation("adminActor", fields: [adminId], references: [id])
+
+  @@index([adminId])
+  @@index([createdAt])
+  @@map("admin_logs")
+}
+
+// ═══════════════════════════════════════════════════════
+//  APPLICATION SCORING
+// ═══════════════════════════════════════════════════════
+
+model ApplicationScore {
+  id                Int         @id @default(autoincrement())
+  applicationId     Int         @unique
+  adminId           String
+  innovation        Int
+  feasibility       Int
+  impact            Int
+  teamStrength      Int
+  marketPotential   Int
+  totalScore        Int
+  notes             String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  application       Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  admin             User        @relation("scoreAdmin", fields: [adminId], references: [id])
+
+  @@index([adminId])
+  @@map("application_scores")
+}
+
+// ═══════════════════════════════════════════════════════
+//  ANNOUNCEMENTS
+// ═══════════════════════════════════════════════════════
+
+enum AnnouncementTarget {
+  all
+  entrepreneur
+  mentor
+}
+
+model Announcement {
+  id          Int                @id @default(autoincrement())
+  title       String
+  body        String
+  isPinned    Boolean            @default(false)
+  isActive    Boolean            @default(true)
+  targetRole  AnnouncementTarget @default(all)
+  createdById String
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  createdBy   User               @relation(fields: [createdById], references: [id])
+
+  @@index([isActive])
+  @@index([targetRole])
+  @@map("announcements")
+}
+
+// ═══════════════════════════════════════════════════════
+//  ADMIN SETTINGS
+// ═══════════════════════════════════════════════════════
+
+model AdminSetting {
+  id           Int      @id @default(autoincrement())
+  settingKey   String   @unique
+  settingValue String
+  description  String?
+  updatedAt    DateTime @updatedAt
+
+  @@map("admin_settings")
+}
+
+// ═══════════════════════════════════════════════════════
+//  PUSH SUBSCRIPTIONS
+// ═══════════════════════════════════════════════════════
+
+model PushSubscription {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("push_subscriptions")
+}

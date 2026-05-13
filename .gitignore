@@ -8,8 +8,8 @@ build/
 # Environment files — never commit secrets
 .env
 .env.local
-.env.production
 .env.staging
+# .env.production is intentionally tracked (frontend-only, no secrets — replace YOUR_VPS_IP)
 
 # Logs
 *.log

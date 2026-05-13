@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Camera, Upload, Trash, DownloadSimple, CloudArrowUp } from '@phosphor-icons/react'
+import { Camera, Trash, DownloadSimple, CloudArrowUp } from '@phosphor-icons/react'
 import { api } from '@/lib/api'
 import { Badge, statusVariant } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'

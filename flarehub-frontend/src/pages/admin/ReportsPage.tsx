@@ -10,7 +10,7 @@ import { PageHeader } from '@/components/layout/PageHeader'
 import { toast } from '@/store/ui.store'
 import { useDebounce } from '@/hooks/useDebounce'
 import { formatDate } from '@/lib/utils'
-import type { ApiPaginated, ApiSuccess, Program } from '@/types/api'
+import type { ApiPaginated, Program } from '@/types/api'
 import type { User as UserType } from '@/types/api'
 
 async function downloadPdf(url: string, filename: string) {
@@ -72,7 +72,7 @@ function ProgramReports() {
                 </p>
               </div>
               <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full border ${
-                program.status === 'active'
+                program.status === 'Active'
                   ? 'border-[var(--color-forest-200)] text-[var(--color-forest-700)] bg-[var(--color-forest-50)]'
                   : 'border-[var(--color-line)] text-[var(--color-ink-faint)]'
               }`}>

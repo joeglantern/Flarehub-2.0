@@ -2,11 +2,10 @@ import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import {
   Users, CalendarBlank, ArrowRight, ChatCircle,
-  CheckCircle, Circle, ArrowUp,
+  CheckCircle, ArrowUp,
 } from '@phosphor-icons/react'
 import { api } from '@/lib/api'
 import { Card } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { Avatar } from '@/components/ui/Avatar'

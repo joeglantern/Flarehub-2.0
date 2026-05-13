@@ -9,7 +9,7 @@ module.exports = {
       node_args: '--experimental-vm-modules',
       env_production: {
         NODE_ENV: 'production',
-        PORT: 3002,
+        PORT: 3030,
       },
       error_file: '/var/log/flarehub/error.log',
       out_file:   '/var/log/flarehub/out.log',

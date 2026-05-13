@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'flarehub-api',
-      script: '/var/www/flarehub/flarehub-backend/dist/server.js',
+      script: '/var/www/flarehub/flarehub-backend/dist/src/server.js',
       cwd: '/var/www/flarehub/flarehub-backend',
       instances: 1,
       exec_mode: 'fork',

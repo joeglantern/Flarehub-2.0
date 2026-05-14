@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { ArrowRight, SlidersHorizontal } from '@phosphor-icons/react'
+import { ArrowRight, MagnifyingGlass, SlidersHorizontal, Tag } from '@phosphor-icons/react'
 import { api } from '@/lib/api'
 import { Badge, statusVariant } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
@@ -13,16 +13,12 @@ import { formatDate } from '@/lib/utils'
 import type { ApiPaginated, Program } from '@/types/api'
 
 const TAGS = ['All', 'Accelerator', 'Grant', 'Bootcamp', 'Fellowship', 'Cohort']
-const PROGRAM_EMOJIS: Record<string, string> = {
-  Accelerator: '🚀', Grant: '💰', Bootcamp: '⚡', Fellowship: '🌱', Cohort: '🏆',
-}
 
 function ProgramCard({ program, onApply, onNavigate }: {
   program: Program
   onApply: (p: Program) => void
   onNavigate: (id: number) => void
 }) {
-  const emoji    = PROGRAM_EMOJIS[program.tags[0]] ?? '📌'
   const spotsLeft = program.maxParticipants != null && program.applicationCount != null
     ? Math.max(0, program.maxParticipants - program.applicationCount)
     : null
@@ -40,8 +36,8 @@ function ProgramCard({ program, onApply, onNavigate }: {
       <div className="absolute top-0 right-0 w-0 h-0 border-t-[28px] border-l-[28px] border-t-[var(--color-terra-500)] border-l-transparent opacity-0 group-hover:opacity-100 transition" />
 
       <div className="flex items-start justify-between gap-3">
-        <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shadow-soft bg-[var(--color-forest-50)]">
-          {emoji}
+        <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-soft bg-[var(--color-forest-50)] text-[var(--color-forest-600)]">
+          <Tag size={22} weight="duotone" />
         </div>
         <Badge variant={program.hasApplied ? 'approved' : statusVariant(program.status)}>
           {program.hasApplied ? 'Applied' : (program.tags[0] ?? program.status)}
@@ -70,7 +66,7 @@ function ProgramCard({ program, onApply, onNavigate }: {
             {spotsLeft != null ? spotsLeft : '—'}
             {closing && (
               <span className="text-[10px] font-mono text-[var(--color-terra-600)] bg-[var(--color-terra-50)] px-1.5 py-0.5 rounded">
-                ⚡ closing
+                closing
               </span>
             )}
           </div>
@@ -179,8 +175,8 @@ export default function ProgramsPage() {
         </div>
       ) : programs.length === 0 ? (
         <div className="card p-10 text-center dotted">
-          <div className="w-16 h-16 rounded-3xl mesh-green flex items-center justify-center mx-auto mb-4 shadow-soft">
-            <span className="text-3xl">🔍</span>
+          <div className="w-16 h-16 rounded-3xl mesh-green flex items-center justify-center mx-auto mb-4 shadow-soft text-[var(--color-forest-600)]">
+            <MagnifyingGlass size={32} weight="duotone" />
           </div>
           <div className="text-[18px] font-semibold text-[var(--color-ink)]">No programs found</div>
           <p className="text-[13px] text-[var(--color-ink-mute)] mt-1 max-w-sm mx-auto">
@@ -202,7 +198,7 @@ export default function ProgramsPage() {
               <div className="grid lg:grid-cols-2 gap-6 items-center relative z-10">
                 <div>
                   <div className="flex items-center gap-2 mb-3 flex-wrap">
-                    <span className="chip bg-white/10 text-white border-white/20">⭐ featured program</span>
+                    <span className="chip bg-white/10 text-white border-white/20">featured program</span>
                     {featured.applicationDeadline && (
                       <span className="chip bg-[var(--color-terra-500)] text-white border-transparent">
                         closes {formatDate(featured.applicationDeadline)}
@@ -250,9 +246,6 @@ export default function ProgramsPage() {
                         ? Math.max(0, featured.maxParticipants - featured.applicationCount)
                         : '∞'}
                     </div>
-                  </div>
-                  <div className="absolute right-10 bottom-4 rotate-6 w-16 h-16 rounded-2xl bg-[var(--color-terra-500)] flex items-center justify-center text-2xl shadow-pop">
-                    🚀
                   </div>
                 </div>
               </div>

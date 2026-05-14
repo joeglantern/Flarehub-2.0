@@ -15,7 +15,7 @@ const programs = [
 export function Programs({ setPage }: { setPage: (p: string) => void }) {
   const [filter, setFilter] = useState('All')
   const [visible, setVisible] = useState(true)
-  const timerRef = useRef<ReturnType<typeof setTimeout>>()
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
 
   const list = filter === 'All' ? programs : programs.filter((p) => p.cat === filter)
 

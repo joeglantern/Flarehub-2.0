@@ -22,7 +22,7 @@ export default function App() {
   const [theme, setTheme] = useState<Theme>(() => {
     try { return (localStorage.getItem('fh:theme') as Theme) || 'cream' } catch { return 'cream' }
   })
-  const [font, setFont] = useState<Font>('editorial')
+  const [font] = useState<Font>('editorial')
 
   const isDark = theme === 'ink'
   const toggleDark = () => {

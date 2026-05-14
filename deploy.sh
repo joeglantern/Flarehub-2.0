@@ -8,6 +8,7 @@ set -e
 DEPLOY_DIR="/var/www/flarehub"
 BACKEND_DIR="$DEPLOY_DIR/flarehub-backend"
 FRONTEND_DIR="$DEPLOY_DIR/flarehub-frontend"
+MARKETING_DIR="$DEPLOY_DIR/flarehub-marketing"
 LOG_DIR="/var/log/flarehub"
 REPO_URL="https://github.com/joeglantern/Flarehub-2.0.git"
 
@@ -88,6 +89,12 @@ npm run build
 # Build frontend
 log "Building frontend..."
 cd "$FRONTEND_DIR"
+npm ci
+npm run build
+
+# Build marketing site
+log "Building marketing site..."
+cd "$MARKETING_DIR"
 npm ci
 npm run build
 

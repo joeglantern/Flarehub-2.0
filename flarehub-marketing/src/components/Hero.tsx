@@ -1,0 +1,161 @@
+import { CountUp, MarkerPortrait, Reveal, Squiggle } from './primitives'
+
+const partners = ['UNICEF']
+
+export function Hero({ setPage }: { setPage: (p: string) => void }) {
+  return (
+    <section className="section dot-grid" style={{ paddingTop: 40, paddingBottom: 40, position: 'relative', minHeight: 'calc(100vh - 80px)' }}>
+      {/* Floating stickers — hidden on mobile via CSS */}
+      <div className="hero-stickers" style={{ position: 'absolute', top: 80, right: 40, display: 'flex', flexDirection: 'column', gap: 14, alignItems: 'flex-end', zIndex: 2 }}>
+        <span className="sticker" style={{ transform: 'rotate(3deg)' }}>
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#fff', display: 'inline-block' }} />
+          For young Kenyan founders
+        </span>
+        <span className="sticker sticker-terra" style={{ transform: 'rotate(-4deg)' }}>Cohort 07 · Open</span>
+      </div>
+
+      <div className="container" style={{ position: 'relative' }}>
+        <div className="hero-grid">
+          {/* Left — copy */}
+          <div>
+            <Reveal>
+              <div className="mono" style={{ color: 'var(--ink-2)', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ width: 28, height: 1, background: 'var(--ink-2)', display: 'inline-block' }} />
+                Nairobi · since 2023
+              </div>
+            </Reveal>
+            <Reveal delay={80}>
+              <h1 className="display" style={{ fontSize: 'clamp(48px, 8.4vw, 132px)', margin: 0, color: 'var(--ink)' }}>
+                Build{' '}<br />
+                <span style={{ fontWeight: 300 }}>something </span>
+                <span className="squiggle display-italic" style={{ fontWeight: 700, color: 'var(--ink)' }}>
+                  real
+                  <Squiggle />
+                </span>
+                .
+              </h1>
+            </Reveal>
+            <Reveal delay={180}>
+              <p style={{ fontSize: 'clamp(16px,2vw,19px)', color: 'var(--ink-2)', maxWidth: 520, marginTop: 32, lineHeight: 1.55 }}>
+                A cohort-based launchpad for Kenyan founders under 30. Mentors who've done the thing.
+                Funding that shows up. Milestones that mean it.
+              </p>
+            </Reveal>
+            <Reveal delay={260}>
+              <div className="hero-btns" style={{ display: 'flex', gap: 12, marginTop: 32, alignItems: 'center', flexWrap: 'wrap' }}>
+                <button className="btn" onClick={() => setPage('apply')}>
+                  Start your application <span>→</span>
+                </button>
+                <button className="btn btn-ghost" onClick={() => setPage('process')}>
+                  How it works
+                </button>
+                <div className="mono" style={{ color: 'var(--ink-2)', marginLeft: 4 }}>⏱ 6 min</div>
+              </div>
+            </Reveal>
+            <Reveal delay={340}>
+              <div className="hero-stats" style={{ marginTop: 48, display: 'flex', gap: 32, alignItems: 'flex-start' }}>
+                <div>
+                  <div className="display" style={{ fontSize: 'clamp(28px,4vw,40px)', color: 'var(--g500)', fontWeight: 800 }}>
+                    <CountUp to={420} suffix="+" />
+                  </div>
+                  <div className="mono" style={{ color: 'var(--ink-2)' }}>Founders backed</div>
+                </div>
+                <div>
+                  <div className="display" style={{ fontSize: 'clamp(28px,4vw,40px)', color: 'var(--t500)', fontWeight: 800 }}>
+                    <CountUp to={38} />
+                  </div>
+                  <div className="mono" style={{ color: 'var(--ink-2)' }}>Active mentors</div>
+                </div>
+                <div>
+                  <div className="display" style={{ fontSize: 'clamp(28px,4vw,40px)', color: 'var(--ink)', fontWeight: 800 }}>
+                    <CountUp to={12} />
+                  </div>
+                  <div className="mono" style={{ color: 'var(--ink-2)' }}>Programs running</div>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+
+          {/* Right — portrait collage (hidden on mobile) */}
+          <div className="hero-portrait" style={{ position: 'relative', height: 520 }}>
+            <div style={{
+              position: 'absolute', right: -20, top: 20, width: 220, height: 280,
+              background: 'var(--surface)',
+              backgroundImage: 'repeating-linear-gradient(0deg,rgba(29,111,66,0.08) 0 1px,transparent 1px 24px),repeating-linear-gradient(90deg,rgba(29,111,66,0.08) 0 1px,transparent 1px 24px)',
+              transform: 'rotate(4deg)', borderRadius: 4,
+              boxShadow: '0 6px 20px -8px rgba(26,25,22,0.25)', border: '1px solid var(--border)',
+            }} />
+            <div style={{ position: 'absolute', left: 40, top: 40 }}>
+              <MarkerPortrait seed={1} rotate={-3} w={340} h={400} />
+            </div>
+            <svg style={{ position: 'absolute', left: -20, top: 420, width: 180, height: 80 }} viewBox="0 0 180 80">
+              <path d="M20 60 C 40 30, 80 30, 120 50" stroke="var(--t500)" strokeWidth="2.2" fill="none" strokeDasharray="1 6" strokeLinecap="round" />
+              <path d="M112 44 L 122 50 L 114 58" stroke="var(--t500)" strokeWidth="2.2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+              <text x="10" y="48" fontFamily="var(--display)" fontSize="18" fontStyle="italic" fill="var(--ink)">that's User</text>
+            </svg>
+            <div style={{
+              position: 'absolute', right: 40, bottom: 40,
+              background: '#f9ddd1', padding: '14px 16px', borderRadius: 2,
+              transform: 'rotate(-5deg)', boxShadow: '2px 8px 20px -6px rgba(26,25,22,0.25)',
+              fontFamily: 'var(--display)', fontSize: 15, maxWidth: 180, lineHeight: 1.3, color: '#1a1916',
+            }}>
+              <div className="mono" style={{ color: 'var(--t600)', fontSize: 10, marginBottom: 6 }}>COHORT 05 · 2025</div>
+              Raised KES 4.2M in her first round. Now hiring.
+            </div>
+            <div style={{
+              position: 'absolute', right: 10, top: 10, width: 96, height: 96, borderRadius: '50%',
+              border: '2.5px dashed var(--t500)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              transform: 'rotate(-15deg)', color: 'var(--t500)',
+              fontFamily: 'var(--mono)', fontSize: 10, textAlign: 'center', lineHeight: 1.2, padding: 10,
+            }}>
+              APPS<br />OPEN<br />★
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Scroll marquee */}
+      <div className="marquee" style={{ marginTop: 80 }}>
+        <div className="marquee-track">
+          {[1, 2].flatMap((k) => [
+            <span className="marquee-item" key={`a${k}`}><CountUp to={420} suffix="+" /> Founders</span>,
+            <span className="marquee-dot" key={`d1${k}`} />,
+            <span className="marquee-item" key={`b${k}`}>38 Mentors</span>,
+            <span className="marquee-dot" key={`d2${k}`} />,
+            <span className="marquee-item" key={`c${k}`}>12 Active programs</span>,
+            <span className="marquee-dot" key={`d3${k}`} />,
+            <span className="marquee-item" key={`e${k}`}>KES 64M deployed</span>,
+            <span className="marquee-dot" key={`d4${k}`} />,
+            <span className="marquee-item" key={`f${k}`}>Since 2023</span>,
+            <span className="marquee-dot" key={`d5${k}`} />,
+            <span className="marquee-item" key={`g${k}`}>Nairobi · Mombasa · Kisumu</span>,
+            <span className="marquee-dot" key={`d6${k}`} />,
+          ])}
+        </div>
+      </div>
+
+      {/* Partners strip */}
+      <div className="container" style={{ marginTop: 48 }}>
+        <div className="mono" style={{ color: 'var(--ink-3)', marginBottom: 20, textAlign: 'center' }}>Backed &amp; supported by</div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 0, border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' }}>
+          {partners.map((p, i) => (
+            <div key={p} style={{
+              padding: '16px 28px', fontFamily: 'var(--display)', fontWeight: 700, fontSize: 14,
+              letterSpacing: '-0.01em', color: 'var(--ink-3)',
+              borderRight: i < partners.length - 1 ? '1px solid var(--border)' : 'none',
+              borderBottom: '0',
+              transition: 'color 160ms, background 160ms',
+              cursor: 'default', flex: '1 1 auto', textAlign: 'center',
+              background: 'var(--surface)',
+            }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink)'; e.currentTarget.style.background = 'var(--elevated)' }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--ink-3)'; e.currentTarget.style.background = 'var(--surface)' }}
+            >
+              {p}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

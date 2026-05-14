@@ -7,7 +7,6 @@ import { Programs } from './components/Programs'
 import { About } from './components/About'
 import { Mentors } from './components/Mentors'
 import { CTAFooter } from './components/CTAFooter'
-import { ApplyModal } from './components/ApplyModal'
 import { TornEdge } from './components/primitives'
 
 type Theme = 'cream' | 'sage' | 'ink'
@@ -18,7 +17,6 @@ export default function App() {
   const [page, setPage] = useState<Page>(() => {
     try { return (localStorage.getItem('fh:page') as Page) || 'home' } catch { return 'home' }
   })
-  const [applyOpen, setApplyOpen] = useState(false)
   const [theme, setTheme] = useState<Theme>(() => {
     try { return (localStorage.getItem('fh:theme') as Theme) || 'cream' } catch { return 'cream' }
   })
@@ -39,7 +37,7 @@ export default function App() {
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }) }, [page])
 
   const go = (p: string) => {
-    if (p === 'apply') { setApplyOpen(true); return }
+    if (p === 'apply') { window.open('https://app.flarehub.org/signup', '_blank'); return }
     setPage(p as Page)
   }
 
@@ -73,7 +71,6 @@ export default function App() {
     <div key={page} style={{ animation: 'pageIn 380ms cubic-bezier(.2,.8,.2,1.05)' }}>
       <Nav current={page} setPage={go} isDark={isDark} toggleDark={toggleDark} />
       {body}
-      <ApplyModal open={applyOpen} onClose={() => setApplyOpen(false)} />
     </div>
   )
 }

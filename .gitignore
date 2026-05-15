@@ -15,8 +15,9 @@ build/
 *.log
 logs/
 
-# Old production database dump
+# Old production database dump — but keep Supabase migrations
 *.sql
+!flarehub-backend/supabase/migrations/*.sql
 
 # OS
 .DS_Store

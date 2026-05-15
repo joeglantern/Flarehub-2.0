@@ -17,7 +17,7 @@ export type NotificationType =
   | 'smart_goal_commented' | 'market_research_commented' | 'milestone_plan_commented'
   | 'submission_reviewed' | 'new_program' | 'new_message'
 export type TemplateType = 'milestone' | 'survey' | 'smart_goals' | 'market_research' | 'customer_feedback'
-export type AnnouncementTarget = 'all' | 'entrepreneur' | 'mentor'
+export type AnnouncementTarget = 'all' | 'entrepreneur' | 'mentor' | 'individual'
 export type Priority = 'low' | 'medium' | 'high' | 'urgent'
 
 export interface ApiSuccess<T> {
@@ -319,10 +319,12 @@ export interface Announcement {
   isPinned: boolean
   isActive: boolean
   targetRole: AnnouncementTarget
+  targetUserId: string | null
   createdById: string
   createdAt: string
   updatedAt: string
   createdBy?: Pick<User, 'firstName' | 'lastName'>
+  targetUser?: Pick<User, 'firstName' | 'lastName'> | null
 }
 
 export interface SubmissionProgress {

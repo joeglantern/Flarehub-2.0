@@ -7,10 +7,11 @@ import { logAdminAction } from '../../services/admin-log.service.js';
 import { sendEmail, announcementEmail } from '../../services/email.service.js';
 
 const createAnnouncementSchema = z.object({
-  title:      z.string().min(1),
-  body:       z.string().min(1),
-  isPinned:   z.boolean().optional(),
-  targetRole: z.enum(['all', 'entrepreneur', 'mentor']).optional(),
+  title:        z.string().min(1),
+  body:         z.string().min(1),
+  isPinned:     z.boolean().optional(),
+  targetRole:   z.enum(['all', 'entrepreneur', 'mentor']).optional(),
+  targetUserId: z.string().optional(),
 });
 
 const updateAnnouncementSchema = createAnnouncementSchema.partial().extend({
@@ -28,12 +29,16 @@ export default async function announcementRoutes(fastify: FastifyInstance) {
       where: {
         isActive: true,
         OR: [
-          { targetRole: 'all' },
-          ...(role ? [{ targetRole: role as 'entrepreneur' | 'mentor' }] : []),
+          { targetRole: 'all',  targetUserId: null },
+          ...(role ? [{ targetRole: role as 'entrepreneur' | 'mentor', targetUserId: null }] : []),
+          { targetUserId: user.id },
         ],
       },
       orderBy: [{ isPinned: 'desc' }, { createdAt: 'desc' }],
-      include: { createdBy: { select: { firstName: true, lastName: true } } },
+      include: {
+        createdBy:  { select: { firstName: true, lastName: true } },
+        targetUser: { select: { firstName: true, lastName: true } },
+      },
       take: 50,
     });
 
@@ -56,13 +61,22 @@ export default async function announcementRoutes(fastify: FastifyInstance) {
     });
 
     // Fire-and-forget email to targeted users
-    const roleFilter = body.targetRole === 'entrepreneur' ? { role: 'entrepreneur' as const }
-                     : body.targetRole === 'mentor'       ? { isMentor: true }
-                     : {};
-    const recipients = await fastify.prisma.user.findMany({
-      where:  { ...roleFilter, isVerified: true },
-      select: { firstName: true, email: true },
-    });
+    let recipients: { firstName: string; email: string }[];
+    if (body.targetUserId) {
+      const u = await fastify.prisma.user.findUnique({
+        where:  { id: body.targetUserId },
+        select: { firstName: true, email: true },
+      });
+      recipients = u ? [u] : [];
+    } else {
+      const roleFilter = body.targetRole === 'entrepreneur' ? { role: 'entrepreneur' as const }
+                       : body.targetRole === 'mentor'       ? { isMentor: true }
+                       : {};
+      recipients = await fastify.prisma.user.findMany({
+        where:  { ...roleFilter, isVerified: true },
+        select: { firstName: true, email: true },
+      });
+    }
     void Promise.all(
       recipients.map((u) =>
         sendEmail({

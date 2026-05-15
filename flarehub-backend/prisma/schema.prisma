@@ -170,7 +170,8 @@ model User {
   adminTemplatesCreated     AdminTemplate[]
   adminLogsActioned         AdminLog[]       @relation("adminActor")
   applicationScores         ApplicationScore[] @relation("scoreAdmin")
-  announcements             Announcement[]
+  announcements             Announcement[]   @relation("announcementCreator")
+  targetedAnnouncements     Announcement[]   @relation("announcementTarget")
   pushSubscriptions         PushSubscription[]
 
   @@map("users")
@@ -612,20 +613,23 @@ enum AnnouncementTarget {
 }
 
 model Announcement {
-  id          Int                @id @default(autoincrement())
-  title       String
-  body        String
-  isPinned    Boolean            @default(false)
-  isActive    Boolean            @default(true)
-  targetRole  AnnouncementTarget @default(all)
-  createdById String
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
+  id            Int                @id @default(autoincrement())
+  title         String
+  body          String
+  isPinned      Boolean            @default(false)
+  isActive      Boolean            @default(true)
+  targetRole    AnnouncementTarget @default(all)
+  targetUserId  String?
+  createdById   String
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
 
-  createdBy   User               @relation(fields: [createdById], references: [id])
+  createdBy     User               @relation("announcementCreator", fields: [createdById], references: [id])
+  targetUser    User?              @relation("announcementTarget", fields: [targetUserId], references: [id])
 
   @@index([isActive])
   @@index([targetRole])
+  @@index([targetUserId])
   @@map("announcements")
 }
 

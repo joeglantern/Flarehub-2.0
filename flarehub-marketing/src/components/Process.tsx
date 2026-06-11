@@ -40,7 +40,7 @@ export function Process() {
               <Reveal key={s.n} delay={i * 120}>
                 <div className="card paper" style={{
                   transform: `rotate(${s.rotate}deg) translateY(${s.top}px)`,
-                  background: 'var(--surface)', padding: 28, position: 'relative', overflow: 'hidden',
+                  background: 'var(--surface)', padding: 28, position: 'relative',
                 }}>
                   <div className="pin" />
                   <div className="display" style={{ fontSize: 'clamp(48px,8vw,72px)', fontWeight: 800, color: 'var(--g500)', lineHeight: 0.9 }}>{s.n}</div>

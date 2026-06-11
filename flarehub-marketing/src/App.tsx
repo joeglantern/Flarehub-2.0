@@ -37,7 +37,7 @@ export default function App() {
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }) }, [page])
 
   const go = (p: string) => {
-    if (p === 'apply') { window.open('https://app.flarehub.org/signup', '_blank'); return }
+    if (p === 'apply') { window.open('https://app.afosihub.com/signup', '_blank'); return }
     setPage(p as Page)
   }
 

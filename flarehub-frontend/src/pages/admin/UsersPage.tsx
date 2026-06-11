@@ -81,8 +81,8 @@ export default function UsersPage() {
         <EmptyState icon={<UsersThree size={28} />} heading="No users found" body="Try a different search." />
       ) : (
         <>
-          <Card padding="none" className="overflow-hidden mb-5">
-            <table className="w-full text-sm">
+          <Card padding="none" className="overflow-x-auto overflow-y-hidden mb-5">
+            <table className="w-full min-w-[500px] text-sm">
               <thead>
                 <tr className="border-b border-[var(--color-line)] bg-[var(--color-elev)]">
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-[var(--color-ink-mute)]">User</th>

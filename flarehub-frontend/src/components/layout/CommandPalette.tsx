@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  House, Binoculars, FileText, Target, ChatCircle, Plus, ArrowRight, MagnifyingGlass,
+  House, Binoculars, FileText, Target, Plus, ArrowRight, MagnifyingGlass,
 } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 
@@ -10,7 +10,6 @@ const ITEMS = [
   { icon: Binoculars,label: 'Browse programs',       to: '/programs' },
   { icon: FileText,  label: 'My applications',       to: '/applications' },
   { icon: Target,    label: 'Edit Smart Goals',      to: '/submissions/smart-goals' },
-  { icon: ChatCircle,label: 'Message my mentor',     to: '/messages' },
   { icon: Plus,      label: 'Apply to new program',  to: '/programs' },
 ]
 

@@ -26,6 +26,7 @@ const Documents        = lazy(() => import('@/pages/entrepreneur/DocumentsPage')
 const Templates        = lazy(() => import('@/pages/entrepreneur/TemplatesPage'))
 const BusinessPlan     = lazy(() => import('@/pages/entrepreneur/BusinessPlanPage'))
 const Messages         = lazy(() => import('@/pages/entrepreneur/MessagesPage'))
+const SparkBot         = lazy(() => import('@/pages/entrepreneur/SparkBotPage'))
 const Notifications    = lazy(() => import('@/pages/entrepreneur/NotificationsPage'))
 const Announcements    = lazy(() => import('@/pages/entrepreneur/AnnouncementsPage'))
 const Profile          = lazy(() => import('@/pages/entrepreneur/ProfilePage'))
@@ -91,6 +92,7 @@ export default function App() {
               <Route path="/business-plan"               element={<BusinessPlan />} />
               <Route path="/messages"                    element={<Messages />} />
               <Route path="/messages/:contactId"         element={<Messages />} />
+              <Route path="/sparkbot"                    element={<SparkBot />} />
               <Route path="/notifications"               element={<Notifications />} />
               <Route path="/announcements"               element={<Announcements />} />
               <Route path="/profile"                     element={<Profile />} />

@@ -27,7 +27,7 @@ export default function ApplyPage() {
   const draftQuery = useQuery({
     queryKey: ['applications', 'draft', id],
     queryFn:  () =>
-      api.get<{ data: Application[] }>('/applications').then(r =>
+      api.get<ApiSuccess<Application[]>>('/applications/me').then(r =>
         r.data.data.find(a => String(a.programId) === id && a.isDraft) ?? null,
       ),
     enabled: !!id,

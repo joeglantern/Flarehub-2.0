@@ -18,6 +18,7 @@ export const programQuerySchema = z.object({
   limit:  z.coerce.number().int().positive().max(100).default(20),
   search: z.string().optional(),
   status: z.enum(['Active', 'Inactive']).optional(),
+  tag:    z.string().optional(),
 });
 
 export type CreateProgramInput = z.infer<typeof createProgramSchema>;

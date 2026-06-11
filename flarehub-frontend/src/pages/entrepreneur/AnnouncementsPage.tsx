@@ -15,7 +15,7 @@ export default function AnnouncementsPage() {
   const regular = announcements?.filter(a => !a.isPinned) ?? []
 
   return (
-    <div className="p-6 max-w-3xl mx-auto space-y-6">
+    <div className="px-4 lg:px-7 py-6 lg:py-8 max-w-3xl mx-auto space-y-6 pb-24 lg:pb-8">
       <div className="flex items-center gap-3">
         <MegaphoneSimple size={24} weight="duotone" className="text-[var(--color-forest-600)]" />
         <h1 className="text-xl font-semibold text-[var(--color-ink)]">Announcements</h1>

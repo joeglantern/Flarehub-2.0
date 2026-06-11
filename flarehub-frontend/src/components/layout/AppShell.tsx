@@ -21,6 +21,8 @@ const SELF_PADDED: string[] = [
   '/templates',
   '/business-plan',
   '/notifications',
+  '/announcements',
+  '/sparkbot',
   '/profile',
 ]
 

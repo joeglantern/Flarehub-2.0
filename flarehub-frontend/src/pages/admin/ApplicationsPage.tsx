@@ -129,7 +129,7 @@ export default function ApplicationsPage() {
 
   const bulkUpdate = useMutation({
     mutationFn: (applicationIds: number[]) =>
-      api.patch('/applications/bulk-status', { applicationIds, status: bulkStatus }).then(r => r.data),
+      api.patch('/applications/bulk-status', { ids: applicationIds, status: bulkStatus }).then(r => r.data),
     onSuccess: () => {
       toast.success(`${selected.size} application(s) updated`)
       qc.invalidateQueries({ queryKey: ['admin', 'applications'] })
@@ -238,8 +238,8 @@ export default function ApplicationsPage() {
             </div>
           )}
 
-          <Card padding="none" className="overflow-hidden mb-5">
-            <table className="w-full text-sm">
+          <Card padding="none" className="overflow-x-auto overflow-y-hidden mb-5">
+            <table className="w-full min-w-[640px] text-sm">
               <thead>
                 <tr className="border-b border-[var(--color-line)] bg-[var(--color-elev)]">
                   <th className="px-4 py-2.5 w-10">

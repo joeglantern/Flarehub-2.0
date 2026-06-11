@@ -66,11 +66,6 @@ export function useWebSocket() {
         toast.info('Your submission has been reviewed')
       }),
 
-      wsClient.on('new_message', () => {
-        qc.invalidateQueries({ queryKey: ['conversations'] })
-        qc.invalidateQueries({ queryKey: ['messages'] })
-      }),
-
       wsClient.on('new_program', () => {
         qc.invalidateQueries({ queryKey: ['programs'] })
         toast.success('New program available')

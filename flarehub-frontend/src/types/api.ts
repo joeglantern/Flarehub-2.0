@@ -17,7 +17,7 @@ export type NotificationType =
   | 'smart_goal_commented' | 'market_research_commented' | 'milestone_plan_commented'
   | 'submission_reviewed' | 'new_program' | 'new_message'
 export type TemplateType = 'milestone' | 'survey' | 'smart_goals' | 'market_research' | 'customer_feedback'
-export type AnnouncementTarget = 'all' | 'entrepreneur' | 'mentor' | 'individual'
+export type AnnouncementTarget = 'all' | 'entrepreneur' | 'mentor'
 export type Priority = 'low' | 'medium' | 'high' | 'urgent'
 
 export interface ApiSuccess<T> {

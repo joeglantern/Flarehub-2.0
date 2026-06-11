@@ -22,6 +22,8 @@ const PAGE_LABELS: Record<string, string> = {
   '/business-plan':               'Business Plan',
   '/messages':                    'Messages',
   '/notifications':               'Notifications',
+  '/announcements':               'Announcements',
+  '/sparkbot':                    'SparkBot',
   '/profile':                     'Profile',
   '/mentor':                      'Dashboard',
   '/mentor/mentees':              'My Mentees',
@@ -75,25 +77,31 @@ export function TopBar() {
   return (
     <>
       <header className="sticky top-0 z-30 bg-[var(--color-paper)]/85 backdrop-blur-xl border-b border-[var(--color-line)] shrink-0">
-        <div className="flex items-center gap-3 px-4 lg:px-7 h-14">
-          {/* Mobile hamburger */}
+        <div className="flex items-center px-4 lg:px-7 h-14 gap-2">
+
+          {/* ── Mobile hamburger ──────────────────────────────── */}
           <button
             onClick={() => setMobileNavOpen(true)}
-            className="lg:hidden p-2 rounded-xl hover:bg-[var(--color-elev)] text-[var(--color-ink-mute)] hover:text-[var(--color-ink)] transition"
+            className="lg:hidden shrink-0 w-9 h-9 flex items-center justify-center rounded-xl hover:bg-[var(--color-elev)] text-[var(--color-ink-mute)] hover:text-[var(--color-ink)] transition"
             aria-label="Open menu"
           >
             <List size={20} />
           </button>
 
-          {/* Desktop breadcrumb */}
-          <div className="hidden lg:flex items-center gap-2 text-[12px] text-[var(--color-ink-mute)]">
+          {/* ── Mobile: current page title ────────────────────── */}
+          <span className="lg:hidden flex-1 min-w-0 text-[15px] font-semibold text-[var(--color-ink)] truncate">
+            {pageLabel}
+          </span>
+
+          {/* ── Desktop: breadcrumb ───────────────────────────── */}
+          <div className="hidden lg:flex items-center gap-2 text-[12px] text-[var(--color-ink-mute)] shrink-0">
             <span className="font-mono uppercase tracking-wider">Workspace</span>
             <span className="text-[var(--color-line)]">›</span>
             <span className="text-[var(--color-ink)] font-semibold">{pageLabel}</span>
           </div>
 
-          {/* Command palette trigger */}
-          <div className="flex-1 max-w-xl mx-auto">
+          {/* ── Desktop: search bar ───────────────────────────── */}
+          <div className="hidden lg:flex flex-1 max-w-xl mx-6">
             <button
               onClick={() => setCommandOpen(true)}
               className="group w-full flex items-center gap-2.5 h-10 px-3.5 rounded-2xl bg-[var(--color-elev)] hover:bg-[var(--color-inset)] border border-[var(--color-line)] text-left transition"
@@ -102,56 +110,83 @@ export function TopBar() {
               <span className="text-[13px] text-[var(--color-ink-mute)] flex-1 truncate">
                 Search programs, mentors, evidence…
               </span>
-              <span className="hidden sm:flex items-center gap-1 font-mono text-[10px] text-[var(--color-ink-mute)]">
+              <span className="flex items-center gap-1 font-mono text-[10px] text-[var(--color-ink-mute)]">
                 <kbd className="px-1.5 py-0.5 rounded bg-white border border-[var(--color-line)]">⌘</kbd>
                 <kbd className="px-1.5 py-0.5 rounded bg-white border border-[var(--color-line)]">K</kbd>
               </span>
             </button>
           </div>
 
-          {/* Right cluster */}
-          <div className="flex items-center gap-1.5">
+          {/* ── Right cluster ─────────────────────────────────── */}
+          <div className="flex items-center gap-1 shrink-0 ml-auto lg:ml-0">
+
+            {/* Mobile: search icon */}
+            <button
+              onClick={() => setCommandOpen(true)}
+              className="lg:hidden w-9 h-9 flex items-center justify-center rounded-xl hover:bg-[var(--color-elev)] text-[var(--color-ink-mute)] hover:text-[var(--color-ink)] transition"
+              aria-label="Search"
+            >
+              <MagnifyingGlass size={18} />
+            </button>
+
+            {/* SparkBot — icon on mobile, pill on desktop */}
             {isEntrepreneur && (
-              <button className="hidden lg:inline-flex items-center gap-1.5 h-10 px-3 rounded-xl text-[13px] font-semibold text-[var(--color-forest-700)] bg-[var(--color-forest-50)] hover:bg-[var(--color-forest-100)] transition border border-[var(--color-forest-100)]">
-                <Sparkle size={14} weight="fill" />
-                Ask Sparkbot
-              </button>
+              <>
+                <button
+                  onClick={() => navigate('/sparkbot')}
+                  className="lg:hidden w-9 h-9 flex items-center justify-center rounded-xl hover:bg-[var(--color-forest-50)] text-[var(--color-forest-700)] transition"
+                  aria-label="Ask Sparkbot"
+                >
+                  <Sparkle size={18} weight="fill" />
+                </button>
+                <button
+                  onClick={() => navigate('/sparkbot')}
+                  className="hidden lg:inline-flex items-center gap-1.5 h-10 px-3 rounded-xl text-[13px] font-semibold text-[var(--color-forest-700)] bg-[var(--color-forest-50)] hover:bg-[var(--color-forest-100)] transition border border-[var(--color-forest-100)]"
+                >
+                  <Sparkle size={14} weight="fill" />
+                  Ask Sparkbot
+                </button>
+              </>
             )}
 
+            {/* Notifications bell */}
             <button
               onClick={() => navigate('/notifications')}
-              className="relative w-10 h-10 rounded-xl hover:bg-[var(--color-elev)] flex items-center justify-center text-[var(--color-ink-mute)] hover:text-[var(--color-ink)] transition"
+              className="relative w-9 h-9 lg:w-10 lg:h-10 rounded-xl hover:bg-[var(--color-elev)] flex items-center justify-center text-[var(--color-ink-mute)] hover:text-[var(--color-ink)] transition"
               aria-label="Notifications"
             >
               <Bell size={18} />
               {(unreadCount ?? 0) > 0 && (
-                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[var(--color-terra-500)] ring-2 ring-[var(--color-paper)]" />
+                <span className="absolute top-1.5 right-1.5 lg:top-2 lg:right-2 w-2 h-2 rounded-full bg-[var(--color-terra-500)] ring-2 ring-[var(--color-paper)]" />
               )}
             </button>
 
+            {/* Calendar shortcut — desktop only */}
             <button
               onClick={() => navigate('/submissions/milestones')}
-              className="w-10 h-10 rounded-xl hover:bg-[var(--color-elev)] flex items-center justify-center text-[var(--color-ink-mute)] hover:text-[var(--color-ink)] transition"
+              className="hidden lg:flex w-10 h-10 rounded-xl hover:bg-[var(--color-elev)] items-center justify-center text-[var(--color-ink-mute)] hover:text-[var(--color-ink)] transition"
               aria-label="Milestones"
             >
               <CalendarBlank size={18} />
             </button>
 
-            <div className="w-px h-6 bg-[var(--color-line)] mx-1" />
+            <div className="hidden lg:block w-px h-6 bg-[var(--color-line)] mx-1" />
 
+            {/* Avatar */}
             <button
               onClick={() => navigate('/profile')}
-              className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-xl hover:bg-[var(--color-elev)] transition"
+              className="flex items-center pl-0.5 pr-1.5 py-1 rounded-xl hover:bg-[var(--color-elev)] transition"
             >
               <Avatar
                 src={user.profilePic}
                 firstName={user.firstName}
                 lastName={user.lastName}
-                size={30}
+                size={28}
                 online
               />
             </button>
           </div>
+
         </div>
       </header>
 

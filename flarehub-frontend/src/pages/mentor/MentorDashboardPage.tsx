@@ -78,7 +78,7 @@ export default function MentorDashboardPage() {
         <div className="absolute inset-0 opacity-[0.06]"
           style={{ backgroundImage: 'radial-gradient(circle, var(--color-terra-500) 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
 
-        <div className="relative z-10 max-w-[58%]">
+        <div className="relative z-10 w-full sm:max-w-[58%]">
           <div className="text-[11px] font-mono uppercase tracking-widest text-[var(--color-terra-500)] mb-2">
             Mentor · Flarehub
           </div>
@@ -113,7 +113,7 @@ export default function MentorDashboardPage() {
         </div>
 
         {/* Illustration */}
-        <div className="absolute right-0 bottom-0 w-52 h-44 pointer-events-none select-none opacity-90">
+        <div className="hidden sm:block absolute right-0 bottom-0 w-52 h-44 pointer-events-none select-none opacity-90">
           <IllustrationMentor />
         </div>
       </div>

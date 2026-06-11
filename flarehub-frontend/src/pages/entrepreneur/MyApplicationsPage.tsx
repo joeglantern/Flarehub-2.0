@@ -60,7 +60,7 @@ export default function MyApplicationsPage() {
       {/* Pipeline stage bars */}
       <div className="card p-5">
         <div className="text-[11px] font-mono uppercase text-[var(--color-ink-faint)] mb-4">Stage overview</div>
-        <div className="grid grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
           {STAGES.map(stage => {
             const count    = stageCounts[stage]
             const isActive = activeStage === stage

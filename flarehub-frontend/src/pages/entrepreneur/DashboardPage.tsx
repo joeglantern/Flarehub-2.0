@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import {
   ArrowRight, Camera, CheckCircle, Circle, MegaphoneSimple,
-  ChatCircle, Target, CalendarBlank, Trophy,
+  ChatCircle, Target, Trophy,
 } from '@phosphor-icons/react'
 import { IllustrationPlant } from '@/components/illustrations/IllustrationPlant'
 import { useAuthStore } from '@/store/auth.store'
@@ -14,7 +14,7 @@ import { Progress } from '@/components/ui/Progress'
 import { StatCard } from '@/components/ui/StatCard'
 import { formatDate } from '@/lib/utils'
 import type {
-  ApiPaginated, ApiSuccess, Application, MentorMeeting,
+  ApiPaginated, ApiSuccess, Application,
   Announcement, SmartGoal, MilestonePlan, MarketResearch, Evidence,
 } from '@/types/api'
 
@@ -22,24 +22,6 @@ function greeting(name: string) {
   const h = new Date().getHours()
   const time = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening'
   return `${time}, ${name} 👋`
-}
-
-function ActivityChart({ data }: { data: number[] }) {
-  const max = Math.max(...data, 1)
-  const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
-  return (
-    <div className="flex items-end gap-1.5 h-16">
-      {data.map((v, i) => (
-        <div key={i} className="flex-1 flex flex-col items-center gap-1">
-          <div
-            className="w-full rounded-md bg-[var(--color-forest-500)] transition-all"
-            style={{ height: `${Math.max(4, (v / max) * 56)}px`, opacity: v === 0 ? 0.15 : 1 }}
-          />
-          <span className="text-[9px] font-mono text-[var(--color-ink-faint)]">{days[i]}</span>
-        </div>
-      ))}
-    </div>
-  )
 }
 
 export default function DashboardPage() {
@@ -70,12 +52,6 @@ export default function DashboardPage() {
     enabled:  !!user,
   })
 
-  const { data: meetings } = useQuery({
-    queryKey: ['meetings', 'upcoming'],
-    queryFn:  () => api.get<ApiPaginated<MentorMeeting>>('/mentor/meetings?status=Scheduled&limit=1').then(r => r.data.data),
-    enabled:  !!user,
-  })
-
   const { data: announcements } = useQuery({
     queryKey: ['announcements'],
     queryFn:  () => api.get<ApiSuccess<Announcement[]>>('/announcements').then(r => r.data.data),
@@ -88,16 +64,12 @@ export default function DashboardPage() {
     enabled:  !!user,
   })
 
-  const nextMeeting      = meetings?.[0]
   const pinned           = announcements?.find(a => a.isPinned)
   const submissionsDone  = [!!smartGoal, !!milestonePlan, !!marketResearch].filter(Boolean).length
   const submissionPct    = Math.round((submissionsDone / 3) * 100)
   const evidenceCount    = evidence?.length ?? 0
   const appCount         = appsData?.length ?? 0
   const activeApps       = appsData?.filter(a => !['Rejected'].includes(a.status)) ?? []
-
-  // Last 7 days simulated activity data (evidence uploads per day-of-week)
-  const activityData = [2, 1, 3, 0, 2, 1, evidenceCount > 0 ? 4 : 1]
 
   return (
     <div className="page-enter px-4 lg:px-7 py-6 lg:py-8 max-w-[1400px] mx-auto space-y-6 pb-24 lg:pb-8">
@@ -207,11 +179,8 @@ export default function DashboardPage() {
         />
         <StatCard
           label="Next Meeting"
-          value={nextMeeting
-            ? new Date(nextMeeting.meetingTime).toLocaleDateString('en-KE', { month: 'short', day: 'numeric' })
-            : '—'
-          }
-          sub={nextMeeting ? nextMeeting.meetingType : 'none scheduled'}
+          value="—"
+          sub="no sessions yet"
           color="var(--color-forest-700)"
         />
       </div>
@@ -221,18 +190,6 @@ export default function DashboardPage() {
 
         {/* Left column */}
         <div className="space-y-5">
-
-          {/* Activity chart */}
-          <div className="card p-5">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <div className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-ink-faint)]">Activity</div>
-                <h3 className="text-[16px] font-semibold text-[var(--color-ink)] mt-0.5">This week</h3>
-              </div>
-              <span className="chip text-[var(--color-ink-mute)] border-[var(--color-line)]">last 7 days</span>
-            </div>
-            <ActivityChart data={activityData} />
-          </div>
 
           {/* Applications list */}
           <div className="card p-5">
@@ -327,41 +284,11 @@ export default function DashboardPage() {
           {/* Mentor session card */}
           <div className="card p-5">
             <div className="font-mono text-[10px] uppercase text-[var(--color-ink-faint)]">Next session</div>
-            {nextMeeting ? (
-              <div className="mt-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-14 h-14 rounded-2xl mesh-green flex flex-col items-center justify-center shrink-0">
-                    <div className="font-mono text-[10px] text-white/70 uppercase">
-                      {new Date(nextMeeting.meetingTime).toLocaleDateString('en-KE', { weekday: 'short' })}
-                    </div>
-                    <div className="text-[22px] font-bold leading-none text-white" style={{ fontFamily: 'var(--font-display)' }}>
-                      {new Date(nextMeeting.meetingTime).getDate()}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-[15px] font-semibold text-[var(--color-ink)]" style={{ fontFamily: 'var(--font-display)' }}>
-                      {new Date(nextMeeting.meetingTime).toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' })}
-                    </div>
-                    <div className="text-[12px] text-[var(--color-ink-mute)]">{nextMeeting.meetingType}</div>
-                  </div>
-                </div>
-                {nextMeeting.link && (
-                  <a href={nextMeeting.link} target="_blank" rel="noopener noreferrer" className="w-full mt-4 block">
-                    <Button variant="primary" className="w-full" icon={<CalendarBlank size={14} />}>
-                      Join Meeting
-                    </Button>
-                  </a>
-                )}
-              </div>
-            ) : (
-              <div className="mt-3">
-                <p className="text-[13px] text-[var(--color-ink-mute)]">No sessions scheduled.</p>
-                <Button variant="secondary" size="sm" className="mt-3 w-full" icon={<CalendarBlank size={14} />}
-                  onClick={() => navigate('/messages')}>
-                  Message your mentor
-                </Button>
-              </div>
-            )}
+            <div className="mt-3">
+              <p className="text-[13px] text-[var(--color-ink-mute)]">
+                Sessions are scheduled by your mentor once you&apos;re assigned one.
+              </p>
+            </div>
           </div>
 
           {/* Announcements */}

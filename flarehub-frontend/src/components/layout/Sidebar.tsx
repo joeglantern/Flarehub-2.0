@@ -4,7 +4,7 @@ import {
   Camera, FolderOpen, DownloadSimple, Briefcase,
   ChatCircle, Bell, UsersThree, CalendarBlank,
   ChartPieSlice, ClipboardText, SealCheck, UsersFour,
-  TrendUp, MegaphoneSimple, ClockCounterClockwise, Gear,
+  TrendUp, MegaphoneSimple, ClockCounterClockwise, Gear, SignOut,
   Flame, X, Plus, FilePdf,
 } from '@phosphor-icons/react'
 import { useQuery } from '@tanstack/react-query'
@@ -12,10 +12,9 @@ import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/store/auth.store'
 import { useAuth } from '@/hooks/useAuth'
 import { Avatar } from '@/components/ui/Avatar'
-import { Progress } from '@/components/ui/Progress'
 import { useUiStore } from '@/store/ui.store'
 import { api } from '@/lib/api'
-import type { ApiPaginated, Notification, ApiSuccess, Conversation } from '@/types/api'
+import type { ApiPaginated, Notification } from '@/types/api'
 
 interface NavItem {
   to:     string
@@ -32,7 +31,7 @@ interface NavGroup {
   items: NavItem[]
 }
 
-function entrepreneurGroups(unreadMessages: number, unreadNotifs: number): NavGroup[] {
+function entrepreneurGroups(unreadNotifs: number): NavGroup[] {
   return [
     {
       group: 'Workspace',
@@ -57,7 +56,7 @@ function entrepreneurGroups(unreadMessages: number, unreadNotifs: number): NavGr
     {
       group: 'Connect',
       items: [
-        { to: '/messages',       icon: ChatCircle,     label: 'Messages',       badge: unreadMessages || undefined },
+        { to: '/messages',       icon: ChatCircle,     label: 'Messages' },
         { to: '/notifications',  icon: Bell,           label: 'Notifications',  badge: unreadNotifs   || undefined },
         { to: '/announcements',  icon: MegaphoneSimple, label: 'Announcements' },
       ],
@@ -65,7 +64,7 @@ function entrepreneurGroups(unreadMessages: number, unreadNotifs: number): NavGr
   ]
 }
 
-function mentorGroups(unreadMessages: number): NavGroup[] {
+function mentorGroups(unreadNotifs: number): NavGroup[] {
   return [
     {
       group: 'Workspace',
@@ -78,7 +77,9 @@ function mentorGroups(unreadMessages: number): NavGroup[] {
     {
       group: 'Connect',
       items: [
-        { to: '/mentor/messages', icon: ChatCircle, label: 'Messages', badge: unreadMessages || undefined },
+        { to: '/mentor/messages', icon: ChatCircle,      label: 'Messages' },
+        { to: '/notifications',   icon: Bell,            label: 'Notifications', badge: unreadNotifs || undefined },
+        { to: '/announcements',   icon: MegaphoneSimple, label: 'Announcements' },
       ],
     },
   ]
@@ -170,25 +171,15 @@ function SidebarInner({ onClose, mobile }: { onClose?: () => void; mobile?: bool
     refetchInterval: 30_000,
   })
 
-  const { data: conversationsData } = useQuery({
-    queryKey: ['conversations'],
-    queryFn:  () =>
-      api.get<ApiSuccess<Conversation[]>>('/messages/conversations')
-        .then(r => r.data.data),
-    enabled: !!user,
-    refetchInterval: 30_000,
-  })
-
-  const unreadMessages = conversationsData?.reduce((n, c) => n + c.unreadCount, 0) ?? 0
-  const unreadNotifs   = unreadNotifsData ?? 0
+  const unreadNotifs = unreadNotifsData ?? 0
 
   if (!user) return null
 
   const role    = user.isMentor ? 'mentor' : user.role
   const groups  =
-    role === 'mentor'                          ? mentorGroups(unreadMessages) :
+    role === 'mentor'                          ? mentorGroups(unreadNotifs) :
     role === 'admin' || role === 'super_admin' ? adminGroups() :
-    entrepreneurGroups(unreadMessages, unreadNotifs)
+    entrepreneurGroups(unreadNotifs)
 
   const isEntrepreneur = role !== 'mentor' && role !== 'admin' && role !== 'super_admin'
 
@@ -222,30 +213,6 @@ function SidebarInner({ onClose, mobile }: { onClose?: () => void; mobile?: bool
           </button>
         )}
       </div>
-
-      {/* Streak card — entrepreneur only */}
-      {isEntrepreneur && (
-        <div className="mx-3 mb-3 shrink-0">
-          <div className="relative rounded-2xl p-4 mesh-green overflow-hidden">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-[11px] font-mono uppercase text-white/70 tracking-wider">Level · 2</div>
-                <div
-                  className="text-[18px] font-bold text-white leading-tight mt-0.5"
-                  style={{ fontFamily: 'var(--font-display)' }}
-                >
-                  Day 7 streak
-                </div>
-              </div>
-              <div className="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center text-xl animate-bob shrink-0">
-                🔥
-              </div>
-            </div>
-            <Progress value={60} color="#ffffff" track="rgba(255,255,255,0.25)" height={6} className="mt-3" />
-            <div className="text-[11px] text-white/70 mt-1.5 font-medium">3 of 5 weekly goals · keep going.</div>
-          </div>
-        </div>
-      )}
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto px-3 pb-4 min-h-0">
@@ -300,7 +267,7 @@ function SidebarInner({ onClose, mobile }: { onClose?: () => void; mobile?: bool
             className="p-1.5 text-[var(--color-ink-mute)] hover:text-[var(--color-error)] transition rounded-lg"
             aria-label="Sign out"
           >
-            <Gear size={15} />
+            <SignOut size={15} />
           </button>
         </div>
       </div>

@@ -156,7 +156,7 @@ export default function ProfilePage() {
               editable
               className="ring-4 ring-white"
             />
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex flex-wrap items-center gap-2 mb-1">
               <Button variant="secondary" size="sm" icon={<LockSimple size={13} />} onClick={() => setPwdOpen(true)}>
                 Password
               </Button>
@@ -277,11 +277,11 @@ export default function ProfilePage() {
           </>
         }>
         <form className="flex flex-col gap-4">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Input label="First name" required error={profileForm.formState.errors.firstName?.message} {...profileForm.register('firstName')} />
             <Input label="Last name" required error={profileForm.formState.errors.lastName?.message} {...profileForm.register('lastName')} />
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Input label="Phone" type="tel" {...profileForm.register('phone')} />
             <Input label="County" {...profileForm.register('county')} />
           </div>

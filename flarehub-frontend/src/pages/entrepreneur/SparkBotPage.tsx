@@ -1,30 +1,30 @@
 import { useNavigate } from 'react-router-dom'
-import { IllustrationMessages } from '@/components/illustrations/IllustrationMessages'
+import { IllustrationDashboard } from '@/components/illustrations/IllustrationDashboard'
 import { Button } from '@/components/ui/Button'
 import { ArrowLeft } from '@phosphor-icons/react'
 
-export default function MessagesPage() {
+export default function SparkBotPage() {
   const navigate = useNavigate()
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 py-12">
+    <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 py-12 pb-24 lg:pb-12">
       <div className="w-48 h-48 mb-8 opacity-90">
-        <IllustrationMessages />
+        <IllustrationDashboard />
       </div>
 
       <div className="text-center max-w-md">
-        <span className="inline-block font-mono text-[11px] uppercase tracking-widest text-[var(--color-terra-600)] bg-[var(--color-terra-50)] px-3 py-1 rounded-full mb-4">
+        <span className="inline-block font-mono text-[11px] uppercase tracking-widest text-[var(--color-forest-600)] bg-[var(--color-forest-50)] px-3 py-1 rounded-full mb-4">
           Coming Soon
         </span>
         <h1
           className="text-[28px] font-bold text-[var(--color-ink)] leading-tight"
           style={{ fontFamily: 'var(--font-display)' }}
         >
-          Messaging
+          SparkBot AI
         </h1>
         <p className="text-[14px] text-[var(--color-ink-mute)] mt-3 leading-relaxed">
-          We&apos;re building a first-class chat experience. You&apos;ll be able to
-          message your mentor directly from here.
+          Your personal AI business assistant. SparkBot will help you refine your goals,
+          review your submissions, and give you actionable insights on your progress.
         </p>
         <p className="text-[12px] text-[var(--color-ink-faint)] mt-2">
           Check back soon — we&apos;re working on it.

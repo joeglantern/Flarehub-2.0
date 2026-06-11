@@ -18,12 +18,13 @@ export default async function programRoutes(fastify: FastifyInstance) {
   // ── GET /programs ─────────────────────────────────────────────────────────
   fastify.get('/programs', async (request, reply) => {
     const query = programQuerySchema.parse(request.query);
-    const { page, limit, search, status } = query;
+    const { page, limit, search, status, tag } = query;
     const skip = (page - 1) * limit;
 
     const where = {
       ...(status ? { status } : {}),
       ...(search ? { name: { contains: search, mode: 'insensitive' as const } } : {}),
+      ...(tag ? { tags: { has: tag } } : {}),
     };
 
     const [programs, total] = await Promise.all([

@@ -1,15 +1,29 @@
 import { useState, useEffect, useRef } from 'react'
 import { CountUp, Reveal, Squiggle } from './primitives'
 
-const tabs = ['All', 'Pre-seed', 'Growth', 'Solo', 'Women-led']
+const tabs = ['All', 'Incubation', 'Training']
 
 const programs = [
-  { title: 'Program', cat: 'Pre-seed',   deadline: 'May 14',  spots: 8,  total: 20, amount: 'KES 500k',  focus: 'Program description',            tags: ['Mentorship', 'KES 500k', '12 weeks'] },
-  { title: 'Program',       cat: 'Growth',     deadline: 'Jun 02',  spots: 3,  total: 10, amount: 'KES 2M',    focus: 'Program description',         tags: ['Capital', 'Hiring', '16 weeks'] },
-  { title: 'Program',        cat: 'Solo',       deadline: 'May 28',  spots: 14, total: 30, amount: 'Stipend',   focus: 'Program description',         tags: ['Community', 'Stipend', '8 weeks'] },
-  { title: 'Program',  cat: 'Women-led',  deadline: 'Jun 20',  spots: 6,  total: 15, amount: 'KES 1.5M',  focus: 'Program description',                tags: ['Capital', 'Childcare', '14 weeks'] },
-  { title: 'Program',        cat: 'Pre-seed',   deadline: 'Jul 05',  spots: 11, total: 20, amount: 'KES 350k',  focus: 'Program description',           tags: ['Mentorship', 'Studio', '10 weeks'] },
-  { title: 'Program',         cat: 'Growth',     deadline: 'Rolling', spots: 2,  total: 6,  amount: 'KES 3M',    focus: 'Program description',            tags: ['Relocation', 'Capital'] },
+  {
+    title: 'Youth Climate Innovation Challenge',
+    cat: 'Incubation',
+    deadline: 'Rolling',
+    spots: 10,
+    total: 10,
+    amount: 'KES 250K',
+    focus: 'A 3-stage pipeline selecting, training, and funding youth-led climate innovations across WASH, renewable energy, and sustainable infrastructure. From open call to bootcamp to 6-month incubation.',
+    tags: ['3 Stages', 'Seed Funding', 'Bootcamp', '6 months', 'UNICEF-backed'],
+  },
+  {
+    title: 'BeGreen Programme',
+    cat: 'Training',
+    deadline: 'Rolling',
+    spots: 25,
+    total: 40,
+    amount: 'Stipend + Cert',
+    focus: 'An 8-week green economy and digital skills programme for youth entering sustainable livelihoods. Covers circular economy principles, green entrepreneurship, climate finance access, and digital literacy.',
+    tags: ['Digital Skills', 'Green Economy', '8 weeks', 'Certification'],
+  },
 ]
 
 export function Programs({ setPage }: { setPage: (p: string) => void }) {

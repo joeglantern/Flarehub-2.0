@@ -1,6 +1,6 @@
 import { CountUp, MarkerPortrait, Reveal, Squiggle } from './primitives'
 
-const partners = ['UNICEF']
+const partners = ['UNICEF', 'KeNIA', 'KCB', 'NETFUND', 'CEMASTEA', 'gDIH']
 
 export function Hero({ setPage }: { setPage: (p: string) => void }) {
   return (
@@ -56,21 +56,21 @@ export function Hero({ setPage }: { setPage: (p: string) => void }) {
               <div className="hero-stats" style={{ marginTop: 48, display: 'flex', gap: 32, alignItems: 'flex-start' }}>
                 <div>
                   <div className="display" style={{ fontSize: 'clamp(28px,4vw,40px)', color: 'var(--g500)', fontWeight: 800 }}>
-                    <CountUp to={420} suffix="+" />
+                    <CountUp to={36} suffix="K+" />
                   </div>
-                  <div className="mono" style={{ color: 'var(--ink-2)' }}>Founders backed</div>
+                  <div className="mono" style={{ color: 'var(--ink-2)' }}>Youth registered</div>
                 </div>
                 <div>
                   <div className="display" style={{ fontSize: 'clamp(28px,4vw,40px)', color: 'var(--t500)', fontWeight: 800 }}>
-                    <CountUp to={38} />
+                    <CountUp to={300} suffix="+" />
                   </div>
-                  <div className="mono" style={{ color: 'var(--ink-2)' }}>Active mentors</div>
+                  <div className="mono" style={{ color: 'var(--ink-2)' }}>YCIC applications</div>
                 </div>
                 <div>
                   <div className="display" style={{ fontSize: 'clamp(28px,4vw,40px)', color: 'var(--ink)', fontWeight: 800 }}>
-                    <CountUp to={12} />
+                    <CountUp to={10} />
                   </div>
-                  <div className="mono" style={{ color: 'var(--ink-2)' }}>Programs running</div>
+                  <div className="mono" style={{ color: 'var(--ink-2)' }}>Innovators funded</div>
                 </div>
               </div>
             </Reveal>
@@ -118,15 +118,15 @@ export function Hero({ setPage }: { setPage: (p: string) => void }) {
       <div className="marquee" style={{ marginTop: 80 }}>
         <div className="marquee-track">
           {[1, 2].flatMap((k) => [
-            <span className="marquee-item" key={`a${k}`}><CountUp to={420} suffix="+" /> Founders</span>,
+            <span className="marquee-item" key={`a${k}`}>36K+ Youth Registered</span>,
             <span className="marquee-dot" key={`d1${k}`} />,
-            <span className="marquee-item" key={`b${k}`}>38 Mentors</span>,
+            <span className="marquee-item" key={`b${k}`}>300+ YCIC Applications</span>,
             <span className="marquee-dot" key={`d2${k}`} />,
-            <span className="marquee-item" key={`c${k}`}>12 Active programs</span>,
+            <span className="marquee-item" key={`c${k}`}>10 Innovators Funded</span>,
             <span className="marquee-dot" key={`d3${k}`} />,
-            <span className="marquee-item" key={`e${k}`}>KES 64M deployed</span>,
+            <span className="marquee-item" key={`e${k}`}>KES 2.5M Seed Deployed</span>,
             <span className="marquee-dot" key={`d4${k}`} />,
-            <span className="marquee-item" key={`f${k}`}>Since 2023</span>,
+            <span className="marquee-item" key={`f${k}`}>YCIC Cohort 1 · 2025</span>,
             <span className="marquee-dot" key={`d5${k}`} />,
             <span className="marquee-item" key={`g${k}`}>Nairobi · Mombasa · Kisumu</span>,
             <span className="marquee-dot" key={`d6${k}`} />,

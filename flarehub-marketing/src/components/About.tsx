@@ -1,17 +1,17 @@
 import { CountUp, Reveal } from './primitives'
 
 const stats = [
-  { num: 420, label: 'Founders backed', rot: -4, color: 'var(--g500)', bg: '#f9ddd1' },
-  { num: 64,  label: 'Million KES deployed', suffix: 'M', rot: 3, color: 'var(--t500)', bg: 'var(--surface)' },
-  { num: 38,  label: 'Active mentors', rot: -2, color: 'var(--ink)', bg: '#d0ecdb' },
-  { num: 7,   label: 'Cohorts shipped', rot: 4, color: 'var(--g500)', bg: 'var(--surface)' },
+  { num: 36,  label: 'Thousand youth registered', suffix: 'K+', rot: -4, color: 'var(--g500)', bg: '#f9ddd1' },
+  { num: 300, label: 'YCIC applications received', suffix: '+', rot: 3,  color: 'var(--t500)', bg: 'var(--surface)' },
+  { num: 10,  label: 'Innovators funded', suffix: '',  rot: -2, color: 'var(--ink)', bg: '#d0ecdb' },
+  { num: 9,   label: 'Universities activated', suffix: '+', rot: 4, color: 'var(--g500)', bg: 'var(--surface)' },
 ]
 
 const facts = [
-  { k: 'Built with', v: 'Local mentors, not imported ones.' },
-  { k: 'Paid for by', v: 'Five partner funds + fees from graduates.' },
-  { k: 'Live in',    v: 'Nairobi, Mombasa, Kisumu.' },
-  { k: 'Since',      v: 'February 2023.' },
+  { k: 'Powered by',  v: 'AFOSI — Action for Sustainability Initiative.' },
+  { k: 'Backed by',   v: 'UNICEF, KeNIA, KCB, NETFUND & partners.' },
+  { k: 'Live in',     v: 'Nairobi, Mombasa, Kisumu.' },
+  { k: 'Since',       v: 'May 2025 — YCIC Cohort 1.' },
 ]
 
 export function About() {
@@ -21,9 +21,9 @@ export function About() {
         <Reveal>
           <div className="mono" style={{ color: 'var(--t500)', marginBottom: 12 }}>▸ 005 — Who we are</div>
           <h2 className="display" style={{ fontSize: 'clamp(32px, 6vw, 88px)', margin: 0, maxWidth: 920 }}>
-            We think the next great <span className="display-italic" style={{ color: 'var(--g500)' }}>companies</span>{' '}
-            will be built in Eastleigh, Kisumu &amp; Westlands —{' '}
-            <span style={{ color: 'var(--ink-2)' }}>not Palo Alto.</span>
+            Kenya's next climate <span className="display-italic" style={{ color: 'var(--g500)' }}>innovators</span>{' '}
+            are in Kibera, Kisumu &amp; Mombasa —{' '}
+            <span style={{ color: 'var(--ink-2)' }}>not Silicon Valley.</span>
           </h2>
         </Reveal>
 
@@ -61,18 +61,23 @@ export function About() {
                 <span>19 April 2026</span>
               </div>
               <p style={{ margin: '0 0 18px' }}>
-                Bricolage Grotesque. Space Grotesk. Inter. JetBrains Mono. Bricolage Grotesque. Space Grotesk. Inter. JetBrains Mono. Bricolage Grotesque. Space Grotesk. Inter. JetBrains Mono. Bricolage Grotesque. Space Grotesk. Inter. JetBrains Mono.
+                We started AFOSI because we believed Kenya's best climate innovations weren't going to come out of a boardroom.
+                They'd come from a 24-year-old in Kibera who'd watched floods destroy her neighbourhood, or a TVET graduate
+                in Kisumu who figured out a cleaner way to run a small business.
               </p>
               <p style={{ margin: '0 0 18px' }}>
-                Bricolage Grotesque. Space Grotesk. Inter. JetBrains Mono. Bricolage Grotesque. Space Grotesk. Inter. JetBrains Mono. Bricolage Grotesque. Space Grotesk. Inter. JetBrains Mono. Bricolage Grotesque. Space Grotesk. Inter. JetBrains Mono.
+                The challenge was never the talent. It was the pipeline — the structured support between a raw idea and a
+                funded venture. So we built one. Through Flarehub, we run programmes like YCIC and BeGreen that take young
+                innovators from application to incubation to seed funding, with real mentorship at every stage.
               </p>
               <p style={{ margin: '0 0 18px' }}>
-                Bricolage Grotesque. Space Grotesk. Inter. JetBrains Mono. Bricolage Grotesque. Space Grotesk. Inter. JetBrains Mono. Bricolage Grotesque. Space Grotesk. Inter. JetBrains Mono.
+                This year, 300+ innovators applied for YCIC. Thirty-two made it to our bootcamp at CEMASTEA. Ten walked
+                away with KES 250,000 each and a six-month scaling plan. That's cohort one. We're just getting started.
               </p>
               <div className="display" style={{ fontSize: 'clamp(24px,3vw,36px)', fontStyle: 'italic', fontWeight: 500, color: 'var(--t500)', marginTop: 18, transform: 'rotate(-3deg)' }}>
-                — User &amp; User
+                — The AFOSI Team
               </div>
-              <div className="mono" style={{ color: 'var(--ink-3)', marginTop: 8, fontSize: 10 }}>CO-FOUNDERS, FLAREHUB</div>
+              <div className="mono" style={{ color: 'var(--ink-3)', marginTop: 8, fontSize: 10 }}>ACTION FOR SUSTAINABILITY INITIATIVE</div>
             </div>
           </Reveal>
 
@@ -85,8 +90,9 @@ export function About() {
               }}>"</div>
               <div className="mono" style={{ color: 'var(--t500)', marginBottom: 16 }}>OUR MISSION</div>
               <p className="display" style={{ fontSize: 'clamp(22px,2.6vw,38px)', fontWeight: 500, color: 'var(--g500)', lineHeight: 1.25, margin: 0 }}>
-                To make starting a company the most normal career choice for a{' '}
-                <span className="display-italic">21-year-old in Kenya</span>.
+                To give every young Kenyan innovator a{' '}
+                <span className="display-italic">structured pathway</span>{' '}
+                from idea to funded, scaling venture.
               </p>
               <div className="facts-grid" style={{ marginTop: 32 }}>
                 {facts.map((x) => (

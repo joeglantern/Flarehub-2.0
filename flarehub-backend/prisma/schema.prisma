@@ -116,6 +116,15 @@ enum NotificationType {
   submission_reviewed
   new_program
   new_message
+  mentorship_application_received
+  mentorship_application_accepted
+  mentorship_application_rejected
+}
+
+enum MentorshipApplicationStatus {
+  pending
+  accepted
+  rejected
 }
 
 enum AdminTargetType {
@@ -173,6 +182,8 @@ model User {
   announcements             Announcement[]   @relation("announcementCreator")
   targetedAnnouncements     Announcement[]   @relation("announcementTarget")
   pushSubscriptions         PushSubscription[]
+  programMentorships        ProgramMentor[]         @relation("UserProgramMentors")
+  mentorshipApplications    MentorshipApplication[] @relation("EntrepreneurMentorshipApplications")
 
   @@map("users")
 }
@@ -197,6 +208,7 @@ model Program {
 
   applications            Application[]
   evidence                Evidence[]
+  programMentors          ProgramMentor[]
 
   @@map("programs")
 }
@@ -663,4 +675,59 @@ model PushSubscription {
 
   @@index([userId])
   @@map("push_subscriptions")
+}
+
+// ═══════════════════════════════════════════════════════
+//  PROGRAM MENTORS & MENTORSHIP APPLICATIONS
+// ═══════════════════════════════════════════════════════
+
+model ProgramMentor {
+  id        Int      @id @default(autoincrement())
+  programId Int
+  mentorId  String
+  createdAt DateTime @default(now())
+
+  program      Program                 @relation(fields: [programId], references: [id], onDelete: Cascade)
+  mentor       User                    @relation("UserProgramMentors", fields: [mentorId], references: [id], onDelete: Cascade)
+  inviteLink   MentorInviteLink?
+  applications MentorshipApplication[]
+
+  @@unique([programId, mentorId])
+  @@index([programId])
+  @@index([mentorId])
+  @@map("program_mentors")
+}
+
+model MentorInviteLink {
+  id              Int           @id @default(autoincrement())
+  token           String        @unique @default(cuid())
+  programMentorId Int           @unique
+  isActive        Boolean       @default(true)
+  createdAt       DateTime      @default(now())
+
+  programMentor ProgramMentor           @relation(fields: [programMentorId], references: [id], onDelete: Cascade)
+  applications  MentorshipApplication[]
+
+  @@map("mentor_invite_links")
+}
+
+model MentorshipApplication {
+  id              Int                         @id @default(autoincrement())
+  programMentorId Int
+  entrepreneurId  String
+  inviteLinkId    Int?
+  status          MentorshipApplicationStatus @default(pending)
+  message         String?
+  respondedAt     DateTime?
+  createdAt       DateTime                    @default(now())
+  updatedAt       DateTime                    @updatedAt
+
+  programMentor ProgramMentor     @relation(fields: [programMentorId], references: [id], onDelete: Cascade)
+  entrepreneur  User              @relation("EntrepreneurMentorshipApplications", fields: [entrepreneurId], references: [id], onDelete: Cascade)
+  inviteLink    MentorInviteLink? @relation(fields: [inviteLinkId], references: [id])
+
+  @@unique([programMentorId, entrepreneurId])
+  @@index([entrepreneurId])
+  @@index([programMentorId])
+  @@map("mentorship_applications")
 }

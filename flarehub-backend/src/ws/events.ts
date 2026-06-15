@@ -41,6 +41,9 @@ export type ServerEvent =
   | { type: 'user_online';                data: { userId: string } }
   | { type: 'user_offline';               data: { userId: string } }
   | { type: 'messages_read';              data: { conversationId: string; readBy: string } }
+  | { type: 'mentorship_application_received'; data: { applicationId: number; entrepreneurName: string; programName: string } }
+  | { type: 'mentorship_application_accepted'; data: { applicationId: number; status: string; mentorName: string; programName: string } }
+  | { type: 'mentorship_application_rejected'; data: { applicationId: number; status: string; mentorName: string; programName: string } }
   | { type: 'pong' }
   | { type: 'error';                      data: { code: string; message: string } };
 

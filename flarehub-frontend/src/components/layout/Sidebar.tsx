@@ -5,7 +5,7 @@ import {
   ChatCircle, Bell, UsersThree, CalendarBlank,
   ChartPieSlice, ClipboardText, SealCheck, UsersFour,
   TrendUp, MegaphoneSimple, ClockCounterClockwise, Gear, SignOut,
-  Flame, X, Plus, FilePdf,
+  Flame, X, Plus, FilePdf, Link, HandHeart,
 } from '@phosphor-icons/react'
 import { useQuery } from '@tanstack/react-query'
 import { cn } from '@/lib/utils'
@@ -56,9 +56,10 @@ function entrepreneurGroups(unreadNotifs: number): NavGroup[] {
     {
       group: 'Connect',
       items: [
-        { to: '/messages',       icon: ChatCircle,     label: 'Messages' },
-        { to: '/notifications',  icon: Bell,           label: 'Notifications',  badge: unreadNotifs   || undefined },
-        { to: '/announcements',  icon: MegaphoneSimple, label: 'Announcements' },
+        { to: '/messages',                    icon: ChatCircle,      label: 'Messages' },
+        { to: '/mentorship/applications',     icon: HandHeart,       label: 'Mentorship' },
+        { to: '/notifications',               icon: Bell,            label: 'Notifications',  badge: unreadNotifs || undefined },
+        { to: '/announcements',               icon: MegaphoneSimple, label: 'Announcements' },
       ],
     },
   ]
@@ -77,9 +78,11 @@ function mentorGroups(unreadNotifs: number): NavGroup[] {
     {
       group: 'Connect',
       items: [
-        { to: '/mentor/messages', icon: ChatCircle,      label: 'Messages' },
-        { to: '/notifications',   icon: Bell,            label: 'Notifications', badge: unreadNotifs || undefined },
-        { to: '/announcements',   icon: MegaphoneSimple, label: 'Announcements' },
+        { to: '/mentor/messages',       icon: ChatCircle,      label: 'Messages' },
+        { to: '/mentor/invite-links',   icon: Link,            label: 'Invite Links' },
+        { to: '/mentor/applications',   icon: HandHeart,       label: 'Applications' },
+        { to: '/notifications',         icon: Bell,            label: 'Notifications', badge: unreadNotifs || undefined },
+        { to: '/announcements',         icon: MegaphoneSimple, label: 'Announcements' },
       ],
     },
   ]

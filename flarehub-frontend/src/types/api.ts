@@ -18,6 +18,7 @@ export type NotificationType =
   | 'submission_reviewed' | 'new_program' | 'new_message'
 export type TemplateType = 'milestone' | 'survey' | 'smart_goals' | 'market_research' | 'customer_feedback'
 export type AnnouncementTarget = 'all' | 'entrepreneur' | 'mentor'
+export type MentorshipApplicationStatus = 'pending' | 'accepted' | 'rejected'
 export type Priority = 'low' | 'medium' | 'high' | 'urgent'
 
 export interface ApiSuccess<T> {
@@ -366,4 +367,49 @@ export interface ProfileCheck {
   profileComplete: boolean
   role: UserRole
   isMentor: boolean
+}
+
+export interface ProgramMentor {
+  id: number
+  programId: number
+  mentorId: string
+  createdAt: string
+  mentor?: Pick<User, 'id' | 'firstName' | 'lastName' | 'email' | 'profilePic' | 'county'>
+  program?: Pick<Program, 'id' | 'name' | 'status'>
+  inviteLink?: MentorInviteLink | null
+  applicationCount?: number
+}
+
+export interface MentorInviteLink {
+  id: number
+  token: string
+  programMentorId: number
+  isActive: boolean
+  createdAt: string
+  applicationCount?: number
+}
+
+export interface MentorshipApplication {
+  id: number
+  programMentorId: number
+  entrepreneurId: string
+  inviteLinkId: number | null
+  status: MentorshipApplicationStatus
+  message: string | null
+  respondedAt: string | null
+  createdAt: string
+  updatedAt: string
+  entrepreneur?: Pick<User, 'id' | 'firstName' | 'lastName' | 'email' | 'profilePic' | 'businessName' | 'businessStage' | 'county'>
+  programMentor?: {
+    id: number
+    mentor?: Pick<User, 'id' | 'firstName' | 'lastName' | 'email' | 'profilePic' | 'county'>
+    program?: Pick<Program, 'id' | 'name'>
+  }
+}
+
+export interface MentorApplyInfo {
+  mentor: Pick<User, 'id' | 'firstName' | 'lastName' | 'email' | 'profilePic' | 'county'>
+  program: Pick<Program, 'id' | 'name' | 'description' | 'status' | 'tags'>
+  programMentorId: number
+  linkId: number
 }

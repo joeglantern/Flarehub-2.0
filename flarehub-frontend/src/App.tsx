@@ -25,8 +25,10 @@ const Evidence         = lazy(() => import('@/pages/entrepreneur/EvidencePage'))
 const Documents        = lazy(() => import('@/pages/entrepreneur/DocumentsPage'))
 const Templates        = lazy(() => import('@/pages/entrepreneur/TemplatesPage'))
 const BusinessPlan     = lazy(() => import('@/pages/entrepreneur/BusinessPlanPage'))
-const Messages         = lazy(() => import('@/pages/entrepreneur/MessagesPage'))
-const SparkBot         = lazy(() => import('@/pages/entrepreneur/SparkBotPage'))
+const Messages              = lazy(() => import('@/pages/entrepreneur/MessagesPage'))
+const MentorshipApply       = lazy(() => import('@/pages/entrepreneur/MentorshipApplyPage'))
+const MentorshipApplications = lazy(() => import('@/pages/entrepreneur/MentorshipApplicationsPage'))
+const SparkBot              = lazy(() => import('@/pages/entrepreneur/SparkBotPage'))
 const Notifications    = lazy(() => import('@/pages/entrepreneur/NotificationsPage'))
 const Announcements    = lazy(() => import('@/pages/entrepreneur/AnnouncementsPage'))
 const Profile          = lazy(() => import('@/pages/entrepreneur/ProfilePage'))
@@ -36,6 +38,8 @@ const MentorDashboard  = lazy(() => import('@/pages/mentor/MentorDashboardPage')
 const Mentees          = lazy(() => import('@/pages/mentor/MenteesPage'))
 const MenteeDetail     = lazy(() => import('@/pages/mentor/MenteeDetailPage'))
 const Meetings         = lazy(() => import('@/pages/mentor/MeetingsPage'))
+const MentorInviteLinks = lazy(() => import('@/pages/mentor/MentorInviteLinksPage'))
+const MentorApplications = lazy(() => import('@/pages/mentor/MentorApplicationsPage'))
 
 // Admin
 const FormBuilderPage  = lazy(() => import('@/pages/admin/FormBuilderPage'))
@@ -68,6 +72,11 @@ export default function App() {
           <Route path="/auth/callback"  element={<AuthCallback />} />
           <Route path="/onboarding"     element={<Onboarding />} />
 
+          {/* Mentorship apply — standalone layout, requires auth */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/mentorship/apply/:token" element={<MentorshipApply />} />
+          </Route>
+
           {/* Full-screen admin tools (no AppShell) */}
           <Route element={<ProtectedRoute roles={['admin', 'super_admin']} />}>
             <Route path="/admin/programs/:id/form-builder" element={<FormBuilderPage />} />
@@ -90,8 +99,9 @@ export default function App() {
               <Route path="/documents"                   element={<Documents />} />
               <Route path="/templates"                   element={<Templates />} />
               <Route path="/business-plan"               element={<BusinessPlan />} />
-              <Route path="/messages"                    element={<Messages />} />
-              <Route path="/messages/:contactId"         element={<Messages />} />
+              <Route path="/messages"                         element={<Messages />} />
+              <Route path="/messages/:contactId"              element={<Messages />} />
+              <Route path="/mentorship/applications"          element={<MentorshipApplications />} />
               <Route path="/sparkbot"                    element={<SparkBot />} />
               <Route path="/notifications"               element={<Notifications />} />
               <Route path="/announcements"               element={<Announcements />} />
@@ -102,8 +112,10 @@ export default function App() {
               <Route path="/mentor/mentees"        element={<Mentees />} />
               <Route path="/mentor/mentees/:id"    element={<MenteeDetail />} />
               <Route path="/mentor/meetings"       element={<Meetings />} />
-              <Route path="/mentor/messages"               element={<Messages />} />
-              <Route path="/mentor/messages/:contactId"    element={<Messages />} />
+              <Route path="/mentor/messages"                   element={<Messages />} />
+              <Route path="/mentor/messages/:contactId"        element={<Messages />} />
+              <Route path="/mentor/invite-links"               element={<MentorInviteLinks />} />
+              <Route path="/mentor/applications"               element={<MentorApplications />} />
 
               {/* Admin */}
               <Route element={<ProtectedRoute roles={['admin', 'super_admin']} />}>

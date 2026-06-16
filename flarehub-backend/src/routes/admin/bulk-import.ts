@@ -40,6 +40,14 @@ export default async function bulkImportRoutes(fastify: FastifyInstance) {
           where: { email: { equals: emailNorm, mode: 'insensitive' } },
         });
         if (existing) {
+          // Still enroll in program even if account already exists
+          if (programId) {
+            await fastify.prisma.application.upsert({
+              where:  { userId_programId: { userId: existing.id, programId } },
+              update: {},
+              create: { userId: existing.id, programId, status: 'Approved', submittedAt: new Date() },
+            });
+          }
           skipped++;
           continue;
         }

@@ -33,14 +33,15 @@ export default async function bulkImportRoutes(fastify: FastifyInstance) {
 
     for (const row of users) {
       try {
-        const existing = await fastify.prisma.user.findUnique({ where: { email: row.email } });
+        const emailNorm = row.email.toLowerCase().trim();
+        const existing = await fastify.prisma.user.findUnique({ where: { email: emailNorm } });
         if (existing) {
           skipped++;
           continue;
         }
 
         const { data: authData, error: authError } = await fastify.supabase.auth.admin.createUser({
-          email:         row.email,
+          email:         emailNorm,
           email_confirm: true,
           user_metadata: { firstName: row.firstName, lastName: row.lastName },
         });
@@ -50,7 +51,7 @@ export default async function bulkImportRoutes(fastify: FastifyInstance) {
         if (authError || !authData.user) {
           // User may already exist in Supabase auth — look them up via REST API
           const res = await fetch(
-            `${appConfig.supabase.url}/auth/v1/admin/users?email=${encodeURIComponent(row.email)}`,
+            `${appConfig.supabase.url}/auth/v1/admin/users?email=${encodeURIComponent(emailNorm)}`,
             { headers: { 'Authorization': `Bearer ${appConfig.supabase.serviceRoleKey}`, 'apikey': appConfig.supabase.serviceRoleKey } }
           );
           const body = await res.json() as { users?: { id: string }[] };
@@ -67,7 +68,7 @@ export default async function bulkImportRoutes(fastify: FastifyInstance) {
         await fastify.prisma.user.create({
           data: {
             id:             userId,
-            email:          row.email,
+            email:          emailNorm,
             firstName:      row.firstName,
             lastName:       row.lastName,
             phone:          row.phone ?? null,
@@ -96,7 +97,7 @@ export default async function bulkImportRoutes(fastify: FastifyInstance) {
 
         const { data: linkData } = await fastify.supabase.auth.admin.generateLink({
           type:  'recovery',
-          email: row.email,
+          email: emailNorm,
           options: { redirectTo: `${FRONTEND_URL}/update-password` },
         });
 
@@ -104,7 +105,7 @@ export default async function bulkImportRoutes(fastify: FastifyInstance) {
           ?.properties?.action_link;
 
         await sendEmail({
-          to:      row.email,
+          to:      emailNorm,
           subject: 'You\'re invited to Flarehub — set your password',
           html:    inviteEmailHtml(row.firstName, actionLink ?? FRONTEND_URL),
         });

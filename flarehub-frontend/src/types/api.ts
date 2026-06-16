@@ -44,6 +44,7 @@ export interface User {
   businessName: string | null
   businessStage: BusinessStage | null
   businessDescription: string | null
+  businessPlanUrl: string | null
   role: UserRole
   isMentor: boolean
   isVerified: boolean

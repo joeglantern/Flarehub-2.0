@@ -153,6 +153,7 @@ model User {
   businessName        String?
   businessStage       BusinessStage?
   businessDescription String?
+  businessPlanUrl     String?
   role                UserRole       @default(entrepreneur)
   isMentor            Boolean        @default(false)
   isVerified          Boolean        @default(false)

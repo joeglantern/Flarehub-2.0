@@ -57,6 +57,7 @@ const AdminActivityLog = lazy(() => import('@/pages/admin/ActivityLogPage'))
 const AdminSettings    = lazy(() => import('@/pages/admin/SettingsPage'))
 const AdminDocuments   = lazy(() => import('@/pages/admin/DocumentsAdminPage'))
 const AdminReports     = lazy(() => import('@/pages/admin/ReportsPage'))
+const AdminImport      = lazy(() => import('@/pages/admin/ImportUsersPage'))
 
 export default function App() {
   useAuthInit()
@@ -133,6 +134,7 @@ export default function App() {
                 <Route path="/admin/settings"           element={<AdminSettings />} />
                 <Route path="/admin/documents"          element={<AdminDocuments />} />
                 <Route path="/admin/reports"            element={<AdminReports />} />
+                <Route path="/admin/import"             element={<AdminImport />} />
               </Route>
 
             </Route>

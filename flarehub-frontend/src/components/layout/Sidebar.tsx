@@ -5,7 +5,7 @@ import {
   ChatCircle, Bell, UsersThree, CalendarBlank,
   ChartPieSlice, ClipboardText, SealCheck, UsersFour,
   TrendUp, MegaphoneSimple, ClockCounterClockwise, Gear, SignOut,
-  Flame, X, Plus, FilePdf, Link, HandHeart,
+  Flame, X, Plus, FilePdf, Link, HandHeart, UploadSimple,
 } from '@phosphor-icons/react'
 import { useQuery } from '@tanstack/react-query'
 import { cn } from '@/lib/utils'
@@ -101,6 +101,7 @@ function adminGroups(): NavGroup[] {
         { to: '/admin/submissions',  icon: FileText,        label: 'Submissions' },
         { to: '/admin/mentors',      icon: UsersFour,       label: 'Mentor Management' },
         { to: '/admin/documents',    icon: FolderOpen,      label: 'Documents' },
+        { to: '/admin/import',       icon: UploadSimple,    label: 'Import Users' },
       ],
     },
     {

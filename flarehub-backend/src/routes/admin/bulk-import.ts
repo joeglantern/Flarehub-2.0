@@ -45,12 +45,24 @@ export default async function bulkImportRoutes(fastify: FastifyInstance) {
           user_metadata: { firstName: row.firstName, lastName: row.lastName },
         });
 
-        if (authError || !authData.user) {
-          failed.push({ email: row.email, reason: authError?.message ?? 'Supabase user creation failed' });
-          continue;
-        }
+        let userId: string;
 
-        const userId = authData.user.id;
+        if (authError || !authData.user) {
+          // User may already exist in Supabase auth — look them up via REST API
+          const res = await fetch(
+            `${appConfig.supabase.url}/auth/v1/admin/users?email=${encodeURIComponent(row.email)}`,
+            { headers: { 'Authorization': `Bearer ${appConfig.supabase.serviceRoleKey}`, 'apikey': appConfig.supabase.serviceRoleKey } }
+          );
+          const body = await res.json() as { users?: { id: string }[] };
+          const existingAuthUser = body.users?.[0];
+          if (!existingAuthUser) {
+            failed.push({ email: row.email, reason: authError?.message ?? 'Supabase user not found' });
+            continue;
+          }
+          userId = existingAuthUser.id;
+        } else {
+          userId = authData.user.id;
+        }
 
         await fastify.prisma.user.create({
           data: {

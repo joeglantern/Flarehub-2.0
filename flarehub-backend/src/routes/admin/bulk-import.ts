@@ -34,7 +34,11 @@ export default async function bulkImportRoutes(fastify: FastifyInstance) {
     for (const row of users) {
       try {
         const emailNorm = row.email.toLowerCase().trim();
-        const existing = await fastify.prisma.user.findUnique({ where: { email: emailNorm } });
+
+        // Case-insensitive lookup — handles emails stored with wrong case from earlier imports
+        const existing = await fastify.prisma.user.findFirst({
+          where: { email: { equals: emailNorm, mode: 'insensitive' } },
+        });
         if (existing) {
           skipped++;
           continue;
@@ -61,6 +65,9 @@ export default async function bulkImportRoutes(fastify: FastifyInstance) {
             continue;
           }
           userId = existingAuthUser.id;
+          // If a DB record with this UUID already exists (different email casing), count as skipped
+          const existingById = await fastify.prisma.user.findUnique({ where: { id: userId } });
+          if (existingById) { skipped++; continue; }
         } else {
           userId = authData.user.id;
         }

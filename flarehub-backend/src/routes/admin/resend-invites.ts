@@ -89,12 +89,18 @@ export default async function resendInvitesRoutes(fastify: FastifyInstance) {
         options: { redirectTo: `${FRONTEND_URL}/update-password` },
       });
       const actionLink = (linkData as { properties?: { action_link?: string } } | null)?.properties?.action_link;
-      await sendEmail({
-        to: user.email,
-        subject: 'Congratulations! Your Flarehub account is ready',
-        html: inviteEmailHtml(user.firstName, actionLink ?? FRONTEND_URL),
-      });
-      return reply.send({ success: true, data: { sent: 1, alreadyActive: 0, wasAlreadyActive, failed: [] } });
+      try {
+        await sendEmail({
+          to: user.email,
+          subject: 'Congratulations! Your Flarehub account is ready',
+          html: inviteEmailHtml(user.firstName, actionLink ?? FRONTEND_URL),
+        });
+        return reply.send({ success: true, data: { sent: 1, alreadyActive: 0, wasAlreadyActive, failed: [] } });
+      } catch (err) {
+        const reason = err instanceof Error ? err.message : 'Unknown error';
+        fastify.log.error({ testEmail, reason }, 'Test invite email failed');
+        return reply.send({ success: true, data: { sent: 0, alreadyActive: 0, wasAlreadyActive, failed: [{ email: user.email, reason }] } });
+      }
     }
 
     const dbUsers = await fastify.prisma.user.findMany({

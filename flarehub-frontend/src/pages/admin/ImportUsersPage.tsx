@@ -348,7 +348,7 @@ export default function ImportUsersPage() {
               className="flex-1 max-w-xs text-sm border border-[var(--color-border)] rounded-lg px-3 py-2 bg-[var(--color-surface)] text-[var(--color-ink)] placeholder:text-[var(--color-ink-faint)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
             />
             {testEmail && !testConfirmed && (
-              <Button size="sm" variant="outline" onClick={() => setTestConfirmed(true)}>
+              <Button size="sm" variant="secondary" onClick={() => setTestConfirmed(true)}>
                 Send
               </Button>
             )}

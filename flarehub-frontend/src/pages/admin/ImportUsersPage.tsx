@@ -367,7 +367,7 @@ export default function ImportUsersPage() {
                 disabled={importMut.isPending || validRows.length === 0}
               >
                 {importMut.isPending
-                  ? <><Spinner size={14} className="animate-spin" /> Importing…</>
+                  ? <><Spinner size="sm" className="animate-spin" /> Importing…</>
                   : `Import ${validRows.length} users`}
               </Button>
             </div>

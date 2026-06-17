@@ -120,6 +120,8 @@ export default function ImportUsersPage() {
   const [resendResult, setResendResult]     = useState<ResendResult | null>(null)
   const [selectedIds, setSelectedIds]       = useState<Set<string>>(new Set())
   const [showPending, setShowPending]       = useState(false)
+  const [testEmail, setTestEmail]           = useState('')
+  const [testConfirmed, setTestConfirmed]   = useState(false)
 
   const { data: programs } = useQuery({
     queryKey: ['admin', 'programs-list'],
@@ -147,6 +149,13 @@ export default function ImportUsersPage() {
       setSelectedIds(new Set())
       qc.invalidateQueries({ queryKey: ['admin', 'activation-stats', statsProgramId] })
     },
+  })
+
+  const testMut = useMutation({
+    mutationFn: (email: string) =>
+      api.post<ApiSuccess<ResendResult & { wasAlreadyActive?: boolean }>>('/admin/resend-invites', { testEmail: email })
+        .then(r => r.data.data),
+    onSuccess: () => { setTestEmail(''); setTestConfirmed(false) },
   })
 
   const importMut = useMutation({
@@ -326,6 +335,48 @@ export default function ImportUsersPage() {
             </>
           ) : null
         )}
+
+        {/* Test send */}
+        <div className="mt-5 pt-5 border-t border-[var(--color-border)]">
+          <p className="text-xs font-semibold text-[var(--color-ink-soft)] uppercase tracking-wide mb-3">Test send</p>
+          <div className="flex gap-2 items-start">
+            <input
+              type="email"
+              value={testEmail}
+              onChange={e => { setTestEmail(e.target.value); setTestConfirmed(false) }}
+              placeholder="any@email.com"
+              className="flex-1 max-w-xs text-sm border border-[var(--color-border)] rounded-lg px-3 py-2 bg-[var(--color-surface)] text-[var(--color-ink)] placeholder:text-[var(--color-ink-faint)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+            />
+            {testEmail && !testConfirmed && (
+              <Button size="sm" variant="outline" onClick={() => setTestConfirmed(true)}>
+                Send
+              </Button>
+            )}
+            {testConfirmed && (
+              <Button
+                size="sm"
+                onClick={() => testMut.mutate(testEmail)}
+                disabled={testMut.isPending}
+                className="flex items-center gap-1.5 bg-[var(--color-terra-500)] hover:bg-[var(--color-terra-600)] text-white border-0"
+              >
+                {testMut.isPending ? <><Spinner size="sm" /> Sending…</> : 'Confirm send'}
+              </Button>
+            )}
+          </div>
+          {testConfirmed && (
+            <p className="text-xs text-[var(--color-terra-500)] mt-2 flex items-center gap-1.5">
+              <Warning size={13} /> This sends to the address even if the account is already activated.
+            </p>
+          )}
+          {testMut.isSuccess && (
+            <p className="text-xs text-[var(--color-forest-500)] mt-2 flex items-center gap-1.5">
+              <CheckCircle size={13} /> Invite sent to {testEmail}
+            </p>
+          )}
+          {testMut.isError && (
+            <p className="text-xs text-[var(--color-error)] mt-2">Failed — check the email is in the system.</p>
+          )}
+        </div>
       </Card>
 
       {/* Upload area */}

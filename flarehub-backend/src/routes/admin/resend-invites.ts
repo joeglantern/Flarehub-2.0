@@ -67,10 +67,35 @@ export default async function resendInvitesRoutes(fastify: FastifyInstance) {
 
   // POST /admin/resend-invites
   fastify.post('/admin/resend-invites', { preHandler: requireAdmin }, async (request, reply) => {
-    const { programId, userIds } = z.object({
+    const { programId, userIds, testEmail } = z.object({
       programId: z.coerce.number().int().positive().optional(),
       userIds:   z.array(z.string().uuid()).optional(),
+      testEmail: z.string().email().optional(),
     }).parse(request.body);
+
+    // Test send: find by email and send regardless of activation status
+    if (testEmail) {
+      const user = await fastify.prisma.user.findFirst({
+        where: { email: { equals: testEmail, mode: 'insensitive' } },
+        select: { id: true, email: true, firstName: true },
+      });
+      if (!user) return reply.send({ success: false, error: 'No user found with that email' });
+
+      const supabaseUsers = await fetchSupabaseUsers(appConfig.supabase.url, appConfig.supabase.serviceRoleKey);
+      const wasAlreadyActive = supabaseUsers.some(u => u.id === user.id && u.last_sign_in_at);
+
+      const { data: linkData } = await fastify.supabase.auth.admin.generateLink({
+        type: 'recovery', email: user.email,
+        options: { redirectTo: `${FRONTEND_URL}/update-password` },
+      });
+      const actionLink = (linkData as { properties?: { action_link?: string } } | null)?.properties?.action_link;
+      await sendEmail({
+        to: user.email,
+        subject: 'Congratulations! Your Flarehub account is ready',
+        html: inviteEmailHtml(user.firstName, actionLink ?? FRONTEND_URL),
+      });
+      return reply.send({ success: true, data: { sent: 1, alreadyActive: 0, wasAlreadyActive, failed: [] } });
+    }
 
     const dbUsers = await fastify.prisma.user.findMany({
       where: {

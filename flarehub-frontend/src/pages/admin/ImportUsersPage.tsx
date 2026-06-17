@@ -1,12 +1,13 @@
 import { useState, useRef } from 'react'
 import { read, utils } from 'xlsx'
-import { useQuery, useMutation } from '@tanstack/react-query'
-import { UploadSimple, CheckCircle, XCircle, Warning, Spinner } from '@phosphor-icons/react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { UploadSimple, CheckCircle, XCircle, Warning, PaperPlaneTilt, ArrowClockwise } from '@phosphor-icons/react'
 import { api } from '@/lib/api'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
+import { Spinner } from '@/components/ui/Spinner'
 import type { ApiSuccess, Program } from '@/types/api'
 
 interface ParsedRow {
@@ -27,6 +28,18 @@ interface ImportResult {
   created: number
   skipped: number
   failed:  { email: string; reason: string }[]
+}
+
+interface ActivationStats {
+  total:     number
+  activated: number
+  pending:   number
+}
+
+interface ResendResult {
+  sent:          number
+  alreadyActive: number
+  failed:        { email: string; reason: string }[]
 }
 
 function mapGender(val: string | null): ParsedRow['gender'] {
@@ -90,14 +103,38 @@ function parseYCICSheet(workbook: ReturnType<typeof read>): ParsedRow[] {
 }
 
 export default function ImportUsersPage() {
+  const qc = useQueryClient()
   const fileRef          = useRef<HTMLInputElement>(null)
   const [rows, setRows]  = useState<ParsedRow[] | null>(null)
-  const [programId, setProgramId] = useState<number | undefined>()
-  const [result, setResult]       = useState<ImportResult | null>(null)
+  const [programId, setProgramId]           = useState<number | undefined>()
+  const [result, setResult]                 = useState<ImportResult | null>(null)
+  const [statsProgramId, setStatsProgramId] = useState<number | undefined>()
+  const [resendResult, setResendResult]     = useState<ResendResult | null>(null)
 
   const { data: programs } = useQuery({
     queryKey: ['admin', 'programs-list'],
     queryFn:  () => api.get<ApiSuccess<Program[]>>('/programs').then(r => r.data.data),
+  })
+
+  const { data: stats, isFetching: statsFetching } = useQuery({
+    queryKey: ['admin', 'activation-stats', statsProgramId],
+    queryFn:  () =>
+      api.get<ApiSuccess<ActivationStats>>('/admin/activation-stats', {
+        params: statsProgramId ? { programId: statsProgramId } : {},
+      }).then(r => r.data.data),
+    enabled: statsProgramId !== undefined,
+    refetchInterval: false,
+  })
+
+  const resendMut = useMutation({
+    mutationFn: () =>
+      api.post<ApiSuccess<ResendResult>>('/admin/resend-invites',
+        statsProgramId ? { programId: statsProgramId } : {},
+      ).then(r => r.data.data),
+    onSuccess: (data) => {
+      setResendResult(data)
+      qc.invalidateQueries({ queryKey: ['admin', 'activation-stats', statsProgramId] })
+    },
   })
 
   const importMut = useMutation({
@@ -134,6 +171,102 @@ export default function ImportUsersPage() {
         title="Import Users"
         subtitle="Bulk-import YCIC applicants from the official tracker spreadsheet."
       />
+
+      {/* Activation status */}
+      <Card className="mb-5">
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-sm font-semibold text-[var(--color-ink)]">Account Activations</p>
+          {stats && (
+            <button
+              onClick={() => qc.invalidateQueries({ queryKey: ['admin', 'activation-stats', statsProgramId] })}
+              className="text-[var(--color-ink-faint)] hover:text-[var(--color-ink)] transition-colors"
+              title="Refresh"
+            >
+              <ArrowClockwise size={15} className={statsFetching ? 'animate-spin' : ''} />
+            </button>
+          )}
+        </div>
+
+        <select
+          value={statsProgramId ?? ''}
+          onChange={e => { setStatsProgramId(e.target.value ? Number(e.target.value) : undefined); setResendResult(null) }}
+          className="w-full max-w-sm text-sm border border-[var(--color-border)] rounded-lg px-3 py-2 bg-[var(--color-surface)] text-[var(--color-ink)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] mb-4"
+        >
+          <option value="">— Select a program to see activation status —</option>
+          {programs?.map(p => (
+            <option key={p.id} value={p.id}>{p.name}</option>
+          ))}
+        </select>
+
+        {statsProgramId && (
+          statsFetching && !stats ? (
+            <div className="flex items-center gap-2 text-sm text-[var(--color-ink-faint)]">
+              <Spinner size="sm" /> Loading…
+            </div>
+          ) : stats ? (
+            <>
+              {/* Progress bar */}
+              <div className="mb-3">
+                <div className="flex items-center justify-between text-xs text-[var(--color-ink-soft)] mb-1.5">
+                  <span><strong className="text-[var(--color-ink)]">{stats.activated}</strong> of <strong className="text-[var(--color-ink)]">{stats.total}</strong> accounts activated</span>
+                  <span className="text-[var(--color-ink-faint)]">{stats.pending} pending</span>
+                </div>
+                <div className="h-2 bg-[var(--color-elev)] rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-[var(--color-forest-500)] rounded-full transition-all"
+                    style={{ width: stats.total > 0 ? `${(stats.activated / stats.total) * 100}%` : '0%' }}
+                  />
+                </div>
+              </div>
+
+              {stats.pending > 0 && (
+                <Button
+                  size="sm"
+                  onClick={() => { setResendResult(null); resendMut.mutate() }}
+                  disabled={resendMut.isPending}
+                  className="flex items-center gap-2"
+                >
+                  {resendMut.isPending
+                    ? <><Spinner size="sm" /> Sending…</>
+                    : <><PaperPlaneTilt size={14} /> Resend to {stats.pending} pending</>
+                  }
+                </Button>
+              )}
+
+              {stats.pending === 0 && (
+                <p className="text-sm text-[var(--color-forest-500)] font-medium flex items-center gap-1.5">
+                  <CheckCircle size={16} /> All {stats.total} users have activated their accounts
+                </p>
+              )}
+
+              {resendResult && (
+                <div className="mt-4 pt-4 border-t border-[var(--color-border)]">
+                  <div className="flex flex-wrap gap-5 text-sm">
+                    <span className="flex items-center gap-1.5 text-[var(--color-forest-500)] font-semibold">
+                      <CheckCircle size={16} /> {resendResult.sent} emails sent
+                    </span>
+                    <span className="flex items-center gap-1.5 text-[var(--color-ink-faint)]">
+                      <Warning size={16} /> {resendResult.alreadyActive} already active
+                    </span>
+                    {resendResult.failed.length > 0 && (
+                      <span className="flex items-center gap-1.5 text-[var(--color-error)]">
+                        <XCircle size={16} /> {resendResult.failed.length} failed
+                      </span>
+                    )}
+                  </div>
+                  {resendResult.failed.length > 0 && (
+                    <div className="mt-2 space-y-1">
+                      {resendResult.failed.map((f, i) => (
+                        <p key={i} className="text-xs text-[var(--color-error)]">{f.email}: {f.reason}</p>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
+          ) : null
+        )}
+      </Card>
 
       {/* Upload area */}
       <Card className="mb-5">

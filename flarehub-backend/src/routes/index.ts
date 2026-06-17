@@ -32,6 +32,7 @@ import adminAnalyticsRoutes   from './admin/analytics.js';
 import adminSettingsRoutes    from './admin/settings.js';
 import adminActivityLogRoutes from './admin/activity-log.js';
 import bulkImportRoutes       from './admin/bulk-import.js';
+import resendInvitesRoutes    from './admin/resend-invites.js';
 
 export default async function routes(fastify: FastifyInstance) {
   await fastify.register(healthRoutes);
@@ -66,6 +67,7 @@ export default async function routes(fastify: FastifyInstance) {
     await api.register(adminSettingsRoutes);
     await api.register(adminActivityLogRoutes);
     await api.register(bulkImportRoutes);
+    await api.register(resendInvitesRoutes);
   }, { prefix: appConfig.apiPrefix });
 
   fastify.get('/ws', { websocket: true }, (socket, request) => {

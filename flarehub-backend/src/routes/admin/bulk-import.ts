@@ -121,7 +121,7 @@ export default async function bulkImportRoutes(fastify: FastifyInstance) {
 
         await sendEmail({
           to:      emailNorm,
-          subject: 'You\'re invited to Flarehub — set your password',
+          subject: 'Congratulations! Your Flarehub account is ready',
           html:    inviteEmailHtml(row.firstName, actionLink ?? FRONTEND_URL),
         });
 
@@ -138,21 +138,49 @@ export default async function bulkImportRoutes(fastify: FastifyInstance) {
   });
 }
 
-function inviteEmailHtml(firstName: string, inviteUrl: string): string {
-  return `
-    <h2 style="font-size:22px;font-weight:700;color:#1a1917;margin:0 0 12px;">Welcome to Flarehub, ${firstName}!</h2>
-    <p style="font-size:15px;color:#4a4744;line-height:1.6;margin:0 0 8px;">
-      You've been enrolled in the <strong>Sheria ya Vijana!</strong> mentorship programme by AFOSI.
-    </p>
-    <p style="font-size:15px;color:#4a4744;line-height:1.6;margin:0 0 28px;">
-      Click below to set your password and access your Flarehub account, where you'll connect with your
-      mentor, track your progress, and access programme resources.
-    </p>
-    <a href="${inviteUrl}" style="display:inline-block;background:#1d6f42;color:#ffffff;text-decoration:none;padding:13px 28px;border-radius:8px;font-size:15px;font-weight:600;letter-spacing:-0.01em;">
-      Set my password →
-    </a>
-    <p style="font-size:13px;color:#a39e98;margin:24px 0 0;line-height:1.5;">
-      This link expires in 24 hours. If you didn't expect this email, you can safely ignore it.
-    </p>
-  `;
+export function inviteEmailHtml(firstName: string, inviteUrl: string): string {
+  return `<!DOCTYPE html>
+<html>
+<body style="margin:0;padding:0;background:#f5f4f2;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 16px;">
+    <tr><td align="center">
+      <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e8e5e0;">
+        <tr>
+          <td style="background:#1a1917;padding:24px 36px;">
+            <span style="font-size:20px;font-weight:700;color:#ffffff;letter-spacing:-0.02em;">Flarehub</span>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:36px 36px 28px;">
+            <h1 style="font-size:24px;font-weight:700;color:#1a1917;margin:0 0 16px;letter-spacing:-0.02em;">
+              Congratulations, ${firstName}!
+            </h1>
+            <p style="font-size:15px;color:#4a4744;line-height:1.6;margin:0 0 14px;">
+              You have been selected to join <strong>Flarehub</strong> as part of the
+              <strong>Sheria ya Vijana! (SYV)</strong> mentorship programme — a 12-month
+              EU-funded initiative connecting young entrepreneurs with experienced mentors.
+            </p>
+            <p style="font-size:15px;color:#4a4744;line-height:1.6;margin:0 0 28px;">
+              On Flarehub you'll be matched with a dedicated mentor, set business goals,
+              track your milestones, and access all programme resources in one place.
+              Click below to activate your account and get started.
+            </p>
+            <a href="${inviteUrl}" style="display:inline-block;background:#1a1917;color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:8px;font-size:15px;font-weight:600;letter-spacing:-0.01em;">
+              Activate my account →
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:20px 36px 28px;border-top:1px solid #f0ede8;">
+            <p style="font-size:12px;color:#a39e98;margin:0;line-height:1.6;">
+              This activation link expires in <strong>7 days</strong>. If you didn't expect this email you can safely ignore it.<br>
+              Need help? Contact us at <a href="mailto:hello@afosihub.com" style="color:#a39e98;">hello@afosihub.com</a>
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
 }

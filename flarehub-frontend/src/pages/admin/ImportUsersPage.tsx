@@ -30,10 +30,18 @@ interface ImportResult {
   failed:  { email: string; reason: string }[]
 }
 
+interface PendingUser {
+  id:        string
+  email:     string
+  firstName: string
+  lastName:  string
+}
+
 interface ActivationStats {
-  total:     number
-  activated: number
-  pending:   number
+  total:        number
+  activated:    number
+  pending:      number
+  pendingUsers: PendingUser[]
 }
 
 interface ResendResult {
@@ -110,6 +118,8 @@ export default function ImportUsersPage() {
   const [result, setResult]                 = useState<ImportResult | null>(null)
   const [statsProgramId, setStatsProgramId] = useState<number | undefined>()
   const [resendResult, setResendResult]     = useState<ResendResult | null>(null)
+  const [selectedIds, setSelectedIds]       = useState<Set<string>>(new Set())
+  const [showPending, setShowPending]       = useState(false)
 
   const { data: programs } = useQuery({
     queryKey: ['admin', 'programs-list'],
@@ -127,12 +137,14 @@ export default function ImportUsersPage() {
   })
 
   const resendMut = useMutation({
-    mutationFn: () =>
-      api.post<ApiSuccess<ResendResult>>('/admin/resend-invites',
-        statsProgramId ? { programId: statsProgramId } : {},
-      ).then(r => r.data.data),
+    mutationFn: (userIds?: string[]) =>
+      api.post<ApiSuccess<ResendResult>>('/admin/resend-invites', {
+        ...(statsProgramId ? { programId: statsProgramId } : {}),
+        ...(userIds?.length ? { userIds } : {}),
+      }).then(r => r.data.data),
     onSuccess: (data) => {
       setResendResult(data)
+      setSelectedIds(new Set())
       qc.invalidateQueries({ queryKey: ['admin', 'activation-stats', statsProgramId] })
     },
   })
@@ -220,17 +232,65 @@ export default function ImportUsersPage() {
               </div>
 
               {stats.pending > 0 && (
-                <Button
-                  size="sm"
-                  onClick={() => { setResendResult(null); resendMut.mutate() }}
-                  disabled={resendMut.isPending}
-                  className="flex items-center gap-2"
-                >
-                  {resendMut.isPending
-                    ? <><Spinner size="sm" /> Sending…</>
-                    : <><PaperPlaneTilt size={14} /> Resend to {stats.pending} pending</>
-                  }
-                </Button>
+                <>
+                  <div className="flex items-center gap-3 mb-3">
+                    <Button
+                      size="sm"
+                      onClick={() => { setResendResult(null); resendMut.mutate(selectedIds.size ? [...selectedIds] : undefined) }}
+                      disabled={resendMut.isPending}
+                      className="flex items-center gap-2"
+                    >
+                      {resendMut.isPending
+                        ? <><Spinner size="sm" /> Sending…</>
+                        : <><PaperPlaneTilt size={14} />
+                            {selectedIds.size
+                              ? `Send to ${selectedIds.size} selected`
+                              : `Send to all ${stats.pending} pending`}
+                          </>
+                      }
+                    </Button>
+                    <button
+                      onClick={() => setShowPending(v => !v)}
+                      className="text-xs text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] underline"
+                    >
+                      {showPending ? 'Hide list' : 'Select specific users'}
+                    </button>
+                  </div>
+
+                  {showPending && (
+                    <div className="border border-[var(--color-border)] rounded-xl overflow-hidden">
+                      <div className="px-4 py-2 bg-[var(--color-elev)] flex items-center gap-3 border-b border-[var(--color-border)]">
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.size === stats.pendingUsers.length}
+                          onChange={e => setSelectedIds(e.target.checked ? new Set(stats.pendingUsers.map(u => u.id)) : new Set())}
+                          className="rounded"
+                        />
+                        <span className="text-xs font-semibold text-[var(--color-ink-soft)]">
+                          {selectedIds.size > 0 ? `${selectedIds.size} selected` : 'Select all'}
+                        </span>
+                      </div>
+                      <div className="max-h-64 overflow-y-auto">
+                        {stats.pendingUsers.map(u => (
+                          <label key={u.id} className="flex items-center gap-3 px-4 py-2.5 border-b border-[var(--color-border)] last:border-0 hover:bg-[var(--color-elev)] cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={selectedIds.has(u.id)}
+                              onChange={e => setSelectedIds(prev => {
+                                const next = new Set(prev)
+                                e.target.checked ? next.add(u.id) : next.delete(u.id)
+                                return next
+                              })}
+                              className="rounded"
+                            />
+                            <span className="text-sm text-[var(--color-ink)]">{u.firstName} {u.lastName}</span>
+                            <span className="text-xs text-[var(--color-ink-faint)] ml-auto">{u.email}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
 
               {stats.pending === 0 && (

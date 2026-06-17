@@ -41,43 +41,60 @@ export default async function resendInvitesRoutes(fastify: FastifyInstance) {
       where: programId
         ? { applications: { some: { programId, status: 'Approved' } } }
         : {},
-      select: { id: true },
+      select: { id: true, email: true, firstName: true, lastName: true },
     });
 
     if (dbUsers.length === 0) {
-      return reply.send({ success: true, data: { total: 0, activated: 0, pending: 0 } });
+      return reply.send({ success: true, data: { total: 0, activated: 0, pending: 0, pendingUsers: [] } });
     }
-
-    const supabaseUsers = await fetchSupabaseUsers(appConfig.supabase.url, appConfig.supabase.serviceRoleKey);
-    const activatedIds = new Set(supabaseUsers.filter(u => u.last_sign_in_at).map(u => u.id));
-
-    const total     = dbUsers.length;
-    const activated = dbUsers.filter(u => activatedIds.has(u.id)).length;
-
-    return reply.send({ success: true, data: { total, activated, pending: total - activated } });
-  });
-
-  // POST /admin/resend-invites
-  fastify.post('/admin/resend-invites', { preHandler: requireAdmin }, async (request, reply) => {
-    const { programId } = z.object({
-      programId: z.coerce.number().int().positive().optional(),
-    }).parse(request.body);
-
-    const dbUsers = await fastify.prisma.user.findMany({
-      where: programId
-        ? { applications: { some: { programId, status: 'Approved' } } }
-        : {},
-      select: { id: true, email: true, firstName: true },
-    });
 
     const supabaseUsers = await fetchSupabaseUsers(appConfig.supabase.url, appConfig.supabase.serviceRoleKey);
     const activatedIds  = new Set(supabaseUsers.filter(u => u.last_sign_in_at).map(u => u.id));
 
-    const pending = dbUsers.filter(u => !activatedIds.has(u.id));
+    const total        = dbUsers.length;
+    const pendingUsers = dbUsers.filter(u => !activatedIds.has(u.id));
+
+    return reply.send({
+      success: true,
+      data: {
+        total,
+        activated:    total - pendingUsers.length,
+        pending:      pendingUsers.length,
+        pendingUsers: pendingUsers.map(u => ({ id: u.id, email: u.email, firstName: u.firstName, lastName: u.lastName })),
+      },
+    });
+  });
+
+  // POST /admin/resend-invites
+  fastify.post('/admin/resend-invites', { preHandler: requireAdmin }, async (request, reply) => {
+    const { programId, userIds } = z.object({
+      programId: z.coerce.number().int().positive().optional(),
+      userIds:   z.array(z.string().uuid()).optional(),
+    }).parse(request.body);
+
+    const dbUsers = await fastify.prisma.user.findMany({
+      where: {
+        ...(programId ? { applications: { some: { programId, status: 'Approved' } } } : {}),
+        ...(userIds?.length ? { id: { in: userIds } } : {}),
+      },
+      select: { id: true, email: true, firstName: true },
+    });
+
+    // If targeting specific users, skip the sign-in check — send regardless
+    let targets = dbUsers;
+    let alreadyActive = 0;
+
+    if (!userIds?.length) {
+      const supabaseUsers = await fetchSupabaseUsers(appConfig.supabase.url, appConfig.supabase.serviceRoleKey);
+      const activatedIds  = new Set(supabaseUsers.filter(u => u.last_sign_in_at).map(u => u.id));
+      targets      = dbUsers.filter(u => !activatedIds.has(u.id));
+      alreadyActive = dbUsers.length - targets.length;
+    }
+
     const failed: { email: string; reason: string }[] = [];
     let sent = 0;
 
-    for (const user of pending) {
+    for (const user of targets) {
       try {
         const { data: linkData } = await fastify.supabase.auth.admin.generateLink({
           type:    'recovery',
@@ -100,9 +117,6 @@ export default async function resendInvitesRoutes(fastify: FastifyInstance) {
       }
     }
 
-    return reply.send({
-      success: true,
-      data: { sent, alreadyActive: dbUsers.length - pending.length, failed },
-    });
+    return reply.send({ success: true, data: { sent, alreadyActive, failed } });
   });
 }

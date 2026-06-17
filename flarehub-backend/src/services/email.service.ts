@@ -10,18 +10,16 @@ export interface SendEmailPayload {
 }
 
 export async function sendEmail(payload: SendEmailPayload): Promise<void> {
-  if (!resend) return;
+  if (!resend) throw new Error('Resend API key not configured');
 
-  try {
-    await resend.emails.send({
-      from:    appConfig.email.from,
-      to:      payload.to,
-      subject: payload.subject,
-      html:    payload.html,
-    });
-  } catch (err) {
-    console.error('Email send failed:', err);
-  }
+  const { error } = await resend.emails.send({
+    from:    appConfig.email.from,
+    to:      payload.to,
+    subject: payload.subject,
+    html:    payload.html,
+  });
+
+  if (error) throw new Error(error.message);
 }
 
 function shell(content: string): string {

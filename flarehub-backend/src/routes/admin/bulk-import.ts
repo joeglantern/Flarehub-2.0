@@ -140,46 +140,72 @@ export default async function bulkImportRoutes(fastify: FastifyInstance) {
 
 export function inviteEmailHtml(firstName: string, inviteUrl: string): string {
   return `<!DOCTYPE html>
-<html>
-<body style="margin:0;padding:0;background:#f5f4f2;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 16px;">
-    <tr><td align="center">
-      <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e8e5e0;">
-        <tr>
-          <td style="background:#1a1917;padding:24px 36px;">
-            <span style="font-size:20px;font-weight:700;color:#ffffff;letter-spacing:-0.02em;">Flarehub</span>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:36px 36px 28px;">
-            <h1 style="font-size:24px;font-weight:700;color:#1a1917;margin:0 0 16px;letter-spacing:-0.02em;">
-              Congratulations, ${firstName}!
-            </h1>
-            <p style="font-size:15px;color:#4a4744;line-height:1.6;margin:0 0 14px;">
-              You have been selected to join <strong>Flarehub</strong> as part of the
-              <strong>Sheria ya Vijana! (SYV)</strong> mentorship programme — a 12-month
-              EU-funded initiative connecting young entrepreneurs with experienced mentors.
-            </p>
-            <p style="font-size:15px;color:#4a4744;line-height:1.6;margin:0 0 28px;">
-              On Flarehub you'll be matched with a dedicated mentor, set business goals,
-              track your milestones, and access all programme resources in one place.
-              Click below to activate your account and get started.
-            </p>
-            <a href="${inviteUrl}" style="display:inline-block;background:#1a1917;color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:8px;font-size:15px;font-weight:600;letter-spacing:-0.01em;">
-              Activate my account →
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:20px 36px 28px;border-top:1px solid #f0ede8;">
-            <p style="font-size:12px;color:#a39e98;margin:0;line-height:1.6;">
-              This activation link expires in <strong>7 days</strong>. If you didn't expect this email you can safely ignore it.<br>
-              Need help? Contact us at <a href="mailto:hello@afosihub.com" style="color:#a39e98;">hello@afosihub.com</a>
-            </p>
-          </td>
-        </tr>
-      </table>
-    </td></tr>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body style="margin:0;padding:0;background:#f7f6f3;font-family:'Inter',ui-sans-serif,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f7f6f3;">
+    <tr>
+      <td align="center" style="padding:40px 16px 60px;">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:580px;">
+
+          <!-- Header -->
+          <tr>
+            <td style="background:#1d6f42;border-radius:14px 14px 0 0;padding:24px 36px;">
+              <span style="font-size:21px;font-weight:800;color:#ffffff;letter-spacing:-0.03em;font-family:Georgia,'Times New Roman',serif;">Flarehub</span>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="background:#ffffff;padding:36px 36px 32px;border-left:1px solid #e2ddd7;border-right:1px solid #e2ddd7;">
+
+              <div style="display:inline-block;padding:5px 12px;border-radius:6px;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;font-family:ui-monospace,'Courier New',monospace;background:#edf7f1;color:#1d6f42;margin-bottom:20px;">
+                You have been selected
+              </div>
+
+              <h1 style="margin:0 0 14px;font-size:26px;font-weight:800;color:#1a1916;letter-spacing:-0.02em;line-height:1.15;font-family:Georgia,'Times New Roman',serif;">
+                Congratulations, ${firstName}!
+              </h1>
+
+              <p style="margin:0 0 14px;font-size:15px;color:#6b6560;line-height:1.65;">
+                You have been selected to join <strong style="color:#1a1916;">Flarehub</strong> as part of the
+                <strong style="color:#1a1916;">Sheria ya Vijana!</strong> mentorship programme, a 12-month
+                EU-funded initiative that connects young entrepreneurs in Nairobi and Kwale with experienced mentors.
+              </p>
+
+              <p style="margin:0 0 28px;font-size:15px;color:#6b6560;line-height:1.65;">
+                Activate your account to get matched with a mentor, set your business goals, and access all programme resources.
+              </p>
+
+              <a href="${inviteUrl}" style="display:inline-block;padding:13px 28px;background:#1d6f42;color:#ffffff;font-size:14px;font-weight:600;border-radius:10px;text-decoration:none;letter-spacing:0.01em;">
+                Activate my account &rarr;
+              </a>
+
+              <div style="border-top:1px solid #e2ddd7;margin:28px 0;"></div>
+
+              <p style="margin:0;font-size:12px;color:#a39e98;line-height:1.6;">
+                This link expires in <strong>7 days</strong>. If you were not expecting this email you can safely ignore it.
+                For help, write to <a href="mailto:hello@afosihub.com" style="color:#a39e98;text-decoration:underline;">hello@afosihub.com</a>
+              </p>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background:#f0ede8;border:1px solid #e2ddd7;border-top:none;border-radius:0 0 14px 14px;padding:18px 36px;">
+              <p style="margin:0;font-size:10px;color:#a39e98;font-family:ui-monospace,'Courier New',monospace;letter-spacing:0.08em;text-transform:uppercase;">
+                Flarehub &nbsp;&middot;&nbsp; Kenya &nbsp;&middot;&nbsp; <a href="https://app.flarehub.org" style="color:#a39e98;text-decoration:none;">app.flarehub.org</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
   </table>
 </body>
 </html>`;

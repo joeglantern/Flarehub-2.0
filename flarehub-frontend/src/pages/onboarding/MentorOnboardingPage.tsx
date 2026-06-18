@@ -26,7 +26,7 @@ const step1Schema = z.object({
 
 const step2Schema = z.object({
   expertise:       z.array(z.string()).min(1, 'Select at least one area'),
-  yearsExperience: z.coerce.number().int().min(0, 'Required').max(50),
+  yearsExperience: z.number({ invalid_type_error: 'Required' }).int().min(0).max(50),
   currentRole:     z.string().min(1, 'Current role is required'),
   currentCompany:  z.string().optional(),
   linkedIn:        z.string().optional(),
@@ -289,7 +289,7 @@ export default function MentorOnboardingPage() {
                     placeholder="e.g. 5"
                     required
                     error={form2.formState.errors.yearsExperience?.message}
-                    {...form2.register('yearsExperience')}
+                    {...form2.register('yearsExperience', { valueAsNumber: true })}
                   />
                   <Input label="Current role / title" placeholder="e.g. Senior Advocate" required error={form2.formState.errors.currentRole?.message} {...form2.register('currentRole')} />
                   <Input label="Organisation / Company" placeholder="e.g. Bowmans Law" error={form2.formState.errors.currentCompany?.message} {...form2.register('currentCompany')} />

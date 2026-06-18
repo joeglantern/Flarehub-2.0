@@ -26,7 +26,7 @@ const step1Schema = z.object({
 
 const step2Schema = z.object({
   expertise:       z.array(z.string()).min(1, 'Select at least one area'),
-  yearsExperience: z.number({ invalid_type_error: 'Required' }).int().min(0).max(50),
+  yearsExperience: z.number().int().min(0).max(50),
   currentRole:     z.string().min(1, 'Current role is required'),
   currentCompany:  z.string().optional(),
   linkedIn:        z.string().optional(),

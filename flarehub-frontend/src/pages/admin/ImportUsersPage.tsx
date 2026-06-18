@@ -69,45 +69,102 @@ function mapStage(val: string | null): ParsedRow['businessStage'] {
   return 'Idea'
 }
 
-function parseYCICSheet(workbook: ReturnType<typeof read>): ParsedRow[] {
-  const ws = workbook.Sheets[workbook.SheetNames[0]]
-  // headers are in row 2 (0-indexed row 1), data starts from row 3 (0-indexed row 2)
-  const raw: unknown[][] = utils.sheet_to_json(ws, { header: 1, defval: null })
+function formatPhone(val: string | number | null): string | null {
+  if (val == null) return null
+  const p = String(val).replace(/\.0$/, '').trim()
+  return p.length === 9 ? `0${p}` : p
+}
 
+function splitName(full: string): { firstName: string; lastName: string } {
+  const parts = full.trim().split(' ')
+  return { firstName: parts[0] ?? full, lastName: parts.slice(1).join(' ') }
+}
+
+function makeRow(
+  nameRaw: string,
+  emailRaw: string,
+  phone: string | null,
+  county: string | null,
+  gender: string | null,
+  businessName: string | null,
+): ParsedRow {
+  const { firstName, lastName } = splitName(nameRaw)
+  const row: ParsedRow = {
+    firstName, lastName,
+    email:           emailRaw,
+    phone,
+    county,
+    gender:          mapGender(gender),
+    businessName,
+    businessStage:   null,
+    businessPlanUrl: null,
+    _raw:            nameRaw,
+  }
+  if (!emailRaw || !emailRaw.includes('@')) row._error = 'Missing or invalid email'
+  return row
+}
+
+// YCIC format: headers on row index 1, data from row index 2
+function parseYCICSheet(workbook: ReturnType<typeof read>): ParsedRow[] {
+  const ws  = workbook.Sheets[workbook.SheetNames[0]]
+  const raw = utils.sheet_to_json(ws, { header: 1, defval: null }) as (string | number | null)[][]
   const rows: ParsedRow[] = []
   for (let i = 2; i < raw.length; i++) {
-    const r = raw[i] as (string | number | null)[]
+    const r       = raw[i]
     const nameRaw = String(r[0] ?? '').trim()
     if (!nameRaw) continue
-
     const emailRaw = String(r[6] ?? '').trim()
-    const parts    = nameRaw.split(' ')
-    const firstName = parts[0] ?? nameRaw
-    const lastName  = parts.slice(1).join(' ')
-
-    const phoneRaw = r[1] != null ? String(r[1]).replace(/\.0$/, '') : null
     const planUrl  = r[31] ? String(r[31]).trim() : null
-
-    const row: ParsedRow = {
-      firstName,
-      lastName,
-      email:           emailRaw,
-      phone:           phoneRaw,
-      county:          r[5] ? String(r[5]).trim() : null,
-      gender:          mapGender(r[3] ? String(r[3]) : null),
-      businessName:    r[10] ? String(r[10]).trim() : null,
-      businessStage:   mapStage(r[17] ? String(r[17]) : null),
-      businessPlanUrl: planUrl && planUrl.startsWith('http') ? planUrl : null,
-      _raw:            nameRaw,
-    }
-
-    if (!emailRaw || !emailRaw.includes('@')) {
-      row._error = 'Missing or invalid email'
-    }
-
+    const row = makeRow(nameRaw, emailRaw, formatPhone(r[1]), r[5] ? String(r[5]).trim() : null, r[3] ? String(r[3]) : null, r[10] ? String(r[10]).trim() : null)
+    row.businessStage   = mapStage(r[17] ? String(r[17]) : null)
+    row.businessPlanUrl = planUrl && planUrl.startsWith('http') ? planUrl : null
     rows.push(row)
   }
   return rows
+}
+
+// SYV Nairobi: headers row 0, data from row 1
+// cols: 0=idx,1=UniqueId,2=CompanyName,3=Name,4=Email,5=Phone,8=gender,9=County
+function parseSYVNairobi(ws: ReturnType<typeof read>['Sheets'][string]): ParsedRow[] {
+  const raw = utils.sheet_to_json(ws, { header: 1, defval: null }) as (string | number | null)[][]
+  const rows: ParsedRow[] = []
+  for (let i = 1; i < raw.length; i++) {
+    const r       = raw[i]
+    const nameRaw = String(r[3] ?? '').trim()
+    if (!nameRaw) continue
+    rows.push(makeRow(nameRaw, String(r[4] ?? '').trim(), formatPhone(r[5]), r[9] ? String(r[9]).trim() : null, r[8] ? String(r[8]) : null, r[2] ? String(r[2]).trim() : null))
+  }
+  return rows
+}
+
+// SYV Kwale: headers row 0, data from row 1
+// cols: 0=No,1=name,2=gender,6=Organization,11=Phone,13=Email,18=County
+function parseSYVKwale(ws: ReturnType<typeof read>['Sheets'][string]): ParsedRow[] {
+  const raw = utils.sheet_to_json(ws, { header: 1, defval: null }) as (string | number | null)[][]
+  const rows: ParsedRow[] = []
+  for (let i = 1; i < raw.length; i++) {
+    const r       = raw[i]
+    const nameRaw = String(r[1] ?? '').trim()
+    if (!nameRaw) continue
+    rows.push(makeRow(nameRaw, String(r[13] ?? '').trim(), formatPhone(r[11]), r[18] ? String(r[18]).trim() : null, r[2] ? String(r[2]) : null, r[6] ? String(r[6]).trim() : null))
+  }
+  return rows
+}
+
+function parseSheet(wb: ReturnType<typeof read>, sheetName: string): ParsedRow[] {
+  const ws      = wb.Sheets[sheetName]
+  const raw     = utils.sheet_to_json(ws, { header: 1, defval: null }) as (string | null)[][]
+  const headers = (raw[0] ?? []).map(h => String(h ?? '').toLowerCase())
+  if (headers.some(h => h.includes('unique identifier') || h.includes('entreprenuer'))) return parseSYVNairobi(ws)
+  if (headers.some(h => h.includes('final ycm') || h.includes('sub_county')))           return parseSYVKwale(ws)
+  return parseYCICSheet(wb)
+}
+
+function detectAndParse(workbook: ReturnType<typeof read>): ParsedRow[] {
+  // Merge all "selected" sheets when present (e.g. Nairobi_Selected_50 + Kwale_Selected_50)
+  const selected = workbook.SheetNames.filter(n => n.toLowerCase().includes('selected'))
+  if (selected.length > 0) return selected.flatMap(name => parseSheet(workbook, name))
+  return parseSheet(workbook, workbook.SheetNames[0])
 }
 
 export default function ImportUsersPage() {
@@ -171,7 +228,7 @@ export default function ImportUsersPage() {
     const reader = new FileReader()
     reader.onload = (ev) => {
       const wb = read(ev.target?.result, { type: 'array', cellDates: true })
-      setRows(parseYCICSheet(wb))
+      setRows(detectAndParse(wb))
       setResult(null)
     }
     reader.readAsArrayBuffer(file)

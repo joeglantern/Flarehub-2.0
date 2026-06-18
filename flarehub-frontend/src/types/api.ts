@@ -9,6 +9,8 @@ export type DocumentCategory = 'milestone' | 'survey' | 'smart_goals' | 'market_
 export type SubmissionStatus = 'Draft' | 'Submitted' | 'UnderReview' | 'Approved' | 'NeedsRevision'
 export type MeetingStatus = 'Scheduled' | 'Completed' | 'Cancelled'
 export type MeetingType = 'Virtual' | 'InPerson'
+export type MentorApplicationStatus = 'pending' | 'approved' | 'rejected'
+
 export type NotificationType =
   | 'application_approved' | 'application_rejected' | 'application_under_review'
   | 'mentor_assigned' | 'mentor_unassigned'
@@ -16,6 +18,7 @@ export type NotificationType =
   | 'evidence_verified' | 'evidence_rejected'
   | 'smart_goal_commented' | 'market_research_commented' | 'milestone_plan_commented'
   | 'submission_reviewed' | 'new_program' | 'new_message'
+  | 'mentor_application_approved' | 'mentor_application_rejected'
 export type TemplateType = 'milestone' | 'survey' | 'smart_goals' | 'market_research' | 'customer_feedback'
 export type AnnouncementTarget = 'all' | 'entrepreneur' | 'mentor'
 export type MentorshipApplicationStatus = 'pending' | 'accepted' | 'rejected'
@@ -406,6 +409,25 @@ export interface MentorshipApplication {
     mentor?: Pick<User, 'id' | 'firstName' | 'lastName' | 'email' | 'profilePic' | 'county'>
     program?: Pick<Program, 'id' | 'name'>
   }
+}
+
+export interface MentorApplication {
+  id: number
+  userId: string
+  expertise: string[]
+  yearsExperience: number
+  currentRole: string
+  currentCompany: string | null
+  linkedIn: string | null
+  motivation: string
+  availability: string
+  status: MentorApplicationStatus
+  adminNotes: string | null
+  reviewedById: string | null
+  reviewedAt: string | null
+  createdAt: string
+  updatedAt: string
+  user?: Pick<User, 'id' | 'firstName' | 'lastName' | 'email' | 'profilePic' | 'county'>
 }
 
 export interface MentorApplyInfo {

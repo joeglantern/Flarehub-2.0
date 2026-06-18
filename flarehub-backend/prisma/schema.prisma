@@ -119,6 +119,14 @@ enum NotificationType {
   mentorship_application_received
   mentorship_application_accepted
   mentorship_application_rejected
+  mentor_application_approved
+  mentor_application_rejected
+}
+
+enum MentorApplicationStatus {
+  pending
+  approved
+  rejected
 }
 
 enum MentorshipApplicationStatus {
@@ -185,6 +193,7 @@ model User {
   pushSubscriptions         PushSubscription[]
   programMentorships        ProgramMentor[]         @relation("UserProgramMentors")
   mentorshipApplications    MentorshipApplication[] @relation("EntrepreneurMentorshipApplications")
+  mentorApplication         MentorApplication?
 
   @@map("users")
 }
@@ -731,4 +740,31 @@ model MentorshipApplication {
   @@index([entrepreneurId])
   @@index([programMentorId])
   @@map("mentorship_applications")
+}
+
+// ═══════════════════════════════════════════════════════
+//  MENTOR PLATFORM APPLICATIONS
+// ═══════════════════════════════════════════════════════
+
+model MentorApplication {
+  id              Int                     @id @default(autoincrement())
+  userId          String                  @unique
+  expertise       String[]
+  yearsExperience Int
+  currentRole     String
+  currentCompany  String?
+  linkedIn        String?
+  motivation      String
+  availability    String
+  status          MentorApplicationStatus @default(pending)
+  adminNotes      String?
+  reviewedById    String?
+  reviewedAt      DateTime?
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+
+  user            User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@map("mentor_applications")
 }

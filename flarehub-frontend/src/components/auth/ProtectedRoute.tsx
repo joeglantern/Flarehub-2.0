@@ -21,8 +21,10 @@ export function ProtectedRoute({ roles, requireMentor }: ProtectedRouteProps) {
 
   if (!user) return <Navigate to="/login" replace />
 
-  if (!user.profileComplete && window.location.pathname !== '/onboarding') {
-    return <Navigate to="/onboarding" replace />
+  const PROFILE_EXEMPT = ['/onboarding', '/mentor-onboarding', '/mentor-pending']
+  if (!user.profileComplete && !PROFILE_EXEMPT.includes(window.location.pathname)) {
+    const signupRole = sessionStorage.getItem('fh:signup_role')
+    return <Navigate to={signupRole === 'mentor' ? '/mentor-onboarding' : '/onboarding'} replace />
   }
 
   if (requireMentor && !user.isMentor) {

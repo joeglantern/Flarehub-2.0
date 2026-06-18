@@ -11,7 +11,9 @@ const LoginPage    = lazy(() => import('@/pages/auth/LoginPage'))
 const SignupPage   = lazy(() => import('@/pages/auth/SignupPage'))
 const AuthCallback      = lazy(() => import('@/pages/auth/AuthCallbackPage'))
 const UpdatePassword    = lazy(() => import('@/pages/auth/UpdatePasswordPage'))
-const Onboarding   = lazy(() => import('@/pages/onboarding/OnboardingPage'))
+const Onboarding        = lazy(() => import('@/pages/onboarding/OnboardingPage'))
+const MentorOnboarding  = lazy(() => import('@/pages/onboarding/MentorOnboardingPage'))
+const MentorPending     = lazy(() => import('@/pages/mentor/MentorPendingPage'))
 
 // Entrepreneur
 const Dashboard        = lazy(() => import('@/pages/entrepreneur/DashboardPage'))
@@ -71,9 +73,11 @@ export default function App() {
           {/* Public */}
           <Route path="/login"           element={<LoginPage />} />
           <Route path="/signup"          element={<SignupPage />} />
-          <Route path="/auth/callback"   element={<AuthCallback />} />
-          <Route path="/update-password" element={<UpdatePassword />} />
-          <Route path="/onboarding"      element={<Onboarding />} />
+          <Route path="/auth/callback"      element={<AuthCallback />} />
+          <Route path="/update-password"  element={<UpdatePassword />} />
+          <Route path="/onboarding"       element={<Onboarding />} />
+          <Route path="/mentor-onboarding" element={<MentorOnboarding />} />
+          <Route path="/mentor-pending"   element={<MentorPending />} />
 
           {/* Mentorship apply — standalone layout, requires auth */}
           <Route element={<ProtectedRoute />}>

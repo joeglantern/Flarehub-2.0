@@ -215,7 +215,7 @@ export function inviteEmailHtml(firstName: string, inviteUrl: string): string {
               <div style="border-top:1px solid #e2ddd7;margin:28px 0;"></div>
 
               <p style="margin:0;font-size:12px;color:#a39e98;line-height:1.6;">
-                This link expires in <strong>7 days</strong>. If you were not expecting this email you can safely ignore it.
+                This link expires in <strong>24 hours</strong>. If you were not expecting this email you can safely ignore it.
                 For help, write to <a href="mailto:hello@afosihub.com" style="color:#a39e98;text-decoration:underline;">hello@afosihub.com</a>
               </p>
 

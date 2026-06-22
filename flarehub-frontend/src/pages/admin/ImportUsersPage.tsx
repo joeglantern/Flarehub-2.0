@@ -222,6 +222,17 @@ export default function ImportUsersPage() {
     onSuccess: (data) => setResult(data),
   })
 
+  const [enrollResult, setEnrollResult] = useState<{ enrolled: number; notFound: number } | null>(null)
+  const enrollMut = useMutation({
+    mutationFn: (emails: string[]) =>
+      api.post<ApiSuccess<{ enrolled: number; notFound: number }>>('/admin/bulk-enroll', { programId, emails })
+        .then(r => r.data.data),
+    onSuccess: (data) => {
+      setEnrollResult(data)
+      qc.invalidateQueries({ queryKey: ['admin', 'activation-stats'] })
+    },
+  })
+
   function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
@@ -525,19 +536,50 @@ export default function ImportUsersPage() {
             </Card>
           )}
 
+          {/* Enroll result banner */}
+          {enrollResult && (
+            <Card className="mb-5 bg-[var(--color-elev)]">
+              <div className="flex flex-wrap gap-6 text-sm">
+                <span className="flex items-center gap-1.5 text-[var(--color-forest-500)] font-semibold">
+                  <CheckCircle size={18} /> {enrollResult.enrolled} enrolled in program
+                </span>
+                {enrollResult.notFound > 0 && (
+                  <span className="flex items-center gap-1.5 text-[var(--color-ink-faint)]">
+                    <Warning size={18} /> {enrollResult.notFound} not found in system
+                  </span>
+                )}
+              </div>
+            </Card>
+          )}
+
           {/* Preview table */}
           <Card padding="none" className="overflow-hidden">
-            <div className="px-5 py-3 border-b border-[var(--color-border)] flex items-center justify-between">
+            <div className="px-5 py-3 border-b border-[var(--color-border)] flex items-center justify-between flex-wrap gap-2">
               <p className="text-sm font-semibold text-[var(--color-ink)]">Preview — {validRows.length} valid rows</p>
-              <Button
-                size="sm"
-                onClick={handleImport}
-                disabled={importMut.isPending || validRows.length === 0}
-              >
-                {importMut.isPending
-                  ? <><Spinner size="sm" className="animate-spin" /> Importing…</>
-                  : `Import ${validRows.length} users`}
-              </Button>
+              <div className="flex gap-2">
+                {programId && (
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => enrollMut.mutate(validRows.map(r => r.email))}
+                    disabled={enrollMut.isPending || validRows.length === 0}
+                    title="Enroll already-imported users into the selected program without creating new accounts"
+                  >
+                    {enrollMut.isPending
+                      ? <><Spinner size="sm" /> Enrolling…</>
+                      : `Enroll ${validRows.length} existing users`}
+                  </Button>
+                )}
+                <Button
+                  size="sm"
+                  onClick={handleImport}
+                  disabled={importMut.isPending || validRows.length === 0}
+                >
+                  {importMut.isPending
+                    ? <><Spinner size="sm" className="animate-spin" /> Importing…</>
+                    : `Import ${validRows.length} users`}
+                </Button>
+              </div>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-xs">

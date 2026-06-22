@@ -24,6 +24,34 @@ const bulkImportSchema = z.object({
 });
 
 export default async function bulkImportRoutes(fastify: FastifyInstance) {
+  // Enroll already-imported users into a program by email list
+  fastify.post('/admin/bulk-enroll', { preHandler: requireAdmin }, async (request, reply) => {
+    const { programId, emails } = z.object({
+      programId: z.number().int().positive(),
+      emails:    z.array(z.string().email()).min(1).max(300),
+    }).parse(request.body);
+
+    let enrolled = 0;
+    let notFound = 0;
+
+    for (const email of emails) {
+      const user = await fastify.prisma.user.findFirst({
+        where: { email: { equals: email.toLowerCase().trim(), mode: 'insensitive' } },
+        select: { id: true },
+      });
+      if (!user) { notFound++; continue; }
+
+      await fastify.prisma.application.upsert({
+        where:  { userId_programId: { userId: user.id, programId } },
+        update: {},
+        create: { userId: user.id, programId, status: 'Approved', submittedAt: new Date() },
+      });
+      enrolled++;
+    }
+
+    return reply.send({ success: true, data: { enrolled, notFound } });
+  });
+
   fastify.post('/admin/bulk-import/users', { preHandler: requireAdmin }, async (request, reply) => {
     const { programId, users } = bulkImportSchema.parse(request.body);
 

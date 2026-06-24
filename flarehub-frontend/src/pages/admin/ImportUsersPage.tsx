@@ -177,6 +177,7 @@ export default function ImportUsersPage() {
   const [resendResult, setResendResult]     = useState<ResendResult | null>(null)
   const [selectedIds, setSelectedIds]       = useState<Set<string>>(new Set())
   const [showPending, setShowPending]       = useState(false)
+  const [userSearch, setUserSearch]         = useState('')
   const [testEmail, setTestEmail]           = useState('')
   const [testConfirmed, setTestConfirmed]   = useState(false)
 
@@ -336,34 +337,72 @@ export default function ImportUsersPage() {
 
                   {showPending && (
                     <div className="border border-[var(--color-border)] rounded-xl overflow-hidden">
+                      {/* Search */}
+                      <div className="px-4 py-2.5 border-b border-[var(--color-border)] bg-[var(--color-surface)]">
+                        <input
+                          type="text"
+                          value={userSearch}
+                          onChange={e => setUserSearch(e.target.value)}
+                          placeholder="Search by name or email…"
+                          className="w-full text-sm bg-transparent outline-none text-[var(--color-ink)] placeholder:text-[var(--color-ink-faint)]"
+                        />
+                      </div>
+                      {/* Select all (filtered) */}
                       <div className="px-4 py-2 bg-[var(--color-elev)] flex items-center gap-3 border-b border-[var(--color-border)]">
                         <input
                           type="checkbox"
-                          checked={selectedIds.size === stats.pendingUsers.length}
-                          onChange={e => setSelectedIds(e.target.checked ? new Set(stats.pendingUsers.map(u => u.id)) : new Set())}
+                          checked={
+                            stats.pendingUsers
+                              .filter(u => {
+                                const q = userSearch.toLowerCase()
+                                return !q || u.email.toLowerCase().includes(q) || `${u.firstName} ${u.lastName}`.toLowerCase().includes(q)
+                              })
+                              .every(u => selectedIds.has(u.id)) &&
+                            stats.pendingUsers.filter(u => {
+                              const q = userSearch.toLowerCase()
+                              return !q || u.email.toLowerCase().includes(q) || `${u.firstName} ${u.lastName}`.toLowerCase().includes(q)
+                            }).length > 0
+                          }
+                          onChange={e => {
+                            const filtered = stats.pendingUsers.filter(u => {
+                              const q = userSearch.toLowerCase()
+                              return !q || u.email.toLowerCase().includes(q) || `${u.firstName} ${u.lastName}`.toLowerCase().includes(q)
+                            })
+                            setSelectedIds(prev => {
+                              const next = new Set(prev)
+                              filtered.forEach(u => e.target.checked ? next.add(u.id) : next.delete(u.id))
+                              return next
+                            })
+                          }}
                           className="rounded"
                         />
                         <span className="text-xs font-semibold text-[var(--color-ink-soft)]">
                           {selectedIds.size > 0 ? `${selectedIds.size} selected` : 'Select all'}
                         </span>
                       </div>
-                      <div className="max-h-64 overflow-y-auto">
-                        {stats.pendingUsers.map(u => (
-                          <label key={u.id} className="flex items-center gap-3 px-4 py-2.5 border-b border-[var(--color-border)] last:border-0 hover:bg-[var(--color-elev)] cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={selectedIds.has(u.id)}
-                              onChange={e => setSelectedIds(prev => {
-                                const next = new Set(prev)
-                                e.target.checked ? next.add(u.id) : next.delete(u.id)
-                                return next
-                              })}
-                              className="rounded"
-                            />
-                            <span className="text-sm text-[var(--color-ink)]">{u.firstName} {u.lastName}</span>
-                            <span className="text-xs text-[var(--color-ink-faint)] ml-auto">{u.email}</span>
-                          </label>
-                        ))}
+                      <div className="max-h-72 overflow-y-auto">
+                        {stats.pendingUsers
+                          .filter(u => {
+                            const q = userSearch.toLowerCase()
+                            return !q || u.email.toLowerCase().includes(q) || `${u.firstName} ${u.lastName}`.toLowerCase().includes(q)
+                          })
+                          .map(u => (
+                            <label key={u.id} className="flex items-center gap-3 px-4 py-2.5 border-b border-[var(--color-border)] last:border-0 hover:bg-[var(--color-elev)] cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={selectedIds.has(u.id)}
+                                onChange={e => setSelectedIds(prev => {
+                                  const next = new Set(prev)
+                                  e.target.checked ? next.add(u.id) : next.delete(u.id)
+                                  return next
+                                })}
+                                className="rounded"
+                              />
+                              <span className="text-sm text-[var(--color-ink)]">{u.firstName} {u.lastName}</span>
+                              <span className="text-xs text-[var(--color-ink-faint)] ml-auto">{u.email}</span>
+                            </label>
+                          ))
+                        }
                       </div>
                     </div>
                   )}

@@ -45,7 +45,7 @@ export default async function resendInvitesRoutes(fastify: FastifyInstance) {
     });
 
     if (dbUsers.length === 0) {
-      return reply.send({ success: true, data: { total: 0, activated: 0, pending: 0, pendingUsers: [] } });
+      return reply.send({ success: true, data: { total: 0, activated: 0, pending: 0, pendingUsers: [], allUsers: [] } });
     }
 
     const supabaseUsers = await fetchSupabaseUsers(appConfig.supabase.url, appConfig.supabase.serviceRoleKey);
@@ -61,6 +61,7 @@ export default async function resendInvitesRoutes(fastify: FastifyInstance) {
         activated:    total - pendingUsers.length,
         pending:      pendingUsers.length,
         pendingUsers: pendingUsers.map(u => ({ id: u.id, email: u.email, firstName: u.firstName, lastName: u.lastName })),
+        allUsers:     dbUsers.map(u => ({ id: u.id, email: u.email, firstName: u.firstName, lastName: u.lastName, activated: activatedIds.has(u.id) })),
       },
     });
   });

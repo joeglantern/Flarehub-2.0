@@ -35,6 +35,7 @@ interface PendingUser {
   email:     string
   firstName: string
   lastName:  string
+  activated?: boolean
 }
 
 interface ActivationStats {
@@ -42,6 +43,7 @@ interface ActivationStats {
   activated:    number
   pending:      number
   pendingUsers: PendingUser[]
+  allUsers:     PendingUser[]
 }
 
 interface ResendResult {
@@ -351,20 +353,17 @@ export default function ImportUsersPage() {
                       <div className="px-4 py-2 bg-[var(--color-elev)] flex items-center gap-3 border-b border-[var(--color-border)]">
                         <input
                           type="checkbox"
-                          checked={
-                            stats.pendingUsers
-                              .filter(u => {
-                                const q = userSearch.toLowerCase()
-                                return !q || u.email.toLowerCase().includes(q) || `${u.firstName} ${u.lastName}`.toLowerCase().includes(q)
-                              })
-                              .every(u => selectedIds.has(u.id)) &&
-                            stats.pendingUsers.filter(u => {
+                          checked={(() => {
+                            const src = stats.allUsers ?? stats.pendingUsers
+                            const filtered = src.filter(u => {
                               const q = userSearch.toLowerCase()
                               return !q || u.email.toLowerCase().includes(q) || `${u.firstName} ${u.lastName}`.toLowerCase().includes(q)
-                            }).length > 0
-                          }
+                            })
+                            return filtered.length > 0 && filtered.every(u => selectedIds.has(u.id))
+                          })()}
                           onChange={e => {
-                            const filtered = stats.pendingUsers.filter(u => {
+                            const src = stats.allUsers ?? stats.pendingUsers
+                            const filtered = src.filter(u => {
                               const q = userSearch.toLowerCase()
                               return !q || u.email.toLowerCase().includes(q) || `${u.firstName} ${u.lastName}`.toLowerCase().includes(q)
                             })
@@ -381,7 +380,7 @@ export default function ImportUsersPage() {
                         </span>
                       </div>
                       <div className="max-h-72 overflow-y-auto">
-                        {stats.pendingUsers
+                        {(stats.allUsers ?? stats.pendingUsers)
                           .filter(u => {
                             const q = userSearch.toLowerCase()
                             return !q || u.email.toLowerCase().includes(q) || `${u.firstName} ${u.lastName}`.toLowerCase().includes(q)
@@ -399,7 +398,10 @@ export default function ImportUsersPage() {
                                 className="rounded"
                               />
                               <span className="text-sm text-[var(--color-ink)]">{u.firstName} {u.lastName}</span>
-                              <span className="text-xs text-[var(--color-ink-faint)] ml-auto">{u.email}</span>
+                              <span className="text-xs text-[var(--color-ink-faint)]">{u.email}</span>
+                              <span className={`ml-auto text-[10px] font-semibold px-2 py-0.5 rounded-full ${u.activated ? 'bg-[var(--color-forest-500)]/10 text-[var(--color-forest-500)]' : 'bg-amber-50 text-amber-600'}`}>
+                                {u.activated ? 'Active' : 'Pending'}
+                              </span>
                             </label>
                           ))
                         }

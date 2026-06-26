@@ -1,9 +1,9 @@
-﻿import { Reveal, SketchIcon } from './primitives'
+﻿import { Reveal, LottieIcon } from './primitives'
 
 const steps = [
-  { n: '01', icon: 'pencil',    title: 'Apply',         desc: 'Tell us your idea in your own words. No slide decks required. 10 minute form, real humans read every one.', rotate: -3, top: 40 },
-  { n: '02', icon: 'handshake', title: 'Get matched',   desc: "We pair you with a mentor who's shipped what you're trying to ship. Weekly check-ins, no corporate speak.", rotate: 2, top: 10 },
-  { n: '03', icon: 'rocket',    title: 'Build & launch', desc: "Track milestones, pull on funding, and take your thing to market. Graduate with a working business, not a certificate.", rotate: -1, top: 60 },
+  { n: '01', lottie: 'https://assets3.lottiefiles.com/packages/lf20_9cyyl0vy.json', title: 'Apply',         desc: 'Tell us your idea in your own words. No slide decks required. 10 minute form, real humans read every one.', rotate: -3, top: 40 },
+  { n: '02', lottie: 'https://assets8.lottiefiles.com/packages/lf20_HpFqiS.json',   title: 'Get matched',   desc: "We pair you with a mentor who's shipped what you're trying to ship. Weekly check-ins, no corporate speak.", rotate: 2, top: 10 },
+  { n: '03', lottie: 'https://assets9.lottiefiles.com/packages/lf20_obhph3t0.json', title: 'Build & launch', desc: "Track milestones, pull on funding, and take your thing to market. Graduate with a working business, not a certificate.", rotate: -1, top: 60 },
 ]
 
 export function Process() {
@@ -44,8 +44,8 @@ export function Process() {
                 }}>
                   <div className="pin" />
                   <div className="display" style={{ fontSize: 'clamp(48px,8vw,72px)', fontWeight: 800, color: 'var(--g500)', lineHeight: 0.9 }}>{s.n}</div>
-                  <div style={{ position: 'absolute', top: 24, right: 24, padding: 8, background: 'var(--inset)', borderRadius: 8 }}>
-                    <SketchIcon name={s.icon} size={32} color="var(--ink)" />
+                  <div style={{ position: 'absolute', top: 16, right: 16, background: 'var(--inset)', borderRadius: 10, overflow: 'hidden' }}>
+                    <LottieIcon src={s.lottie} size={60} />
                   </div>
                   <h3 className="display" style={{ fontSize: 'clamp(22px,3vw,30px)', margin: '18px 0 8px', fontWeight: 700 }}>{s.title}</h3>
                   <p style={{ margin: 0, color: 'var(--ink-2)', fontSize: 15, lineHeight: 1.55 }}>{s.desc}</p>

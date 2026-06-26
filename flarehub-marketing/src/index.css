@@ -315,3 +315,9 @@ body {
 @media (max-width: 400px) {
   .about-stats  { grid-template-columns: 1fr; }
 }
+
+/* Scroll hint animation */
+@keyframes scroll-dot {
+  0%,100% { transform: translateY(0); opacity: 0.8; }
+  55%     { transform: translateY(7px); opacity: 0.1; }
+}

@@ -164,3 +164,51 @@ export function CountUp({ to, duration = 1400, prefix = '', suffix = '' }: { to:
   }, [to, duration])
   return <span ref={ref}>{prefix}{val.toLocaleString()}{suffix}</span>
 }
+
+export function LottieIcon({ src, size = 56, loop = true, autoplay = true, style }: {
+  src: string; size?: number; loop?: boolean; autoplay?: boolean; style?: CSSProperties
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    el.innerHTML = ''
+    const player = document.createElement('lottie-player')
+    player.setAttribute('src', src)
+    player.setAttribute('background', 'transparent')
+    player.setAttribute('speed', '1')
+    player.style.width = `${size}px`
+    player.style.height = `${size}px`
+    if (loop) player.setAttribute('loop', '')
+    if (autoplay) player.setAttribute('autoplay', '')
+    el.appendChild(player)
+  }, [src, size, loop, autoplay])
+  return <div ref={ref} style={{ width: size, height: size, ...style }} />
+}
+
+export function LottieOnView({ src, size = 200, style }: {
+  src: string; size?: number; style?: CSSProperties
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const player: any = document.createElement('lottie-player')
+    player.setAttribute('src', src)
+    player.setAttribute('background', 'transparent')
+    player.setAttribute('speed', '1')
+    player.style.width = `${size}px`
+    player.style.height = `${size}px`
+    el.appendChild(player)
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => player.play?.(), 350)
+        io.disconnect()
+      }
+    }, { threshold: 0.25 })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [src, size])
+  return <div ref={ref} style={{ width: size, height: size, ...style }} />
+}

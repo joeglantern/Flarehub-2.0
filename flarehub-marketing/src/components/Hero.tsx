@@ -1,4 +1,4 @@
-import { CountUp, MarkerPortrait, Reveal, Squiggle } from './primitives'
+import { CountUp, LottieIcon, MarkerPortrait, Reveal, Squiggle } from './primitives'
 
 const partners = ['UNICEF', 'KeNIA', 'KCB', 'NETFUND', 'CEMASTEA', 'gDIH']
 
@@ -18,12 +18,6 @@ export function Hero({ setPage }: { setPage: (p: string) => void }) {
         <div className="hero-grid">
           {/* Left — copy */}
           <div>
-            <Reveal>
-              <div className="mono" style={{ color: 'var(--ink-2)', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ width: 28, height: 1, background: 'var(--ink-2)', display: 'inline-block' }} />
-                Nairobi · since 2023
-              </div>
-            </Reveal>
             <Reveal delay={80}>
               <h1 className="display" style={{ fontSize: 'clamp(48px, 8.4vw, 132px)', margin: 0, color: 'var(--ink)' }}>
                 Build{' '}<br />
@@ -72,6 +66,21 @@ export function Hero({ setPage }: { setPage: (p: string) => void }) {
                   </div>
                   <div className="mono" style={{ color: 'var(--ink-2)' }}>Innovators funded</div>
                 </div>
+              </div>
+            </Reveal>
+            <Reveal delay={420}>
+              <div style={{ marginTop: 28, display: 'flex', alignItems: 'center', gap: 10, color: 'var(--ink-3)' }}>
+                <LottieIcon
+                  src="https://assets3.lottiefiles.com/packages/lf20_cgjmtpqb.json"
+                  size={32}
+                  loop
+                  autoplay
+                />
+                <svg width="16" height="24" viewBox="0 0 16 24" fill="none" aria-hidden="true">
+                  <rect x="1" y="1" width="14" height="22" rx="7" stroke="currentColor" strokeWidth="1.4" opacity="0.5" />
+                  <circle cx="8" cy="6" r="2" fill="currentColor" className="scroll-dot" />
+                </svg>
+                <span className="mono" style={{ fontSize: 10, letterSpacing: '0.12em', opacity: 0.6 }}>SCROLL</span>
               </div>
             </Reveal>
           </div>

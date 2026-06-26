@@ -349,18 +349,13 @@ body {
   50%     { margin-left: 22px; }
 }
 
-/* Footer star field */
-.footer-stars {
-  background-image:
-    radial-gradient(circle, rgba(208,236,219,0.28) 1px, transparent 1px),
-    radial-gradient(circle, rgba(208,236,219,0.12) 1px, transparent 1px),
-    radial-gradient(circle, rgba(196,82,42,0.12)   1px, transparent 1px);
-  background-size: 26px 26px, 43px 43px, 67px 67px;
-  background-position: 0 0, 13px 21px, 34px 50px;
-  animation: footer-stars-drift 18s linear infinite;
-}
-@keyframes footer-stars-drift {
-  to { background-position: 26px 26px, 56px 64px, 101px 117px; }
+/* Footer film grain */
+@keyframes footer-grain {
+  0%  { transform: translate(0,0); }
+  20% { transform: translate(-3%,-2%); }
+  40% { transform: translate(3%, 2%); }
+  60% { transform: translate(-2%, 3%); }
+  80% { transform: translate(2%,-3%); }
 }
 
 /* About section rising particles */

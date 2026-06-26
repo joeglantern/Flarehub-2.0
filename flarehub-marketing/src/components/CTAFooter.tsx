@@ -115,8 +115,12 @@ export function CTAFooter({ setPage }: { setPage: (p: string) => void }) {
 
       {/* Footer */}
       <footer style={{ background: '#0a2e1c', color: '#d0ecdb', padding: 'clamp(40px,6vw,60px) clamp(20px,4vw,32px) 36px', position: 'relative', overflow: 'hidden' }}>
-        {/* Animated star-field texture */}
-        <div className="footer-stars" style={{ position: 'absolute', inset: '-8%', pointerEvents: 'none', zIndex: 0 }} />
+        {/* Animated film grain */}
+        <div style={{
+          position: 'absolute', inset: '-60%', pointerEvents: 'none', zIndex: 0, opacity: 0.07,
+          backgroundImage: "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23g)' opacity='1'/></svg>\")",
+          animation: 'footer-grain 0.4s steps(1) infinite',
+        }} />
         {/* Ambient glow orbs */}
         <div style={{ position: 'absolute', top: '10%', left: '6%', width: 260, height: 260, borderRadius: '50%', background: 'radial-gradient(circle, rgba(29,111,66,0.22) 0%, transparent 65%)', animation: 'orb-2 11s ease-in-out infinite', filter: 'blur(50px)', pointerEvents: 'none', zIndex: 0 }} />
         <div style={{ position: 'absolute', bottom: '8%', right: '10%', width: 180, height: 180, borderRadius: '50%', background: 'radial-gradient(circle, rgba(196,82,42,0.16) 0%, transparent 65%)', animation: 'orb-1 15s ease-in-out infinite', filter: 'blur(42px)', pointerEvents: 'none', zIndex: 0 }} />

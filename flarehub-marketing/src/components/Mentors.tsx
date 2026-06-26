@@ -78,16 +78,7 @@ export function Mentors({ setPage }: { setPage?: (p: string) => void }) {
                           letterSpacing: '0.06em', transform: 'rotate(2deg)', flexShrink: 0,
                           border: m.avail ? '1px solid #a5d5b7' : '1px solid #e8b9a4',
                         }}>
-                          {m.avail ? (
-                            <>
-                              <span style={{
-                                display: 'inline-block', width: 7, height: 7, borderRadius: '50%',
-                                background: '#1d6f42', marginRight: 5, verticalAlign: 'middle',
-                                animation: 'ping-dot 1.8s ease-in-out infinite',
-                              }} />
-                              Avail.
-                            </>
-                          ) : '● Busy'}
+                          {m.avail ? '● Avail.' : '● Busy'}
                         </span>
                       </div>
                       <div className="mono" style={{ marginTop: 14, paddingTop: 10, borderTop: '1px dashed var(--border)', color: 'var(--ink-3)', fontSize: 10, display: 'flex', justifyContent: 'space-between' }}>

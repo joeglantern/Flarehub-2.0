@@ -114,8 +114,14 @@ export function CTAFooter({ setPage }: { setPage: (p: string) => void }) {
       </section>
 
       {/* Footer */}
-      <footer style={{ background: '#0a2e1c', color: '#d0ecdb', padding: 'clamp(40px,6vw,60px) clamp(20px,4vw,32px) 36px' }}>
-        <div className="container">
+      <footer style={{ background: '#0a2e1c', color: '#d0ecdb', padding: 'clamp(40px,6vw,60px) clamp(20px,4vw,32px) 36px', position: 'relative', overflow: 'hidden' }}>
+        {/* Animated star-field texture */}
+        <div className="footer-stars" style={{ position: 'absolute', inset: '-8%', pointerEvents: 'none', zIndex: 0 }} />
+        {/* Ambient glow orbs */}
+        <div style={{ position: 'absolute', top: '10%', left: '6%', width: 260, height: 260, borderRadius: '50%', background: 'radial-gradient(circle, rgba(29,111,66,0.22) 0%, transparent 65%)', animation: 'orb-2 11s ease-in-out infinite', filter: 'blur(50px)', pointerEvents: 'none', zIndex: 0 }} />
+        <div style={{ position: 'absolute', bottom: '8%', right: '10%', width: 180, height: 180, borderRadius: '50%', background: 'radial-gradient(circle, rgba(196,82,42,0.16) 0%, transparent 65%)', animation: 'orb-1 15s ease-in-out infinite', filter: 'blur(42px)', pointerEvents: 'none', zIndex: 0 }} />
+        <div style={{ position: 'absolute', top: '55%', left: '55%', width: 140, height: 140, borderRadius: '50%', background: 'radial-gradient(circle, rgba(29,111,66,0.12) 0%, transparent 65%)', animation: 'orb-3 9s ease-in-out infinite 2s', filter: 'blur(36px)', pointerEvents: 'none', zIndex: 0 }} />
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <div className="footer-grid">
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>

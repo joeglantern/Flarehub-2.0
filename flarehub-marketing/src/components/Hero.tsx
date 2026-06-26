@@ -1,10 +1,17 @@
-import { CountUp, LottieIcon, MarkerPortrait, Reveal, Squiggle } from './primitives'
+import { CountUp, MarkerPortrait, Reveal, Squiggle } from './primitives'
 
 const partners = ['UNICEF', 'KeNIA', 'KCB', 'NETFUND', 'CEMASTEA', 'gDIH']
 
 export function Hero({ setPage }: { setPage: (p: string) => void }) {
   return (
     <section className="section dot-grid" style={{ paddingTop: 40, paddingBottom: 40, position: 'relative', minHeight: 'calc(100vh - 80px)' }}>
+      {/* Ambient background orbs */}
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
+        <div style={{ position: 'absolute', top: '6%', right: '3%', width: 460, height: 460, borderRadius: '50%', background: 'radial-gradient(circle, rgba(29,111,66,0.1) 0%, transparent 60%)', animation: 'orb-1 9s ease-in-out infinite', filter: 'blur(54px)' }} />
+        <div style={{ position: 'absolute', top: '52%', left: '-7%', width: 360, height: 360, borderRadius: '50%', background: 'radial-gradient(circle, rgba(196,82,42,0.08) 0%, transparent 60%)', animation: 'orb-2 13s ease-in-out infinite', filter: 'blur(58px)' }} />
+        <div style={{ position: 'absolute', top: '22%', left: '36%', width: 240, height: 240, borderRadius: '50%', background: 'radial-gradient(circle, rgba(29,111,66,0.05) 0%, transparent 60%)', animation: 'orb-3 7s ease-in-out infinite 1.5s', filter: 'blur(42px)' }} />
+      </div>
+
       {/* Floating stickers — hidden on mobile via CSS */}
       <div className="hero-stickers" style={{ position: 'absolute', top: 80, right: 40, display: 'flex', flexDirection: 'column', gap: 14, alignItems: 'flex-end', zIndex: 2 }}>
         <span className="sticker" style={{ transform: 'rotate(3deg)' }}>
@@ -69,13 +76,7 @@ export function Hero({ setPage }: { setPage: (p: string) => void }) {
               </div>
             </Reveal>
             <Reveal delay={420}>
-              <div style={{ marginTop: 28, display: 'flex', alignItems: 'center', gap: 10, color: 'var(--ink-3)' }}>
-                <LottieIcon
-                  src="https://assets3.lottiefiles.com/packages/lf20_cgjmtpqb.json"
-                  size={32}
-                  loop
-                  autoplay
-                />
+              <div style={{ marginTop: 28, display: 'flex', alignItems: 'center', gap: 8, color: 'var(--ink-3)' }}>
                 <svg width="16" height="24" viewBox="0 0 16 24" fill="none" aria-hidden="true">
                   <rect x="1" y="1" width="14" height="22" rx="7" stroke="currentColor" strokeWidth="1.4" opacity="0.5" />
                   <circle cx="8" cy="6" r="2" fill="currentColor" className="scroll-dot" />

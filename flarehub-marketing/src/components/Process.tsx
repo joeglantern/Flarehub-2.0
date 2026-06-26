@@ -1,10 +1,47 @@
-﻿import { Reveal, LottieIcon } from './primitives'
+import { Reveal } from './primitives'
 
 const steps = [
-  { n: '01', lottie: 'https://assets3.lottiefiles.com/packages/lf20_9cyyl0vy.json', title: 'Apply',         desc: 'Tell us your idea in your own words. No slide decks required. 10 minute form, real humans read every one.', rotate: -3, top: 40 },
-  { n: '02', lottie: 'https://assets8.lottiefiles.com/packages/lf20_HpFqiS.json',   title: 'Get matched',   desc: "We pair you with a mentor who's shipped what you're trying to ship. Weekly check-ins, no corporate speak.", rotate: 2, top: 10 },
-  { n: '03', lottie: 'https://assets9.lottiefiles.com/packages/lf20_obhph3t0.json', title: 'Build & launch', desc: "Track milestones, pull on funding, and take your thing to market. Graduate with a working business, not a certificate.", rotate: -1, top: 60 },
+  { n: '01', title: 'Apply',          desc: 'Tell us your idea in your own words. No slide decks required. 10 minute form, real humans read every one.', rotate: -3, top: 40 },
+  { n: '02', title: 'Get matched',    desc: "We pair you with a mentor who's shipped what you're trying to ship. Weekly check-ins, no corporate speak.", rotate: 2, top: 10 },
+  { n: '03', title: 'Build & launch', desc: "Track milestones, pull on funding, and take your thing to market. Graduate with a working business, not a certificate.", rotate: -1, top: 60 },
 ]
+
+function StepIcon({ n }: { n: string }) {
+  if (n === '01') return (
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+      <g style={{ animation: 'proc-plane 2.4s ease-in-out infinite', transformOrigin: '20px 20px' }}>
+        <path d="M5 20 L35 8 L27 36 L18 24 Z"
+          stroke="#1d6f42" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+          fill="rgba(29,111,66,0.15)" />
+        <path d="M18 24 L35 8" stroke="#1d6f42" strokeWidth="2" strokeLinecap="round" />
+      </g>
+    </svg>
+  )
+  if (n === '02') return (
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+      <circle cx="8" cy="20" r="5" stroke="#1d6f42" strokeWidth="2" fill="rgba(29,111,66,0.12)"
+        style={{ animation: 'proc-node-pulse 2s ease-in-out infinite', transformOrigin: '8px 20px' }} />
+      <path d="M13 20 L27 20" stroke="#1d6f42" strokeWidth="2" strokeLinecap="round"
+        strokeDasharray={14}
+        style={{ animation: 'proc-line-draw 2s ease-in-out infinite' }} />
+      <circle cx="32" cy="20" r="5" stroke="#1d6f42" strokeWidth="2" fill="rgba(29,111,66,0.12)"
+        style={{ animation: 'proc-node-pulse 2s ease-in-out infinite 0.6s', transformOrigin: '32px 20px' }} />
+    </svg>
+  )
+  return (
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+      <g style={{ animation: 'proc-rocket-float 2s ease-in-out infinite', transformOrigin: '20px 20px' }}>
+        <path d="M20 5 C 13 14, 11 24, 15 29 L25 29 C 29 24, 27 14, 20 5 Z"
+          stroke="#1d6f42" strokeWidth="2" strokeLinejoin="round"
+          fill="rgba(29,111,66,0.15)" />
+        <circle cx="20" cy="19" r="3" stroke="#1d6f42" strokeWidth="2" />
+        <path d="M15 29 L12 37 L20 33 L28 37 L25 29"
+          stroke="#c4522a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
+          style={{ animation: 'proc-flame-flick 0.5s ease-in-out infinite', transformOrigin: '20px 33px' }} />
+      </g>
+    </svg>
+  )
+}
 
 export function Process() {
   return (
@@ -44,8 +81,8 @@ export function Process() {
                 }}>
                   <div className="pin" />
                   <div className="display" style={{ fontSize: 'clamp(48px,8vw,72px)', fontWeight: 800, color: 'var(--g500)', lineHeight: 0.9 }}>{s.n}</div>
-                  <div style={{ position: 'absolute', top: 16, right: 16, background: 'var(--inset)', borderRadius: 10, overflow: 'hidden' }}>
-                    <LottieIcon src={s.lottie} size={60} />
+                  <div style={{ position: 'absolute', top: 20, right: 20, padding: 10, background: 'var(--inset)', borderRadius: 12 }}>
+                    <StepIcon n={s.n} />
                   </div>
                   <h3 className="display" style={{ fontSize: 'clamp(22px,3vw,30px)', margin: '18px 0 8px', fontWeight: 700 }}>{s.title}</h3>
                   <p style={{ margin: 0, color: 'var(--ink-2)', fontSize: 15, lineHeight: 1.55 }}>{s.desc}</p>

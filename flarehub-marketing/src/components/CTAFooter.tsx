@@ -1,5 +1,5 @@
 ﻿import { useState } from 'react'
-import { FlareMark, Reveal, Squiggle, LottieOnView } from './primitives'
+import { FlareMark, Reveal, Squiggle } from './primitives'
 
 const footerCols = [
   { h: 'Programs', items: ['Program', 'Program', 'Program', 'Program', 'Program'] },
@@ -62,9 +62,22 @@ export function CTAFooter({ setPage }: { setPage: (p: string) => void }) {
           backgroundImage: "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.15'/></svg>\")",
           mixBlendMode: 'overlay', opacity: 0.4,
         }} />
-        <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', pointerEvents: 'none', zIndex: 0, opacity: 0.55 }}>
-          <LottieOnView src="https://assets9.lottiefiles.com/packages/lf20_obhph3t0.json" size={380} />
-        </div>
+        {/* CSS confetti overlay */}
+        {Array.from({ length: 16 }, (_, i) => {
+          const palette = ['#d0ecdb', '#a8d5bc', '#f9ddd1', '#f2c4a0', 'rgba(255,255,255,0.75)', 'rgba(208,236,219,0.9)']
+          return (
+            <div key={i} style={{
+              position: 'absolute', top: -14,
+              left: `${((i * 73 + 17) % 90) + 3}%`,
+              width: 5 + (i % 4) * 4,
+              height: 7 + (i % 3) * 5,
+              borderRadius: i % 3 === 0 ? '50%' : i % 3 === 1 ? 3 : 1,
+              background: palette[i % palette.length],
+              animation: `conf-fall ${2.2 + (i % 5) * 0.45}s ease-in ${(i * 0.24) % 2.8}s infinite, conf-sway ${2.6 + (i % 3) * 0.55}s ease-in-out ${(i * 0.24) % 2.8}s infinite`,
+              pointerEvents: 'none', zIndex: 1,
+            }} />
+          )
+        })}
         <div className="container" style={{ position: 'relative', textAlign: 'center' }}>
           <Reveal>
             <div className="mono" style={{ color: '#d0ecdb', marginBottom: 18, letterSpacing: '0.15em' }}>★  YOUR MOVE  ★</div>

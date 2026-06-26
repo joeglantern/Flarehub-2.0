@@ -17,6 +17,24 @@ const facts = [
 export function About() {
   return (
     <section className="section alt-bg" style={{ position: 'relative', overflow: 'hidden' }}>
+      {/* Rising particle overlay */}
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+        {Array.from({ length: 14 }, (_, i) => {
+          const colors = ['rgba(29,111,66,0.35)', 'rgba(196,82,42,0.25)', 'rgba(29,111,66,0.2)', 'rgba(208,236,219,0.6)']
+          return (
+            <div key={i} style={{
+              position: 'absolute',
+              bottom: `${(i * 19 + 5) % 55}%`,
+              left: `${(i * 83 + 4) % 94}%`,
+              width: 3 + (i % 3),
+              height: 3 + (i % 3),
+              borderRadius: '50%',
+              background: colors[i % colors.length],
+              animation: `particle-rise ${3.2 + (i % 4) * 0.75}s ease-in-out ${(i * 0.45) % 3.8}s infinite`,
+            }} />
+          )
+        })}
+      </div>
       <div className="container">
         <Reveal>
           <div className="mono" style={{ color: 'var(--t500)', marginBottom: 12 }}>▸ 005 — Who we are</div>

@@ -88,6 +88,9 @@ export function Hero({ setPage }: { setPage: (p: string) => void }) {
 
           {/* Right — portrait collage (hidden on mobile) */}
           <div className="hero-portrait" style={{ position: 'relative', height: 520 }}>
+            {/* Ambient portrait rings */}
+            <div style={{ position: 'absolute', left: 12, top: 8, width: 400, height: 460, borderRadius: '50%', border: '2px dashed rgba(29,111,66,0.16)', animation: 'spin-slow 26s linear infinite', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', left: 28, top: 24, width: 368, height: 428, borderRadius: '42% 58% 54% 46% / 50% 44% 56% 50%', border: '1.5px dashed rgba(196,82,42,0.13)', animation: 'spin-slow-reverse 19s linear infinite', pointerEvents: 'none' }} />
             <div style={{
               position: 'absolute', right: -20, top: 20, width: 220, height: 280,
               background: 'var(--surface)',

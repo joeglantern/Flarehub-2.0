@@ -1,6 +1,26 @@
 import { useState, useEffect, useRef } from 'react'
 import { CountUp, Reveal, Squiggle } from './primitives'
 
+function AnimatedBar({ fillPct }: { fillPct: number }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [go, setGo] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setGo(true); io.disconnect() } }, { threshold: 0.6 })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+  return (
+    <div ref={ref} className="rough-bar">
+      <div className="rough-fill" style={{
+        transform: `scaleX(${go ? fillPct / 100 : 0})`,
+        transition: go ? 'transform 1.1s cubic-bezier(.25,.46,.45,.94) 0.15s' : 'none',
+      }} />
+    </div>
+  )
+}
+
 const tabs = ['All', 'Incubation', 'Training']
 
 const programs = [
@@ -128,9 +148,7 @@ export function Programs({ setPage }: { setPage: (p: string) => void }) {
                     <span className="mono" style={{ color: 'var(--ink-2)' }}>Spots left</span>
                     <span className="mono" style={{ color: 'var(--ink)', fontWeight: 600 }}>{p.spots} / {p.total}</span>
                   </div>
-                  <div className="rough-bar">
-                    <div className="rough-fill" style={{ transform: `scaleX(${fillPct / 100})` }} />
-                  </div>
+                  <AnimatedBar fillPct={fillPct} />
                 </div>
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 18 }}>
                   {p.tags.map((t) => (

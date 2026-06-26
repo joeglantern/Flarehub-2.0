@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { Reveal } from './primitives'
 
 const faqs = [
@@ -8,7 +8,7 @@ const faqs = [
   },
   {
     q: 'Is it free to apply and participate?',
-    a: 'Applying is completely free. Accepted founders join at no cost — Flarehub is funded by our partner funds and a small success fee from graduates who raise capital after graduating. You never pay us to participate.',
+    a: 'Applying is completely free. Accepted founders join at no cost — Afosihub is funded by our partner funds and a small success fee from graduates who raise capital after graduating. You never pay us to participate.',
   },
   {
     q: 'What do I actually get from the program?',
@@ -70,7 +70,7 @@ export function FAQ() {
               <p style={{ margin: 0, fontWeight: 600, fontSize: 16, color: 'var(--ink)' }}>Still have questions?</p>
               <p style={{ margin: '4px 0 0', color: 'var(--ink-2)', fontSize: 14 }}>We read every email. Usually reply within a day.</p>
             </div>
-            <a href="mailto:hello@flarehub.co.ke" className="btn btn-ghost">Email us →</a>
+            <a href="mailto:hello@afosihub.com" className="btn btn-ghost">Email us →</a>
           </div>
         </Reveal>
       </div>

@@ -1,10 +1,10 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { FlareMark, Reveal, Squiggle } from './primitives'
 
 const footerCols = [
   { h: 'Programs', items: ['Program', 'Program', 'Program', 'Program', 'Program'] },
   { h: 'Company',  items: ['About', 'Mentors', 'Press', 'Contact', 'Careers'] },
-  { h: 'Follow',   items: ['Newsletter', 'LinkedIn', 'X · @flarehub', 'Instagram', 'YouTube'] },
+  { h: 'Follow',   items: ['Newsletter', 'LinkedIn', 'X · @afosihub', 'Instagram', 'YouTube'] },
 ]
 
 export function CTAFooter({ setPage }: { setPage: (p: string) => void }) {
@@ -104,7 +104,7 @@ export function CTAFooter({ setPage }: { setPage: (p: string) => void }) {
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <FlareMark color="#d0ecdb" accent="#c4522a" />
-                <span className="display" style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em' }}>Flarehub</span>
+                <span className="display" style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em' }}>Afosihub</span>
               </div>
               <p style={{ marginTop: 16, fontSize: 13, lineHeight: 1.6, opacity: 0.7, maxWidth: 300 }}>
                 A home for Kenyan founders. Built in Nairobi. Open to the whole continent.
@@ -131,7 +131,7 @@ export function CTAFooter({ setPage }: { setPage: (p: string) => void }) {
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 52, paddingTop: 24, borderTop: '1px solid rgba(208,236,219,0.12)', flexWrap: 'wrap', gap: 12 }}>
-            <div style={{ color: '#6b8a7a', fontSize: 12 }}>© 2026 Flarehub Ltd. · Nairobi, Kenya</div>
+            <div style={{ color: '#6b8a7a', fontSize: 12 }}>© 2026 Afosihub Ltd. · Nairobi, Kenya</div>
             <div style={{ color: '#6b8a7a', fontSize: 12, display: 'flex', gap: 18, flexWrap: 'wrap' }}>
               <span style={{ cursor: 'pointer' }}>Privacy</span>
               <span style={{ cursor: 'pointer' }}>Terms</span>

@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form'
+﻿import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useEffect } from 'react'
@@ -54,7 +54,7 @@ export default function LoginPage() {
           Welcome<br />back.
         </h1>
         <p className="text-sm text-[var(--color-text-muted)]">
-          Sign in to continue to Flarehub
+          Sign in to continue to Afosihub
         </p>
       </div>
 

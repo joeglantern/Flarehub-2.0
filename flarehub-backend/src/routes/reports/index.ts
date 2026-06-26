@@ -1,4 +1,4 @@
-import type { FastifyInstance } from 'fastify';
+﻿import type { FastifyInstance } from 'fastify';
 import { requireAuth } from '../../middleware/require-auth.js';
 import { requireAdmin } from '../../middleware/require-admin.js';
 import { AppError } from '../../types/index.js';
@@ -70,7 +70,7 @@ export default async function reportRoutes(fastify: FastifyInstance) {
         businessPlan: businessPlan ? { planData: businessPlan.planData } : null,
       });
 
-      const filename = `flarehub-report-${user.firstName}-${user.lastName}.pdf`
+      const filename = `afosihub-report-${user.firstName}-${user.lastName}.pdf`
         .toLowerCase().replace(/\s+/g, '-');
 
       reply.header('Content-Type', 'application/pdf');
@@ -111,7 +111,7 @@ export default async function reportRoutes(fastify: FastifyInstance) {
         approved, rejected, pending, underReview,
       });
 
-      const filename = `flarehub-program-${program.name.toLowerCase().replace(/\s+/g, '-')}.pdf`;
+      const filename = `afosihub-program-${program.name.toLowerCase().replace(/\s+/g, '-')}.pdf`;
       reply.header('Content-Type', 'application/pdf');
       reply.header('Content-Disposition', `attachment; filename="${filename}"`);
       return reply.send(stream);

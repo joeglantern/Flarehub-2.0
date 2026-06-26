@@ -1,4 +1,4 @@
-import { CountUp, Reveal } from './primitives'
+﻿import { CountUp, Reveal } from './primitives'
 
 const stats = [
   { num: 36,  label: 'Thousand youth registered', suffix: 'K+', rot: -4, color: 'var(--g500)', bg: '#f9ddd1' },
@@ -67,7 +67,7 @@ export function About() {
               </p>
               <p style={{ margin: '0 0 18px' }}>
                 The challenge was never the talent. It was the pipeline — the structured support between a raw idea and a
-                funded venture. So we built one. Through Flarehub, we run programmes like YCIC and BeGreen that take young
+                funded venture. So we built one. Through Afosihub, we run programmes like YCIC and BeGreen that take young
                 innovators from application to incubation to seed funding, with real mentorship at every stage.
               </p>
               <p style={{ margin: '0 0 18px' }}>

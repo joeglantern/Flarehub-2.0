@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+﻿import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import {
   Users, CalendarBlank, ArrowRight, ChatCircle,
@@ -80,7 +80,7 @@ export default function MentorDashboardPage() {
 
         <div className="relative z-10 w-full sm:max-w-[58%]">
           <div className="text-[11px] font-mono uppercase tracking-widest text-[var(--color-terra-500)] mb-2">
-            Mentor · Flarehub
+            Mentor · Afosihub
           </div>
           <h1 className="text-[32px] lg:text-[38px] font-bold text-[var(--color-ink)] leading-[1.05]"
             style={{ fontFamily: 'var(--font-display)' }}>

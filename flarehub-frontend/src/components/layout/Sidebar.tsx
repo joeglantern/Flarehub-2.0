@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+﻿import { NavLink, useNavigate } from 'react-router-dom'
 import {
   House, Binoculars, FileText, Target, Stairs, ChartBar,
   Camera, FolderOpen, DownloadSimple, Briefcase,
@@ -205,7 +205,7 @@ function SidebarInner({ onClose, mobile }: { onClose?: () => void; mobile?: bool
             className="font-semibold text-[18px] tracking-tight text-[var(--color-ink)]"
             style={{ fontFamily: 'var(--font-display)' }}
           >
-            Flarehub
+            Afosihub
           </span>
           <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-[var(--color-elev)] text-[var(--color-ink-mute)]">
             v3

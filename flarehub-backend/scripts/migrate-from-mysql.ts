@@ -1,11 +1,11 @@
-import { readFileSync } from 'fs';
+﻿import { readFileSync } from 'fs';
 import { createClient } from '@supabase/supabase-js';
 import { PrismaClient } from '@prisma/client';
 import type { Prisma } from '@prisma/client';
 import { config } from 'dotenv';
 config();
 
-const SQL_DUMP_PATH = 'C:\\Users\\liban\\OneDrive\\Desktop\\Projects\\Flarehub Rebuild\\flarehub-backend\\yhrqzzlw_flarehub.sql';
+const SQL_DUMP_PATH = 'C:\\Users\\liban\\OneDrive\\Desktop\\Projects\\Afosihub Rebuild\\afosihub-backend\\yhrqzzlw_afosihub.sql';
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -146,7 +146,7 @@ async function main() {
 
       if (error || !data.user) {
         // Fallback: create with a temporary password — user will need to reset
-        const tempPassword = `Flarehub_${Math.random().toString(36).slice(2, 10)}!`;
+        const tempPassword = `Afosihub_${Math.random().toString(36).slice(2, 10)}!`;
         const { data: fallback, error: fallbackErr } = await supabase.auth.admin.createUser({
           email:         row.email,
           password:      tempPassword,

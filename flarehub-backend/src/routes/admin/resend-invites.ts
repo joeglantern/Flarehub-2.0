@@ -1,4 +1,4 @@
-import type { FastifyInstance } from 'fastify';
+﻿import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { requireAdmin } from '../../middleware/require-admin.js';
 import { sendEmail } from '../../services/email.service.js';
@@ -93,7 +93,7 @@ export default async function resendInvitesRoutes(fastify: FastifyInstance) {
       try {
         await sendEmail({
           to: user.email,
-          subject: 'Congratulations! Your Flarehub account is ready',
+          subject: 'Congratulations! Your Afosihub account is ready',
           html: inviteEmailHtml(user.firstName, actionLink ?? FRONTEND_URL),
         });
         return reply.send({ success: true, data: { sent: 1, alreadyActive: 0, wasAlreadyActive, failed: [] } });
@@ -139,7 +139,7 @@ export default async function resendInvitesRoutes(fastify: FastifyInstance) {
 
         await sendEmail({
           to:      user.email,
-          subject: 'Congratulations! Your Flarehub account is ready',
+          subject: 'Congratulations! Your Afosihub account is ready',
           html:    inviteEmailHtml(user.firstName, actionLink ?? FRONTEND_URL),
         });
 

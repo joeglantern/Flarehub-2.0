@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -73,7 +73,7 @@ export default function SignupPage() {
               className="text-4xl font-semibold text-[var(--color-text-primary)] leading-tight mb-2"
               style={{ fontFamily: 'var(--font-display)', letterSpacing: '-0.03em' }}
             >
-              Join Flarehub.
+              Join Afosihub.
             </h1>
             <p className="text-sm text-[var(--color-text-muted)]">
               How would you like to participate?
@@ -138,7 +138,7 @@ export default function SignupPage() {
             <p className="text-sm text-[var(--color-text-muted)]">
               {selectedRole === 'mentor'
                 ? 'Create your account — you\'ll complete your mentor profile next'
-                : 'Create your Flarehub account — it\'s free'}
+                : 'Create your Afosihub account — it\'s free'}
             </p>
           </div>
 

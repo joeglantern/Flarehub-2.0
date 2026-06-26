@@ -1,8 +1,8 @@
-import { Reveal } from './primitives'
+﻿import { Reveal } from './primitives'
 
 const testimonials = [
   {
-    quote: "I'd pitched to 12 investors and gotten nowhere. Flarehub paired me with a mentor who'd built in the exact same space. We fixed my unit economics in two sessions. Three months later I closed my first round.",
+    quote: "I'd pitched to 12 investors and gotten nowhere. Afosihub paired me with a mentor who'd built in the exact same space. We fixed my unit economics in two sessions. Three months later I closed my first round.",
     name: 'User', role: 'Founder, PayHarvest · Cohort 03', avatar: 'U', bg: '#d0ecdb', accent: 'var(--g500)',
   },
   {
@@ -14,7 +14,7 @@ const testimonials = [
     name: 'User', role: 'Founder, Maisha Health · Cohort 04', avatar: 'U', bg: '#e8e4de', accent: 'var(--ink)',
   },
   {
-    quote: "Flarehub is the only program I've seen that actually checks if your idea works with Kenyan infrastructure — not some sanitised version of it. They made us test with real USSD flows on day one.",
+    quote: "Afosihub is the only program I've seen that actually checks if your idea works with Kenyan infrastructure — not some sanitised version of it. They made us test with real USSD flows on day one.",
     name: 'User', role: 'CTO, AgroLink Kenya · Cohort 06', avatar: 'U', bg: '#d0ecdb', accent: 'var(--g500)',
   },
   {
@@ -38,7 +38,7 @@ export function Testimonials() {
             <span className="display-italic" style={{ color: 'var(--g500)' }}>word</span> for it.
           </h2>
           <p style={{ color: 'var(--ink-2)', marginTop: 16, fontSize: 17, maxWidth: 560, lineHeight: 1.55 }}>
-            420 founders have been through Flarehub. Here's a few of them.
+            420 founders have been through Afosihub. Here's a few of them.
           </p>
         </Reveal>
 
@@ -77,7 +77,7 @@ export function Testimonials() {
             flexWrap: 'wrap', gap: 32, border: '1px solid var(--border)',
           }}>
             {[
-              { n: '94%', label: 'would recommend Flarehub to a friend' },
+              { n: '94%', label: 'would recommend Afosihub to a friend' },
               { n: '78%', label: 'of graduates still operating 12 months later' },
               { n: 'KES 64M', label: 'raised by cohort companies in total' },
             ].map((s) => (

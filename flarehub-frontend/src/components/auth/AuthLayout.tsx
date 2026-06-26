@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+﻿import type { ReactNode } from 'react'
 import { Flame } from '@phosphor-icons/react'
 import heroImage from '@/assets/auth-hero.jpg'
 
@@ -31,7 +31,7 @@ export function AuthLayout({ children }: Props) {
               <Flame size={17} weight="fill" className="text-white" />
             </div>
             <span className="text-white text-lg font-semibold tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-              Flarehub
+              Afosihub
             </span>
           </div>
 
@@ -56,7 +56,7 @@ export function AuthLayout({ children }: Props) {
             <Flame size={18} weight="fill" className="text-white" />
           </div>
           <span className="text-xl font-semibold text-[var(--color-text-primary)] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-            Flarehub
+            Afosihub
           </span>
         </div>
 

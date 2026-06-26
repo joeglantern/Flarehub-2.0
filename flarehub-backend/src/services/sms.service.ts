@@ -1,4 +1,4 @@
-import AfricasTalking from 'africastalking';
+﻿import AfricasTalking from 'africastalking';
 import { appConfig } from '../config/index.js';
 
 const at = appConfig.sms.apiKey
@@ -25,17 +25,17 @@ export async function sendSms(phone: string | null | undefined, message: string)
 
 export const smsTemplates = {
   applicationApproved: (programName: string) =>
-    `Congratulations! Your application for ${programName} has been APPROVED. Log in to Flarehub for next steps.`,
+    `Congratulations! Your application for ${programName} has been APPROVED. Log in to Afosihub for next steps.`,
 
   applicationRejected: (programName: string) =>
-    `Update: Your application for ${programName} was unsuccessful. Keep building and apply again! - Flarehub`,
+    `Update: Your application for ${programName} was unsuccessful. Keep building and apply again! - Afosihub`,
 
   mentorAssigned: (mentorName: string) =>
-    `Great news! ${mentorName} has been assigned as your Flarehub mentor. Check your app for details.`,
+    `Great news! ${mentorName} has been assigned as your Afosihub mentor. Check your app for details.`,
 
   meetingScheduled: (mentorName: string, time: string) =>
-    `Meeting scheduled with ${mentorName} on ${time}. Check Flarehub for the join link.`,
+    `Meeting scheduled with ${mentorName} on ${time}. Check Afosihub for the join link.`,
 
   meetingCancelled: (mentorName: string) =>
-    `Your meeting with ${mentorName} has been cancelled. Check Flarehub for updates.`,
+    `Your meeting with ${mentorName} has been cancelled. Check Afosihub for updates.`,
 };

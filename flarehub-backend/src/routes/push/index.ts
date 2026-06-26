@@ -1,4 +1,4 @@
-import type { FastifyInstance } from 'fastify';
+﻿import type { FastifyInstance } from 'fastify';
 import webpush from 'web-push';
 import { requireAuth } from '../../middleware/require-auth.js';
 import { appConfig } from '../../config/index.js';
@@ -54,7 +54,7 @@ export default async function pushRoutes(fastify: FastifyInstance) {
       subs.map((s) =>
         webpush.sendNotification(
           { endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } },
-          JSON.stringify({ title: 'Flarehub', body: 'Push notifications are working!' }),
+          JSON.stringify({ title: 'Afosihub', body: 'Push notifications are working!' }),
         ),
       ),
     );

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -63,7 +63,7 @@ export default function MeetingsPage() {
       {/* ── Header ─────────────────────────────────────────────────────── */}
       <div className="flex items-end justify-between">
         <div>
-          <p className="text-[11px] font-mono uppercase tracking-widest text-[var(--color-ink-faint)] mb-1">Mentor · Flarehub</p>
+          <p className="text-[11px] font-mono uppercase tracking-widest text-[var(--color-ink-faint)] mb-1">Mentor · Afosihub</p>
           <h1 className="text-[32px] font-bold text-[var(--color-ink)] leading-[1.05]"
             style={{ fontFamily: 'var(--font-display)' }}>
             Meetings

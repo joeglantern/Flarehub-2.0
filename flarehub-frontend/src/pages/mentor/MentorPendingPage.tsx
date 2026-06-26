@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+﻿import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { Flame, Clock, CheckCircle } from '@phosphor-icons/react'
@@ -32,7 +32,7 @@ export default function MentorPendingPage() {
             <Flame size={17} weight="fill" className="text-white" />
           </div>
           <span className="text-lg font-semibold text-[var(--color-text-primary)] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-            Flarehub
+            Afosihub
           </span>
         </div>
       </div>
@@ -57,7 +57,7 @@ export default function MentorPendingPage() {
                 You're in!
               </h1>
               <p className="text-sm text-[var(--color-text-muted)] mb-8 leading-relaxed">
-                Your mentor application has been approved. Welcome to the Flarehub mentor community.
+                Your mentor application has been approved. Welcome to the Afosihub mentor community.
               </p>
               <Button onClick={() => navigate('/mentor')} className="w-full">
                 Go to mentor dashboard
@@ -91,7 +91,7 @@ export default function MentorPendingPage() {
                 Application submitted!
               </h1>
               <p className="text-sm text-[var(--color-text-muted)] mb-2 leading-relaxed">
-                Thank you for applying to be a Flarehub mentor. Our team will review your application and get back to you by email.
+                Thank you for applying to be a Afosihub mentor. Our team will review your application and get back to you by email.
               </p>
               <p className="text-xs text-[var(--color-text-muted)] mb-8">
                 This usually takes 1–3 business days.

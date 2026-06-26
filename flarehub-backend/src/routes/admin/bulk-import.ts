@@ -1,4 +1,4 @@
-import type { FastifyInstance } from 'fastify';
+﻿import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { requireAdmin } from '../../middleware/require-admin.js';
 import { sendEmail } from '../../services/email.service.js';
@@ -149,7 +149,7 @@ export default async function bulkImportRoutes(fastify: FastifyInstance) {
 
         await sendEmail({
           to:      emailNorm,
-          subject: 'Congratulations! Your Flarehub account is ready',
+          subject: 'Congratulations! Your Afosihub account is ready',
           html:    inviteEmailHtml(row.firstName, actionLink ?? FRONTEND_URL),
         });
 
@@ -182,7 +182,7 @@ export function inviteEmailHtml(firstName: string, inviteUrl: string): string {
           <!-- Header -->
           <tr>
             <td style="background:#1d6f42;border-radius:14px 14px 0 0;padding:24px 36px;">
-              <span style="font-size:21px;font-weight:800;color:#ffffff;letter-spacing:-0.03em;font-family:Georgia,'Times New Roman',serif;">Flarehub</span>
+              <span style="font-size:21px;font-weight:800;color:#ffffff;letter-spacing:-0.03em;font-family:Georgia,'Times New Roman',serif;">Afosihub</span>
             </td>
           </tr>
 
@@ -199,7 +199,7 @@ export function inviteEmailHtml(firstName: string, inviteUrl: string): string {
               </h1>
 
               <p style="margin:0 0 14px;font-size:15px;color:#6b6560;line-height:1.65;">
-                You have been selected to join <strong style="color:#1a1916;">Flarehub</strong> as part of the
+                You have been selected to join <strong style="color:#1a1916;">Afosihub</strong> as part of the
                 <strong style="color:#1a1916;">Sheria ya Vijana!</strong> mentorship programme, a 12-month
                 EU-funded initiative that connects young entrepreneurs in Nairobi and Kwale with experienced mentors.
               </p>
@@ -226,7 +226,7 @@ export function inviteEmailHtml(firstName: string, inviteUrl: string): string {
           <tr>
             <td style="background:#f0ede8;border:1px solid #e2ddd7;border-top:none;border-radius:0 0 14px 14px;padding:18px 36px;">
               <p style="margin:0;font-size:10px;color:#a39e98;font-family:ui-monospace,'Courier New',monospace;letter-spacing:0.08em;text-transform:uppercase;">
-                Flarehub &nbsp;&middot;&nbsp; Kenya &nbsp;&middot;&nbsp; <a href="https://app.flarehub.org" style="color:#a39e98;text-decoration:none;">app.flarehub.org</a>
+                Afosihub &nbsp;&middot;&nbsp; Kenya &nbsp;&middot;&nbsp; <a href="https://app.afosihub.com" style="color:#a39e98;text-decoration:none;">app.afosihub.com</a>
               </p>
             </td>
           </tr>

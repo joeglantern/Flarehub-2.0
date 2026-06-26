@@ -1,4 +1,4 @@
-import type { FastifyInstance } from 'fastify';
+﻿import type { FastifyInstance } from 'fastify';
 import { requireAdmin } from '../../middleware/require-admin.js';
 import { mentorAssignmentSchema } from '../../schemas/admin.schema.js';
 import { z } from 'zod';
@@ -85,7 +85,7 @@ export default async function adminMentorRoutes(fastify: FastifyInstance) {
     });
     if (mentee) {
       const mentorName = `${mentor.firstName} ${mentor.lastName}`;
-      await sendEmail({ to: mentee.email, subject: 'You have been assigned a mentor — Flarehub', html: mentorAssignedEmail(mentee.firstName, mentorName) });
+      await sendEmail({ to: mentee.email, subject: 'You have been assigned a mentor — Afosihub', html: mentorAssignedEmail(mentee.firstName, mentorName) });
       await sendSms(mentee.phone, smsTemplates.mentorAssigned(mentorName));
     }
 

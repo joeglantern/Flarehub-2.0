@@ -1,4 +1,4 @@
-import { Resend } from 'resend';
+﻿import { Resend } from 'resend';
 import { appConfig } from '../config/index.js';
 
 const resend = appConfig.email.apiKey ? new Resend(appConfig.email.apiKey) : null;
@@ -37,7 +37,7 @@ function shell(content: string): string {
 
           <tr>
             <td style="background:#1d6f42;border-radius:14px 14px 0 0;padding:24px 36px;">
-              <span style="font-size:21px;font-weight:800;color:#ffffff;letter-spacing:-0.03em;font-family:Georgia,'Times New Roman',serif;">Flarehub</span>
+              <span style="font-size:21px;font-weight:800;color:#ffffff;letter-spacing:-0.03em;font-family:Georgia,'Times New Roman',serif;">Afosihub</span>
             </td>
           </tr>
 
@@ -50,7 +50,7 @@ function shell(content: string): string {
           <tr>
             <td style="background:#f0ede8;border:1px solid #e2ddd7;border-top:none;border-radius:0 0 14px 14px;padding:18px 36px;">
               <p style="margin:0;font-size:10px;color:#a39e98;font-family:ui-monospace,'Courier New',monospace;letter-spacing:0.08em;text-transform:uppercase;">
-                Flarehub &nbsp;&middot;&nbsp; Kenya &nbsp;&middot;&nbsp; <a href="https://app.flarehub.org" style="color:#a39e98;text-decoration:none;">app.flarehub.org</a>
+                Afosihub &nbsp;&middot;&nbsp; Kenya &nbsp;&middot;&nbsp; <a href="https://app.afosihub.com" style="color:#a39e98;text-decoration:none;">app.afosihub.com</a>
               </p>
             </td>
           </tr>
@@ -84,7 +84,7 @@ function divider(): string {
 }
 
 function sig(): string {
-  return `<p style="margin:0;font-size:13px;color:#a39e98;">&#8212; The Flarehub Team</p>`;
+  return `<p style="margin:0;font-size:13px;color:#a39e98;">&#8212; The Afosihub Team</p>`;
 }
 
 // ── Email templates ───────────────────────────────────────────────────────────
@@ -95,7 +95,7 @@ export function applicationApprovedEmail(firstName: string, programName: string)
     ${heading(`Congratulations, ${firstName}!`)}
     ${body(`Your application for <strong style="color:#1a1916;">${programName}</strong> has been approved. Welcome to the program.`)}
     ${body('Log in to your dashboard to view your program details, next steps, and connect with your cohort.')}
-    ${cta('Go to Dashboard', 'https://app.flarehub.org/dashboard')}
+    ${cta('Go to Dashboard', 'https://app.afosihub.com/dashboard')}
     ${divider()}
     ${sig()}
   `);
@@ -107,7 +107,7 @@ export function applicationRejectedEmail(firstName: string, programName: string)
     ${heading(`Hi ${firstName}`)}
     ${body(`Thank you for applying to <strong style="color:#1a1916;">${programName}</strong>. After careful review, we were unable to move forward with your application at this time.`)}
     ${body('We encourage you to keep building and apply to future programs — there will be more opportunities ahead.')}
-    ${cta('View Open Programs', 'https://app.flarehub.org/programs', '#c4522a')}
+    ${cta('View Open Programs', 'https://app.afosihub.com/programs', '#c4522a')}
     ${divider()}
     ${sig()}
   `);
@@ -128,9 +128,9 @@ export function mentorAssignedEmail(firstName: string, mentorName: string): stri
   return shell(`
     ${badge('Mentor Assigned', '#edf7f1', '#1d6f42')}
     ${heading(`Meet your mentor`)}
-    ${body(`Hi ${firstName}, you have been paired with <strong style="color:#1a1916;">${mentorName}</strong> as your Flarehub mentor.`)}
-    ${body('Your mentor will reach out to schedule your first session. You can also send them a message directly on Flarehub.')}
-    ${cta('Message Mentor', 'https://app.flarehub.org/messages')}
+    ${body(`Hi ${firstName}, you have been paired with <strong style="color:#1a1916;">${mentorName}</strong> as your Afosihub mentor.`)}
+    ${body('Your mentor will reach out to schedule your first session. You can also send them a message directly on Afosihub.')}
+    ${cta('Message Mentor', 'https://app.afosihub.com/messages')}
     ${divider()}
     ${sig()}
   `);
@@ -153,7 +153,7 @@ export function meetingScheduledEmail(firstName: string, mentorName: string, mee
       <p style="margin:0;font-size:16px;font-weight:700;color:#1a1916;font-family:Georgia,'Times New Roman',serif;">${timeStr}</p>
     </div>
     ${linkBlock}
-    ${cta('View Meeting', 'https://app.flarehub.org/meetings')}
+    ${cta('View Meeting', 'https://app.afosihub.com/meetings')}
     ${divider()}
     ${sig()}
   `);
@@ -164,7 +164,7 @@ export function evidenceVerifiedEmail(firstName: string): string {
     ${badge('Verified', '#edf7f1', '#1d6f42')}
     ${heading('Evidence verified')}
     ${body(`Hi ${firstName}, your uploaded evidence has been reviewed and <strong style="color:#1a1916;">verified</strong> by our team.`)}
-    ${cta('View Evidence', 'https://app.flarehub.org/evidence')}
+    ${cta('View Evidence', 'https://app.afosihub.com/evidence')}
     ${divider()}
     ${sig()}
   `);
@@ -183,7 +183,7 @@ export function evidenceRejectedEmail(firstName: string, notes?: string | null):
     ${body(`Hi ${firstName}, your uploaded evidence requires revision before it can be verified.`)}
     ${notesBlock}
     ${body('Please log in and upload a revised version.')}
-    ${cta('View Evidence', 'https://app.flarehub.org/evidence', '#c4522a')}
+    ${cta('View Evidence', 'https://app.afosihub.com/evidence', '#c4522a')}
     ${divider()}
     ${sig()}
   `);
@@ -195,7 +195,7 @@ export function announcementEmail(firstName: string, title: string, bodyText: st
     ${heading(title)}
     ${body(`Hi ${firstName},`)}
     ${body(bodyText)}
-    ${cta('View Announcements', 'https://app.flarehub.org/announcements')}
+    ${cta('View Announcements', 'https://app.afosihub.com/announcements')}
     ${divider()}
     ${sig()}
   `);
@@ -205,9 +205,9 @@ export function newProgramEmail(firstName: string, programName: string): string 
   return shell(`
     ${badge('New Program', '#edf7f1', '#1d6f42')}
     ${heading('A new program just launched')}
-    ${body(`Hi ${firstName}, a new program is now open on Flarehub: <strong style="color:#1a1916;">${programName}</strong>.`)}
+    ${body(`Hi ${firstName}, a new program is now open on Afosihub: <strong style="color:#1a1916;">${programName}</strong>.`)}
     ${body('Spots are limited — check eligibility and apply before the deadline.')}
-    ${cta('View Program', 'https://app.flarehub.org/programs')}
+    ${cta('View Program', 'https://app.afosihub.com/programs')}
     ${divider()}
     ${sig()}
   `);

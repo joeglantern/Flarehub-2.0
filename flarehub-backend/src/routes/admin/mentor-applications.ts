@@ -1,4 +1,4 @@
-import type { FastifyInstance } from 'fastify';
+﻿import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { requireAdmin } from '../../middleware/require-admin.js';
 import { AppError } from '../../types/index.js';
@@ -79,13 +79,13 @@ export default async function adminMentorApplicationRoutes(fastify: FastifyInsta
         userId:   application.userId,
         type:     'mentor_application_approved',
         title:    'Your mentor application was approved!',
-        body:     'Welcome to Flarehub as a mentor. You can now log in to your mentor dashboard.',
+        body:     'Welcome to Afosihub as a mentor. You can now log in to your mentor dashboard.',
         metadata: {},
       });
 
       await sendEmail({
         to:      application.user.email,
-        subject: 'Your Flarehub mentor application has been approved',
+        subject: 'Your Afosihub mentor application has been approved',
         html:    mentorApprovedEmail(application.user.firstName),
       });
 
@@ -136,7 +136,7 @@ export default async function adminMentorApplicationRoutes(fastify: FastifyInsta
 
       await sendEmail({
         to:      application.user.email,
-        subject: 'Update on your Flarehub mentor application',
+        subject: 'Update on your Afosihub mentor application',
         html:    mentorRejectedEmail(application.user.firstName, notes),
       });
 
@@ -161,19 +161,19 @@ function mentorApprovedEmail(firstName: string): string {
 <body style="margin:0;padding:0;background:#f5f4f2;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="max-width:580px;margin:40px auto;">
     <tr><td style="background:#1d6f42;border-radius:12px 12px 0 0;padding:24px 36px;">
-      <span style="font-size:20px;font-weight:800;color:#fff;font-family:Georgia,serif;">Flarehub</span>
+      <span style="font-size:20px;font-weight:800;color:#fff;font-family:Georgia,serif;">Afosihub</span>
     </td></tr>
     <tr><td style="background:#fff;padding:36px;border:1px solid #e2ddd7;border-top:none;">
       <div style="display:inline-block;padding:4px 12px;border-radius:6px;background:#edf7f1;color:#1d6f42;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px;">Approved</div>
-      <h1 style="margin:0 0 12px;font-size:26px;font-weight:800;color:#1a1916;font-family:Georgia,serif;">Welcome to Flarehub, ${firstName}!</h1>
-      <p style="margin:0 0 14px;font-size:15px;color:#6b6560;line-height:1.65;">Your mentor application has been approved. You are now an official Flarehub mentor.</p>
+      <h1 style="margin:0 0 12px;font-size:26px;font-weight:800;color:#1a1916;font-family:Georgia,serif;">Welcome to Afosihub, ${firstName}!</h1>
+      <p style="margin:0 0 14px;font-size:15px;color:#6b6560;line-height:1.65;">Your mentor application has been approved. You are now an official Afosihub mentor.</p>
       <p style="margin:0 0 24px;font-size:15px;color:#6b6560;line-height:1.65;">Log in to access your mentor dashboard, connect with entrepreneurs, and start making an impact.</p>
-      <a href="https://app.flarehub.org/mentor" style="display:inline-block;padding:13px 26px;background:#1d6f42;color:#fff;font-size:14px;font-weight:600;border-radius:10px;text-decoration:none;">Go to mentor dashboard &rarr;</a>
+      <a href="https://app.afosihub.com/mentor" style="display:inline-block;padding:13px 26px;background:#1d6f42;color:#fff;font-size:14px;font-weight:600;border-radius:10px;text-decoration:none;">Go to mentor dashboard &rarr;</a>
       <hr style="border:none;border-top:1px solid #e2ddd7;margin:28px 0;">
-      <p style="margin:0;font-size:13px;color:#a39e98;">&#8212; The Flarehub Team</p>
+      <p style="margin:0;font-size:13px;color:#a39e98;">&#8212; The Afosihub Team</p>
     </td></tr>
     <tr><td style="background:#f0ede8;border:1px solid #e2ddd7;border-top:none;border-radius:0 0 12px 12px;padding:14px 36px;">
-      <p style="margin:0;font-size:10px;color:#a39e98;font-family:monospace;letter-spacing:.08em;text-transform:uppercase;">Flarehub &middot; Kenya &middot; app.flarehub.org</p>
+      <p style="margin:0;font-size:10px;color:#a39e98;font-family:monospace;letter-spacing:.08em;text-transform:uppercase;">Afosihub &middot; Kenya &middot; app.afosihub.com</p>
     </td></tr>
   </table>
 </body>
@@ -192,19 +192,19 @@ function mentorRejectedEmail(firstName: string, notes?: string): string {
 <body style="margin:0;padding:0;background:#f5f4f2;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="max-width:580px;margin:40px auto;">
     <tr><td style="background:#1d6f42;border-radius:12px 12px 0 0;padding:24px 36px;">
-      <span style="font-size:20px;font-weight:800;color:#fff;font-family:Georgia,serif;">Flarehub</span>
+      <span style="font-size:20px;font-weight:800;color:#fff;font-family:Georgia,serif;">Afosihub</span>
     </td></tr>
     <tr><td style="background:#fff;padding:36px;border:1px solid #e2ddd7;border-top:none;">
       <div style="display:inline-block;padding:4px 12px;border-radius:6px;background:#fdf2ed;color:#c4522a;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px;">Application Update</div>
       <h1 style="margin:0 0 12px;font-size:26px;font-weight:800;color:#1a1916;font-family:Georgia,serif;">Hi ${firstName},</h1>
-      <p style="margin:0 0 14px;font-size:15px;color:#6b6560;line-height:1.65;">Thank you for your interest in becoming a Flarehub mentor. After careful review, we are unable to move forward with your application at this time.</p>
+      <p style="margin:0 0 14px;font-size:15px;color:#6b6560;line-height:1.65;">Thank you for your interest in becoming a Afosihub mentor. After careful review, we are unable to move forward with your application at this time.</p>
       ${notesBlock}
       <p style="margin:0 0 14px;font-size:15px;color:#6b6560;line-height:1.65;">We encourage you to keep building your expertise and apply again in the future.</p>
       <hr style="border:none;border-top:1px solid #e2ddd7;margin:28px 0;">
-      <p style="margin:0;font-size:13px;color:#a39e98;">&#8212; The Flarehub Team</p>
+      <p style="margin:0;font-size:13px;color:#a39e98;">&#8212; The Afosihub Team</p>
     </td></tr>
     <tr><td style="background:#f0ede8;border:1px solid #e2ddd7;border-top:none;border-radius:0 0 12px 12px;padding:14px 36px;">
-      <p style="margin:0;font-size:10px;color:#a39e98;font-family:monospace;letter-spacing:.08em;text-transform:uppercase;">Flarehub &middot; Kenya &middot; app.flarehub.org</p>
+      <p style="margin:0;font-size:10px;color:#a39e98;font-family:monospace;letter-spacing:.08em;text-transform:uppercase;">Afosihub &middot; Kenya &middot; app.afosihub.com</p>
     </td></tr>
   </table>
 </body>

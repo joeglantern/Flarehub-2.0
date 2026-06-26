@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+﻿import { useQuery } from '@tanstack/react-query'
 import { ResponsiveLine } from '@nivo/line'
 import {
   UsersThree, ClipboardText, SealCheck, Binoculars,
@@ -110,7 +110,7 @@ export default function AdminDashboardPage() {
 
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="lg:max-w-[55%]">
-            <div className="text-[11px] font-mono uppercase tracking-widest text-white/50 mb-2">Admin · Flarehub</div>
+            <div className="text-[11px] font-mono uppercase tracking-widest text-white/50 mb-2">Admin · Afosihub</div>
             <h1 className="text-[34px] lg:text-[42px] font-bold leading-[1.05] text-white"
               style={{ fontFamily: 'var(--font-display)' }}>
               {user ? greeting(user.firstName) : 'Dashboard'}

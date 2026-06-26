@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+﻿import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { Users, ChatCircle, ArrowRight } from '@phosphor-icons/react'
 import { api } from '@/lib/api'
@@ -20,7 +20,7 @@ export default function MenteesPage() {
       {/* ── Header ─────────────────────────────────────────────────────── */}
       <div className="flex items-end justify-between">
         <div>
-          <p className="text-[11px] font-mono uppercase tracking-widest text-[var(--color-ink-faint)] mb-1">Mentor · Flarehub</p>
+          <p className="text-[11px] font-mono uppercase tracking-widest text-[var(--color-ink-faint)] mb-1">Mentor · Afosihub</p>
           <h1 className="text-[32px] font-bold text-[var(--color-ink)] leading-[1.05]"
             style={{ fontFamily: 'var(--font-display)' }}>
             My Mentees

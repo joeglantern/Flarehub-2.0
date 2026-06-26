@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -70,7 +70,7 @@ const STEPS = [
     number: 1,
     label:  'About you',
     title:  'First, tell us who you are.',
-    sub:    'This helps the Flarehub team and entrepreneurs know you personally.',
+    sub:    'This helps the Afosihub team and entrepreneurs know you personally.',
     illustration: <IllustrationOnboarding />,
     bg:     'bg-[var(--color-green-50)]',
   },
@@ -148,7 +148,7 @@ export default function MentorOnboardingPage() {
             <Flame size={17} weight="fill" className="text-white" />
           </div>
           <span className="text-lg font-semibold text-[var(--color-text-primary)] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-            Flarehub
+            Afosihub
           </span>
         </div>
 
@@ -191,7 +191,7 @@ export default function MentorOnboardingPage() {
           <div className="w-8 h-8 bg-[var(--color-green-500)] rounded-[var(--radius-md)] flex items-center justify-center">
             <Flame size={18} weight="fill" className="text-white" />
           </div>
-          <span className="text-xl font-semibold text-[var(--color-text-primary)] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>Flarehub</span>
+          <span className="text-xl font-semibold text-[var(--color-text-primary)] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>Afosihub</span>
         </div>
 
         <div className="flex items-center justify-center gap-2 mb-6 lg:hidden">
@@ -334,7 +334,7 @@ export default function MentorOnboardingPage() {
                   </div>
 
                   <Textarea
-                    label="Why do you want to be a Flarehub mentor?"
+                    label="Why do you want to be a Afosihub mentor?"
                     required
                     rows={4}
                     placeholder="Tell us what motivates you to mentor entrepreneurs and what you hope to contribute..."

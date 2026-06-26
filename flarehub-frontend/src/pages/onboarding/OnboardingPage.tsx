@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -109,7 +109,7 @@ export default function OnboardingPage() {
             className="text-lg font-semibold text-[var(--color-text-primary)] tracking-tight"
             style={{ fontFamily: 'var(--font-display)' }}
           >
-            Flarehub
+            Afosihub
           </span>
         </div>
 
@@ -170,7 +170,7 @@ export default function OnboardingPage() {
             <Flame size={18} weight="fill" className="text-white" />
           </div>
           <span className="text-xl font-semibold text-[var(--color-text-primary)] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
-            Flarehub
+            Afosihub
           </span>
         </div>
 

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { MagnifyingGlass, DownloadSimple, FileText, CheckCircle, Clock, X } from '@phosphor-icons/react'
 import { api } from '@/lib/api'
@@ -107,7 +107,7 @@ export default function DocumentsAdminPage() {
       {/* Header */}
       <div className="flex items-end justify-between">
         <div>
-          <p className="text-[11px] font-mono uppercase tracking-widest text-[var(--color-ink-faint)] mb-1">Admin · Flarehub</p>
+          <p className="text-[11px] font-mono uppercase tracking-widest text-[var(--color-ink-faint)] mb-1">Admin · Afosihub</p>
           <h1 className="text-[32px] font-bold text-[var(--color-ink)] leading-[1.05]"
             style={{ fontFamily: 'var(--font-display)' }}>
             Documents

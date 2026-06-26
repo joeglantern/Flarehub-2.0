@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   UsersFour, MagnifyingGlass, Trash, Check, Binoculars,
@@ -559,7 +559,7 @@ export default function MentorManagementPage() {
         open={!!approveTarget}
         onClose={() => { setApproveTarget(null); setApproveProgramId(null) }}
         title="Approve mentor application"
-        description={`Approve ${approveTarget?.user?.firstName} ${approveTarget?.user?.lastName} as a Flarehub mentor. They will be notified by email.`}
+        description={`Approve ${approveTarget?.user?.firstName} ${approveTarget?.user?.lastName} as a Afosihub mentor. They will be notified by email.`}
         size="sm"
         footer={
           <>

@@ -1,4 +1,4 @@
-import fp from 'fastify-plugin';
+﻿import fp from 'fastify-plugin';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import { appConfig } from '../config/index.js';
@@ -9,7 +9,7 @@ export default fp(async (fastify) => {
   await fastify.register(swagger, {
     openapi: {
       info: {
-        title:       'Flarehub API',
+        title:       'Afosihub API',
         description: 'Youth entrepreneurship program management platform',
         version:     '1.0.0',
       },

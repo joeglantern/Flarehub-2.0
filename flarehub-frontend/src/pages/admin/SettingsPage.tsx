@@ -32,13 +32,13 @@ const SETTING_GROUPS: SettingGroup[] = [
         key:         'platform_name',
         label:       'Platform name',
         description: 'Shown in emails, notifications, and the browser tab.',
-        placeholder: 'Flarehub',
+        placeholder: 'Afosihub',
       },
       {
         key:         'support_email',
         label:       'Support email',
         description: 'Where users send support requests.',
-        placeholder: 'support@flarehub.org',
+        placeholder: 'support@afosihub.com',
         type:        'email',
       },
     ],
@@ -101,8 +101,8 @@ const SETTING_GROUPS: SettingGroup[] = [
 const ALL_KEYS = SETTING_GROUPS.flatMap(g => g.settings.map(s => s.key))
 
 const DEFAULTS: Record<string, string> = {
-  platform_name:              'Flarehub',
-  support_email:              'support@flarehub.org',
+  platform_name:              'Afosihub',
+  support_email:              'support@afosihub.com',
   max_applications_per_user:  '3',
   application_review_days:    '14',
   deadline_reminder_days:     '7',

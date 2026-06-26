@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Flame, Eye, EyeSlash } from '@phosphor-icons/react'
 import { supabase, primeToken } from '@/lib/supabase'
@@ -65,14 +65,14 @@ export default function UpdatePasswordPage() {
           </div>
           <span className="font-semibold text-[18px] tracking-tight text-[var(--color-ink)]"
             style={{ fontFamily: 'var(--font-display)' }}>
-            Flarehub
+            Afosihub
           </span>
         </div>
 
         <div className="card p-7">
           <h1 className="text-[22px] font-bold text-[var(--color-ink)] mb-1">Set your password</h1>
           <p className="text-sm text-[var(--color-ink-soft)] mb-6">
-            Welcome to Flarehub. Choose a password to access your account.
+            Welcome to Afosihub. Choose a password to access your account.
           </p>
 
           {!ready ? (

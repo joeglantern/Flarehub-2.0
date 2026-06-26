@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+﻿import { createClient } from '@supabase/supabase-js';
 import { PrismaClient } from '@prisma/client';
 import { config } from 'dotenv';
 config();
@@ -11,8 +11,8 @@ const supabase = createClient(
 
 const prisma = new PrismaClient();
 
-const SUPER_ADMIN_EMAIL = 'admin@flarehub.org';
-const SUPER_ADMIN_PASSWORD = 'FlarehubAdmin2025!';
+const SUPER_ADMIN_EMAIL = 'admin@afosihub.org';
+const SUPER_ADMIN_PASSWORD = 'AfosihubAdmin2025!';
 
 async function main() {
   console.log('Seeding database...');
@@ -48,7 +48,7 @@ async function main() {
     create: {
       id:              adminId,
       email:           SUPER_ADMIN_EMAIL,
-      firstName:       'Flarehub',
+      firstName:       'Afosihub',
       lastName:        'Admin',
       role:            'super_admin',
       isVerified:      true,
@@ -136,10 +136,10 @@ async function main() {
 
   // 5. Default admin settings
   const defaultSettings: Array<{ key: string; value: string; description: string }> = [
-    { key: 'site_name',        value: 'Flarehub',    description: 'Platform display name' },
+    { key: 'site_name',        value: 'Afosihub',    description: 'Platform display name' },
     { key: 'maintenance_mode', value: 'false',        description: 'Set to true to enable maintenance mode' },
     { key: 'max_file_size_mb', value: '50',           description: 'Maximum file upload size in MB' },
-    { key: 'support_email',    value: 'support@flarehub.org', description: 'Support contact email' },
+    { key: 'support_email',    value: 'support@afosihub.com', description: 'Support contact email' },
   ];
 
   for (const s of defaultSettings) {

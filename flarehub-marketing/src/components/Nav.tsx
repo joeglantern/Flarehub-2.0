@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 
 function FlameMark() {
   return (
@@ -44,7 +44,7 @@ export function Nav({
     <nav className={`nav ${scrolled ? 'scrolled' : ''}`}>
       <button className="nav-logo" onClick={() => setPage('home')}>
         <FlameMark />
-        Flarehub
+        Afosihub
       </button>
       <div className="nav-links">
         {links.map((l) => (
@@ -92,7 +92,7 @@ export function Nav({
         <div style={{ position: 'fixed', inset: 0, background: 'var(--base)', zIndex: 60, display: 'flex', flexDirection: 'column', padding: 24 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 32 }}>
             <div className="nav-logo" style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'var(--display)', fontWeight: 800, fontSize: 22 }}>
-              <FlameMark /> Flarehub
+              <FlameMark /> Afosihub
             </div>
             <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
               <button

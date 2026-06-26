@@ -1,4 +1,4 @@
-import { config } from 'dotenv';
+﻿import { config } from 'dotenv';
 config();
 
 function requireEnv(key: string): string {
@@ -42,13 +42,13 @@ export const appConfig = {
 
   email: {
     apiKey: process.env.RESEND_API_KEY ?? '',
-    from:   process.env.EMAIL_FROM     ?? 'noreply@flarehub.org',
+    from:   process.env.EMAIL_FROM     ?? 'Afosihub <noreply@flare.afosihub.com>',
   },
 
   sms: {
     apiKey:   process.env.AT_API_KEY   ?? '',
     username: process.env.AT_USERNAME  ?? '',
-    senderId: process.env.AT_SENDER_ID ?? 'FLAREHUB',
+    senderId: process.env.AT_SENDER_ID ?? 'AFOSIHUB',
   },
 
   redis: {

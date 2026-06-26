@@ -1,4 +1,4 @@
-import { Reveal, SketchIcon } from './primitives'
+﻿import { Reveal, SketchIcon } from './primitives'
 
 const steps = [
   { n: '01', icon: 'pencil',    title: 'Apply',         desc: 'Tell us your idea in your own words. No slide decks required. 10 minute form, real humans read every one.', rotate: -3, top: 40 },
@@ -62,7 +62,7 @@ export function Process() {
             <div className="pq-open-quote display" style={{ fontSize: 72, fontWeight: 800, lineHeight: 0.8, opacity: 0.4 }}>"</div>
             <div>
               <p className="display" style={{ fontSize: 'clamp(20px,2.6vw,28px)', fontWeight: 500, margin: 0, lineHeight: 1.3 }}>
-                Flarehub doesn't teach you to pitch. It makes you <span className="display-italic">useful.</span>
+                Afosihub doesn't teach you to pitch. It makes you <span className="display-italic">useful.</span>
               </p>
               <div className="mono" style={{ marginTop: 14, opacity: 0.7, fontSize: 11 }}>
                 — Amani Otieno · Cohort 04 · Founder, Soma AI

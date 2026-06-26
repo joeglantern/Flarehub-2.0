@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { Flame, ArrowLeft, CheckCircle, Warning, Envelope } from '@phosphor-icons/react'
@@ -100,7 +100,7 @@ export default function MentorshipApplyPage() {
           <Flame size={16} weight="fill" className="text-white" />
           <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[var(--color-terra-500)] rounded-full" />
         </div>
-        <span className="font-bold text-[var(--color-ink)]">Flarehub</span>
+        <span className="font-bold text-[var(--color-ink)]">Afosihub</span>
         <div className="flex-1" />
         <button
           onClick={() => navigate(-1)}

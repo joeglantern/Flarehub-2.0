@@ -29,6 +29,14 @@ export default function App() {
     try { localStorage.setItem('fh:theme', next) } catch {}
   }
 
+  useEffect(() => {
+    const loader = document.getElementById('loader')
+    if (loader) {
+      loader.classList.add('out')
+      setTimeout(() => loader.remove(), 520)
+    }
+  }, [])
+
   useEffect(() => { try { localStorage.setItem('fh:page', page) } catch {} }, [page])
   useEffect(() => {
     document.body.setAttribute('data-theme', theme)

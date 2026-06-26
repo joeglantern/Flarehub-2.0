@@ -27,18 +27,17 @@ export function TornEdge({ flip = false, fill = 'var(--elevated)' }: { flip?: bo
   )
 }
 
-export function FlareMark({ size = 22, color = 'var(--g500)', accent = 'var(--t500)' }: { size?: number; color?: string; accent?: string }) {
+export function FlareMark({ size = 18, bg = 'var(--ink)', accent = 'var(--t500)' }: { size?: number; bg?: string; accent?: string }) {
+  const box = Math.round(size * 1.9)
+  const radius = Math.round(box * 0.38)
+  const dot = Math.round(size * 0.42)
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
-      <path
-        d="M12 2 L13.5 10.3 L22 12 L13.5 13.7 L12 22 L10.5 13.7 L2 12 L10.5 10.3 Z"
-        fill={color}
-        stroke={color}
-        strokeWidth="0.6"
-        strokeLinejoin="round"
-      />
-      <circle cx="18.2" cy="5.8" r="1.6" fill={accent} />
-    </svg>
+    <span style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: box, height: box, borderRadius: radius, background: bg, flexShrink: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.18)' }}>
+      <svg viewBox="0 0 256 256" width={size} height={size} aria-hidden="true">
+        <path d="M173.79,51.48a221.25,221.25,0,0,0-41.67-34.34,8,8,0,0,0-8.24,0A221.25,221.25,0,0,0,82.21,51.48C54.59,80.48,40,112.47,40,144a88,88,0,0,0,176,0C216,112.47,201.41,80.48,173.79,51.48ZM96,184c0-27.67,22.53-47.28,32-54.3,9.48,7,32,26.63,32,54.3a32,32,0,0,1-64,0Z" fill="white" />
+      </svg>
+      <span style={{ position: 'absolute', top: -2, right: -2, width: dot, height: dot, borderRadius: '50%', background: accent, border: '2px solid var(--base, #f7f6f3)' }} />
+    </span>
   )
 }
 

@@ -103,7 +103,7 @@ export function CTAFooter({ setPage }: { setPage: (p: string) => void }) {
           <div className="footer-grid">
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <FlareMark color="#d0ecdb" accent="#c4522a" />
+                <FlareMark bg="rgba(255,255,255,0.1)" accent="#c4522a" size={18} />
                 <span className="display" style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em' }}>Afosihub</span>
               </div>
               <p style={{ marginTop: 16, fontSize: 13, lineHeight: 1.6, opacity: 0.7, maxWidth: 300 }}>

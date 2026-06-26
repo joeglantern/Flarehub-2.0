@@ -30,11 +30,16 @@ export default function App() {
   }
 
   useEffect(() => {
-    const loader = document.getElementById('loader')
-    if (loader) {
-      loader.classList.add('out')
-      setTimeout(() => loader.remove(), 520)
+    const dismiss = () => {
+      const loader = document.getElementById('loader')
+      if (loader) {
+        loader.classList.add('out')
+        setTimeout(() => loader.remove(), 560)
+      }
     }
+    // hold loader for at least 2.6s so the animation actually plays
+    const t = setTimeout(dismiss, 2600)
+    return () => clearTimeout(t)
   }, [])
 
   useEffect(() => { try { localStorage.setItem('fh:page', page) } catch {} }, [page])

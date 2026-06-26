@@ -28,31 +28,30 @@
         align-items: center;
         justify-content: center;
         z-index: 9999;
-        gap: 0;
         opacity: 1;
-        transition: opacity 500ms cubic-bezier(.4,0,.2,1);
+        transition: opacity 560ms cubic-bezier(.4,0,.2,1);
       }
       #loader.out { opacity: 0; pointer-events: none; }
 
       .ld-logo {
-        width: 72px;
-        height: 72px;
-        border-radius: 20px;
+        width: 80px;
+        height: 80px;
+        border-radius: 22px;
         background: #1a1916;
         display: flex;
         align-items: center;
         justify-content: center;
         position: relative;
-        box-shadow: 0 8px 32px rgba(26,25,22,.18);
-        animation: ld-logo-pulse 2.4s ease-in-out infinite;
-        margin-bottom: 18px;
+        box-shadow: 0 8px 32px rgba(26,25,22,.22);
+        animation: ld-glow 2.2s ease-in-out infinite;
+        margin-bottom: 20px;
       }
-      .ld-logo-dot {
+      .ld-dot {
         position: absolute;
-        top: -5px;
-        right: -5px;
-        width: 16px;
-        height: 16px;
+        top: -6px;
+        right: -6px;
+        width: 18px;
+        height: 18px;
         border-radius: 50%;
         background: #c4522a;
         border: 3px solid #f7f6f3;
@@ -60,68 +59,60 @@
       .ld-name {
         font-family: 'Bricolage Grotesque', Georgia, sans-serif;
         font-weight: 800;
-        font-size: 22px;
+        font-size: 24px;
         color: #1a1916;
         letter-spacing: -0.03em;
-        margin-bottom: 28px;
+        margin-bottom: 32px;
       }
 
-      /* Spinning ring */
-      .ld-ring {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        border: 3px solid #d0ecdb;
-        border-top-color: #1d6f42;
-        animation: ld-spin 900ms linear infinite;
-      }
-
-      /* Lottie wrapper — sits on top of ring, hidden until loaded */
-      .ld-lottie {
-        position: absolute;
-        width: 80px;
-        height: 80px;
-        opacity: 0;
-        transition: opacity 400ms;
-      }
-      .ld-lottie.ready { opacity: 1; }
-      .ld-spinner {
-        position: relative;
+      /* Lottie sits here — always visible */
+      .ld-lottie-wrap {
+        width: 120px;
+        height: 120px;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 80px;
-        height: 80px;
+        position: relative;
+      }
+
+      /* CSS ring fallback — hidden once lottie-player element is present & playing */
+      .ld-ring {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 3px solid #d0ecdb;
+        border-top-color: #1d6f42;
+        animation: ld-spin 800ms linear infinite;
+        position: absolute;
       }
 
       @keyframes ld-spin {
         to { transform: rotate(360deg); }
       }
-      @keyframes ld-logo-pulse {
-        0%,100% { box-shadow: 0 8px 32px rgba(26,25,22,.18), 0 0 0 0 rgba(29,111,66,0); }
-        50%      { box-shadow: 0 8px 32px rgba(26,25,22,.18), 0 0 0 14px rgba(29,111,66,.07); }
+      @keyframes ld-glow {
+        0%,100% { box-shadow: 0 8px 32px rgba(26,25,22,.22), 0 0 0 0 rgba(29,111,66,0); }
+        50%      { box-shadow: 0 8px 32px rgba(26,25,22,.22), 0 0 0 16px rgba(29,111,66,.08); }
       }
     </style>
   </head>
   <body>
     <div id="loader">
       <div class="ld-logo">
-        <svg viewBox="0 0 256 256" width="36" height="36" aria-hidden="true">
+        <svg viewBox="0 0 256 256" width="40" height="40" aria-hidden="true">
           <path d="M173.79,51.48a221.25,221.25,0,0,0-41.67-34.34,8,8,0,0,0-8.24,0A221.25,221.25,0,0,0,82.21,51.48C54.59,80.48,40,112.47,40,144a88,88,0,0,0,176,0C216,112.47,201.41,80.48,173.79,51.48ZM96,184c0-27.67,22.53-47.28,32-54.3,9.48,7,32,26.63,32,54.3a32,32,0,0,1-64,0Z" fill="white"/>
         </svg>
-        <span class="ld-logo-dot"></span>
+        <span class="ld-dot"></span>
       </div>
       <div class="ld-name">Afosihub</div>
-      <div class="ld-spinner">
+      <div class="ld-lottie-wrap">
         <div class="ld-ring"></div>
         <lottie-player
-          class="ld-lottie"
-          src="https://assets9.lottiefiles.com/packages/lf20_obhph3t0.json"
+          src="https://assets3.lottiefiles.com/packages/lf20_szlepvdh.json"
           background="transparent"
           speed="1"
+          style="width:120px;height:120px;position:absolute;"
           loop
           autoplay
-          onload="this.classList.add('ready')"
         ></lottie-player>
       </div>
     </div>

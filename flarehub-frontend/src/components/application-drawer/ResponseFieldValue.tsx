@@ -14,6 +14,19 @@ export function ResponseFieldValue({ field, value }: Props) {
 
   switch (field.type) {
 
+    // ── Checkbox ─────────────────────────────────────────────────────────
+    case 'checkbox':
+      return (
+        <span className={cn(
+          'inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-semibold rounded-full',
+          value === true
+            ? 'bg-[var(--color-green-50)] text-[var(--color-green-600)] border border-[var(--color-green-100)]'
+            : 'bg-[var(--color-bg-elevated)] text-[var(--color-text-muted)] border border-[var(--color-border)]',
+        )}>
+          {value === true ? '✓ Checked' : '✗ Unchecked'}
+        </span>
+      )
+
     // ── Yes / No ─────────────────────────────────────────────────────────
     case 'yes_no':
       return (

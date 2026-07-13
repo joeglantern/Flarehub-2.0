@@ -53,6 +53,7 @@ export function getFieldTypeLabel(type: FieldType): string {
     single_choice:   'Single choice',
     multiple_choice: 'Multiple choice',
     dropdown:        'Dropdown',
+    checkbox:        'Checkbox',
     file_upload:     'File upload',
     image_upload:    'Image upload',
     video_upload:    'Video upload',

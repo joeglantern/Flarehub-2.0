@@ -14,6 +14,58 @@ interface Props {
 export function FormField({ field, value, error, onChange }: Props) {
   const id = `field-${field.id}`
 
+  // Checkbox renders its own label inline — bypasses FieldWrapper to avoid duplication
+  if (field.type === 'checkbox') {
+    const checked = value === true
+    return (
+      <div className="space-y-1.5">
+        <label htmlFor={id} className="flex items-start gap-3 cursor-pointer select-none group">
+          <div
+            className={cn(
+              'mt-0.5 w-5 h-5 rounded-[var(--radius-sm)] border-2 flex items-center justify-center shrink-0',
+              'transition-all duration-[var(--duration-fast)]',
+              checked
+                ? 'bg-[var(--color-green-500)] border-[var(--color-green-500)]'
+                : error
+                ? 'border-[var(--color-error)]'
+                : 'border-[var(--color-border)] group-hover:border-[var(--color-green-500)]',
+            )}
+          >
+            <input
+              id={id}
+              type="checkbox"
+              checked={checked}
+              onChange={(e) => onChange(e.target.checked)}
+              className="sr-only"
+              aria-invalid={!!error}
+            />
+            {checked && (
+              <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            )}
+          </div>
+          <div className="space-y-0.5 pt-px">
+            <span className="text-sm font-medium text-[var(--color-text-primary)] leading-snug">
+              {field.label}
+              {field.required && (
+                <span aria-hidden className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-[var(--color-terra-500)] align-middle" />
+              )}
+            </span>
+            {field.description && (
+              <p className="text-xs text-[var(--color-text-muted)] leading-relaxed">{field.description}</p>
+            )}
+          </div>
+        </label>
+        {error && (
+          <p role="alert" className="text-xs font-medium text-[var(--color-error)] flex items-center gap-1">
+            <span aria-hidden>●</span> {error}
+          </p>
+        )}
+      </div>
+    )
+  }
+
   return (
     <FieldWrapper
       fieldId={id}

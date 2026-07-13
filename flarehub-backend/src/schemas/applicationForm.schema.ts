@@ -50,7 +50,7 @@ const CHOICE_TYPES = ['single_choice', 'multiple_choice', 'dropdown'] as const;
 
 export const fieldTypeSchema = z.enum([
   'short_text', 'long_text', 'number', 'date',
-  'single_choice', 'multiple_choice', 'dropdown',
+  'single_choice', 'multiple_choice', 'dropdown', 'checkbox',
   'file_upload', 'image_upload', 'video_upload',
   'rating', 'yes_no', 'phone', 'email',
 ]);

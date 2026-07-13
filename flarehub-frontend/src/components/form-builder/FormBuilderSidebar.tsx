@@ -5,6 +5,7 @@ import {
   Calendar,
   RadioButton,
   CheckSquare,
+  CheckCircle,
   CaretDown,
   UploadSimple,
   Image,
@@ -29,6 +30,7 @@ const FIELD_ICONS: Record<FieldType, React.ReactNode> = {
   single_choice:   <RadioButton    size={18} weight="duotone" />,
   multiple_choice: <CheckSquare    size={18} weight="duotone" />,
   dropdown:        <CaretDown      size={18} weight="duotone" />,
+  checkbox:        <CheckCircle    size={18} weight="duotone" />,
   file_upload:     <UploadSimple   size={18} weight="duotone" />,
   image_upload:    <Image          size={18} weight="duotone" />,
   video_upload:    <VideoCamera    size={18} weight="duotone" />,
@@ -50,6 +52,7 @@ const FIELD_COLORS: Record<FieldType, string> = {
   single_choice:   'text-[var(--color-terra-500)]  bg-[var(--color-terra-50)]',
   multiple_choice: 'text-[var(--color-terra-500)]  bg-[var(--color-terra-50)]',
   dropdown:        'text-[var(--color-terra-500)]  bg-[var(--color-terra-50)]',
+  checkbox:        'text-[var(--color-terra-500)]  bg-[var(--color-terra-50)]',
   yes_no:          'text-[var(--color-terra-500)]  bg-[var(--color-terra-50)]',
   rating:          'text-[var(--color-warning)]    bg-amber-50',
   file_upload:     'text-purple-600               bg-purple-50',
@@ -61,7 +64,7 @@ const FIELD_COLORS: Record<FieldType, string> = {
 
 const GROUPS: { label: string; types: FieldType[] }[] = [
   { label: 'Text',    types: ['short_text', 'long_text', 'email', 'phone', 'number'] },
-  { label: 'Choice',  types: ['single_choice', 'multiple_choice', 'dropdown', 'yes_no'] },
+  { label: 'Choice',  types: ['single_choice', 'multiple_choice', 'dropdown', 'yes_no', 'checkbox'] },
   { label: 'Media',   types: ['image_upload', 'video_upload', 'file_upload'] },
   { label: 'Special', types: ['date', 'rating'] },
 ]

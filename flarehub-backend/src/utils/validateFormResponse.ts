@@ -85,6 +85,15 @@ function validateField(
       break;
     }
 
+    case 'checkbox': {
+      // Required checkbox must be checked; false (unchecked) is not treated as empty
+      // by isEmptyValue so we handle it explicitly here
+      if (field.required && safeValue !== true) {
+        return { fieldId: field.id, sectionId, label: field.label, message: `You must check this box to continue` };
+      }
+      break;
+    }
+
     case 'single_choice':
     case 'dropdown': {
       const str = String(safeValue);

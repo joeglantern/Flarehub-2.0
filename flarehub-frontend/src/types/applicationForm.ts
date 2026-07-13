@@ -8,6 +8,7 @@ export type FieldType =
   | 'single_choice'
   | 'multiple_choice'
   | 'dropdown'
+  | 'checkbox'
   | 'file_upload'
   | 'image_upload'
   | 'video_upload'

@@ -7,7 +7,7 @@ import {
   Spinner,
   Gear,
 } from '@phosphor-icons/react'
-import type { FormSchema, FormField, FieldType } from '@/types/applicationForm'
+import type { FormSchema, FormField, FieldType, FormPurpose } from '@/types/applicationForm'
 import { createEmptyField, createDefaultFormSchema, countFields } from '@/utils/formSchemaHelpers'
 import { FormBuilderSidebar }  from './FormBuilderSidebar'
 import { FormBuilderCanvas }   from './FormBuilderCanvas'
@@ -234,6 +234,17 @@ function FormSettingsBar({
   return (
     <div className="shrink-0 flex flex-wrap items-center gap-6 px-5 py-3 bg-[var(--color-bg-elevated)] border-b border-[var(--color-border)] text-sm">
 
+      {/* Form purpose */}
+      <div className="flex items-center gap-2">
+        <label className="text-xs text-[var(--color-text-secondary)] shrink-0">Form purpose</label>
+        <PurposePicker
+          value={s.purpose ?? 'application'}
+          onChange={(v) => patch({ purpose: v })}
+        />
+      </div>
+
+      <div className="w-px h-4 bg-[var(--color-border)]" />
+
       <ToggleSetting
         label="Allow saving drafts"
         checked={s.allowDraft}
@@ -267,6 +278,39 @@ function FormSettingsBar({
           className="h-7 px-2.5 text-xs rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-white focus:outline-none focus:border-[var(--color-green-500)] transition-colors w-48"
         />
       </div>
+    </div>
+  )
+}
+
+const PURPOSE_OPTIONS: { value: FormPurpose; label: string; description: string }[] = [
+  { value: 'application', label: 'Application',    description: 'Users submit this to apply and join the program' },
+  { value: 'additional',  label: 'Additional form', description: 'Extra form available to existing program participants' },
+]
+
+function PurposePicker({
+  value, onChange,
+}: {
+  value:    FormPurpose
+  onChange: (v: FormPurpose) => void
+}) {
+  return (
+    <div className="flex rounded-[var(--radius-md)] border border-[var(--color-border)] overflow-hidden bg-white">
+      {PURPOSE_OPTIONS.map((opt) => (
+        <button
+          key={opt.value}
+          type="button"
+          title={opt.description}
+          onClick={() => onChange(opt.value)}
+          className={cn(
+            'px-3 py-1 text-xs font-medium transition-colors duration-[var(--duration-fast)]',
+            value === opt.value
+              ? 'bg-[var(--color-green-500)] text-white'
+              : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-inset)]',
+          )}
+        >
+          {opt.label}
+        </button>
+      ))}
     </div>
   )
 }

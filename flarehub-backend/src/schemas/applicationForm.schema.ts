@@ -92,6 +92,7 @@ export const formSectionSchema = z.object({
 // ─── Form Schema ──────────────────────────────────────────────────────────────
 
 export const formSchemaSettingsSchema = z.object({
+  purpose:            z.enum(['application', 'additional']).default('application'),
   allowDraft:         z.boolean(),
   showReviewStep:     z.boolean(),
   submitButtonLabel:  z.string().optional(),

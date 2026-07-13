@@ -94,7 +94,10 @@ export interface FormSection {
 
 // ─── Form Schema (stored in Program.applicationForm) ─────────────────────────
 
+export type FormPurpose = 'application' | 'additional'
+
 export interface FormSchemaSettings {
+  purpose:            FormPurpose
   allowDraft:         boolean
   showReviewStep:     boolean
   submitButtonLabel?: string

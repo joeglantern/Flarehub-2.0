@@ -36,6 +36,7 @@ export function createDefaultFormSchema(): FormSchema {
     version:  1,
     sections: [],
     settings: {
+      purpose:        'application',
       allowDraft:     true,
       showReviewStep: true,
     },

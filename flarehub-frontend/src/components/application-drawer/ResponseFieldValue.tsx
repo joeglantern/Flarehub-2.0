@@ -150,7 +150,23 @@ export function ResponseFieldValue({ field, value }: Props) {
         </p>
       )
 
-    // ── Default (short text, email, phone, number) ────────────────────────
+    // ── Email ─────────────────────────────────────────────────────────────
+    case 'email':
+      return (
+        <a href={`mailto:${String(value)}`} className="text-sm text-[var(--color-green-600)] hover:underline">
+          {String(value)}
+        </a>
+      )
+
+    // ── Phone ─────────────────────────────────────────────────────────────
+    case 'phone':
+      return (
+        <a href={`tel:${String(value)}`} className="text-sm text-[var(--color-green-600)] hover:underline">
+          {String(value)}
+        </a>
+      )
+
+    // ── Default (short text, number) ──────────────────────────────────────
     default:
       return <span className="text-sm text-[var(--color-text-primary)]">{String(value)}</span>
   }

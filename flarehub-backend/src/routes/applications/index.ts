@@ -382,10 +382,13 @@ export default async function applicationRoutes(fastify: FastifyInstance) {
       include: {
         user:    { select: { firstName: true, lastName: true, email: true } },
         program: { select: { name: true } },
+        score:   true,
       },
     });
 
-    const csv = await exportApplications(applications);
+    const csv = await exportApplications(
+      applications.map((a) => ({ ...a, responses: a.responses as Record<string, unknown> | null })),
+    );
     return reply
       .header('Content-Type', 'text/csv')
       .header('Content-Disposition', 'attachment; filename="applications.csv"')

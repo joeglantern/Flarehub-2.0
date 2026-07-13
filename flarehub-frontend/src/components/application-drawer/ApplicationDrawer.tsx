@@ -153,7 +153,6 @@ function DrawerContent({ app }: { app: Application; onClose: () => void }) {
             className={cn(
               'flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full border',
               'transition-all duration-[var(--duration-fast)]',
-              's === "Approved" && "border-[var(--color-green-100)] text-[var(--color-green-600)] hover:bg-[var(--color-green-50)]"',
               s === 'Approved'
                 ? 'border-[var(--color-green-100)] text-[var(--color-green-600)] hover:bg-[var(--color-green-50)]'
                 : s === 'Rejected'

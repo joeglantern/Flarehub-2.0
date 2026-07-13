@@ -22,7 +22,7 @@ import { Drawer } from '@/components/ui/Drawer'
 import { toast } from '@/store/ui.store'
 import { formatDate } from '@/lib/utils'
 import { useDebounce } from '@/hooks/useDebounce'
-import type { ApiPaginated, ApiSuccess, Application, ApplicationStatus, ApplicationScore } from '@/types/api'
+import type { ApiPaginated, ApiSuccess, Application, ApplicationStatus, ApplicationScore, Program } from '@/types/api'
 
 const STATUSES: ApplicationStatus[] = ['Pending', 'UnderReview', 'Approved', 'Rejected']
 
@@ -44,11 +44,11 @@ const SCORE_FIELDS: { key: keyof ScoreForm; label: string }[] = [
   { key: 'marketPotential', label: 'Market potential' },
 ]
 
-async function exportCSV(search: string, status: string) {
+async function exportCSV(search: string, status: string, programId: string) {
   try {
     const response = await api.get('/applications/export', {
       responseType: 'blob',
-      params: { search: search || undefined, status: status || undefined },
+      params: { search: search || undefined, status: status || undefined, programId: programId || undefined },
     })
     const blob = new Blob([response.data], { type: 'text/csv' })
     const link = document.createElement('a')
@@ -65,6 +65,7 @@ export default function ApplicationsPage() {
   const [page, setPage]           = useState(1)
   const [search, setSearch]       = useState('')
   const [status, setStatus]       = useState<ApplicationStatus | ''>('')
+  const [programId, setProgramId] = useState('')
   const [target, setTarget]       = useState<{ app: Application; newStatus: ApplicationStatus } | null>(null)
   const [scoreTarget, setScore]   = useState<Application | null>(null)
   const [drawerApp, setDrawer]    = useState<Application | null>(null)
@@ -74,10 +75,16 @@ export default function ApplicationsPage() {
   const debounced                 = useDebounce(search)
   const qc                        = useQueryClient()
 
+  const programs = useQuery({
+    queryKey: ['admin', 'programs-list'],
+    queryFn:  () => api.get<ApiPaginated<Program>>('/programs', { params: { limit: 100 } }).then(r => r.data),
+    staleTime: 5 * 60 * 1000,
+  })
+
   const { data, isLoading } = useQuery({
-    queryKey: ['admin', 'applications', page, debounced, status],
+    queryKey: ['admin', 'applications', page, debounced, status, programId],
     queryFn:  () => api.get<ApiPaginated<Application>>('/applications', {
-      params: { page, limit: 20, search: debounced || undefined, status: status || undefined },
+      params: { page, limit: 20, search: debounced || undefined, status: status || undefined, programId: programId || undefined },
     }).then(r => r.data),
   })
 
@@ -163,7 +170,7 @@ export default function ApplicationsPage() {
 
   const handleExport = async () => {
     setExportLoading(true)
-    await exportCSV(search, status)
+    await exportCSV(search, status, programId)
     setExportLoading(false)
   }
 
@@ -181,7 +188,7 @@ export default function ApplicationsPage() {
         }
       />
 
-      <div className="flex items-center gap-3 mb-5">
+      <div className="flex flex-wrap items-center gap-3 mb-5">
         <Input
           placeholder="Search applicants..."
           leftIcon={<MagnifyingGlass size={15} />}
@@ -191,6 +198,16 @@ export default function ApplicationsPage() {
           fullWidth={false}
         />
         <NativeSelect
+          value={programId}
+          onChange={e => { setProgramId(e.target.value); setPage(1) }}
+          className="w-52"
+        >
+          <option value="">All programs</option>
+          {(programs.data?.data ?? []).map(p => (
+            <option key={p.id} value={p.id}>{p.name}</option>
+          ))}
+        </NativeSelect>
+        <NativeSelect
           value={status}
           onChange={e => { setStatus(e.target.value as ApplicationStatus | ''); setPage(1) }}
           className="w-44"
@@ -198,6 +215,14 @@ export default function ApplicationsPage() {
           <option value="">All statuses</option>
           {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
         </NativeSelect>
+        {(programId || status || search) && (
+          <button
+            onClick={() => { setProgramId(''); setStatus(''); setSearch(''); setPage(1) }}
+            className="flex items-center gap-1 text-xs text-[var(--color-ink-mute)] hover:text-[var(--color-ink)] transition-colors"
+          >
+            <X size={12} /> Clear filters
+          </button>
+        )}
       </div>
 
       {isLoading ? (

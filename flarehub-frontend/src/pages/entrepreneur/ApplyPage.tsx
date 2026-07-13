@@ -49,8 +49,10 @@ export default function ApplyPage() {
   const schema  = formQuery.data
   const draft   = draftQuery.data
 
-  // Already applied (submitted)
-  if (program?.hasApplied) {
+  const isAdditionalForm = schema?.settings.purpose === 'additional'
+
+  // Block re-application only for application forms — additional forms can always be re-submitted
+  if (program?.hasApplied && !isAdditionalForm) {
     return (
       <div className="max-w-2xl">
         <Button variant="ghost" size="sm" icon={<ArrowLeft size={14} />}
@@ -103,10 +105,10 @@ export default function ApplyPage() {
           Back to {program?.name}
         </Button>
         <h1 className="text-[28px] font-bold mt-4 leading-tight text-[var(--color-ink)]" style={{ fontFamily: 'var(--font-display)' }}>
-          Apply to {program?.name ?? 'program'}
+          {isAdditionalForm ? program?.name ?? 'Form' : `Apply to ${program?.name ?? 'program'}`}
         </h1>
         <p className="text-[14px] text-[var(--color-ink-mute)] mt-1">
-          {draft ? 'Continuing your saved draft' : 'Fill out the form below to apply'}
+          {draft ? 'Continuing your saved draft' : isAdditionalForm ? 'Fill out the form below' : 'Fill out the form below to apply'}
         </p>
       </div>
 

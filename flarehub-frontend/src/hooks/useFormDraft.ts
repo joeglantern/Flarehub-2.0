@@ -54,7 +54,7 @@ export function useFormDraft({ draftId: initialDraftId, programId, onDraftCreate
   // Debounced save — call this on every change
   const scheduleSave = useCallback((responses: FormResponse) => {
     if (timerRef.current) clearTimeout(timerRef.current)
-    timerRef.current = setTimeout(() => save(responses), 2000)
+    timerRef.current = setTimeout(() => save(responses), 5000)
   }, [save])
 
   // Flush immediately (e.g. on section change)

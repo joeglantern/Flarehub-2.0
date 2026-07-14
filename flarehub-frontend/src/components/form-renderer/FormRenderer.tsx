@@ -37,10 +37,11 @@ export function FormRenderer({
   const isReview    = showReview && step === sections.length
   const currentSection = isReview ? null : sections[step]
 
-  // Auto-save on response changes
+  // Auto-save on response changes — skip during/after submission
   useEffect(() => {
     if (!schema.settings.allowDraft) return
     if (Object.keys(responses).length === 0) return
+    if (submitMutation.isPending || submitMutation.isSuccess) return
     const formResponse: FormResponse = { version: 1, fields: responses }
     scheduleSave(formResponse)
   }, [responses]) // eslint-disable-line react-hooks/exhaustive-deps

@@ -17,34 +17,6 @@ interface Props {
 
 export function FormField({ field, value, error, onChange }: Props) {
   const id = `field-${field.id}`
-  const [fileUploading, setFileUploading] = useState(false)
-
-  /**
-   * Upload a file to Supabase Storage via the backend signed-URL flow
-   * and call onChange with the resolved filePath.
-   */
-  const uploadFileToStorage = async (file: File) => {
-    setFileUploading(true)
-    // Immediately store metadata so the UI updates
-    onChange({ fileName: file.name, filePath: '', mimeType: file.type, sizeBytes: file.size })
-    try {
-      const { data: signed } = await api.post<{ success: true; data: SignedUploadResult }>(
-        '/storage/signed-upload-url',
-        { bucket: 'submissions', filename: file.name, mimeType: file.type, fileSize: file.size },
-      )
-      await fetch(signed.data.uploadUrl, {
-        method:  'PUT',
-        body:    file,
-        headers: { 'Content-Type': file.type },
-      })
-      onChange({ fileName: file.name, filePath: signed.data.storagePath, mimeType: file.type, sizeBytes: file.size })
-    } catch {
-      // Clear the field if upload fails so the user can retry
-      onChange({ fileName: '', filePath: '', mimeType: '', sizeBytes: 0 })
-    } finally {
-      setFileUploading(false)
-    }
-  }
 
   // Checkbox renders its own label inline — bypasses FieldWrapper to avoid duplication
   if (field.type === 'checkbox') {
@@ -114,6 +86,29 @@ export function FormField({ field, value, error, onChange }: Props) {
 // ─── Dispatcher ───────────────────────────────────────────────────────────────
 
 function FieldInput({ id, field, value, error, onChange }: Props & { id: string }) {
+  const [fileUploading, setFileUploading] = useState(false)
+
+  const uploadFileToStorage = async (file: File) => {
+    setFileUploading(true)
+    onChange({ fileName: file.name, filePath: '', mimeType: file.type, sizeBytes: file.size })
+    try {
+      const { data: signed } = await api.post<{ success: true; data: SignedUploadResult }>(
+        '/storage/signed-upload-url',
+        { bucket: 'submissions', filename: file.name, mimeType: file.type, fileSize: file.size },
+      )
+      await fetch(signed.data.uploadUrl, {
+        method:  'PUT',
+        body:    file,
+        headers: { 'Content-Type': file.type },
+      })
+      onChange({ fileName: file.name, filePath: signed.data.storagePath, mimeType: file.type, sizeBytes: file.size })
+    } catch {
+      onChange({ fileName: '', filePath: '', mimeType: '', sizeBytes: 0 })
+    } finally {
+      setFileUploading(false)
+    }
+  }
+
   const errCls = error
     ? 'border-[var(--color-error)] focus:border-[var(--color-error)] focus:shadow-[inset_3px_0_0_var(--color-error),0_0_0_3px_rgba(185,28,28,0.08)]'
     : ''

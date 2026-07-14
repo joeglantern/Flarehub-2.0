@@ -93,12 +93,16 @@ export default async function applicationRoutes(fastify: FastifyInstance) {
       where: { userId_programId: { userId, programId } },
     });
 
-    if (existing && !existing.isDraft) {
-      throw new AppError('CONFLICT', 'You have already submitted an application for this program', 409);
-    }
-
     // ── Form validation ───────────────────────────────────────────────────
     const formSchema = program.applicationForm as FormSchema | null;
+
+    // Additional forms allow re-submission (upsert overwrites previous response)
+    const isAdditionalForm =
+      (formSchema?.settings as { purpose?: string } | undefined)?.purpose === 'additional';
+
+    if (existing && !existing.isDraft && !isAdditionalForm) {
+      throw new AppError('CONFLICT', 'You have already submitted an application for this program', 409);
+    }
 
     if (formSchema && !isDraft) {
       // Full submission: responses are required and must be valid

@@ -1,32 +1,15 @@
 import type { WebSocket } from '@fastify/websocket';
-import type { FastifyRequest } from 'fastify';
+import type { FastifyRequest, FastifyInstance } from 'fastify';
 import type { PrismaClient } from '@prisma/client';
-import jwt from 'jsonwebtoken';
-import { appConfig } from '../config/index.js';
 import type { ConnectionRegistry } from './registry.js';
 import type { ClientEvent } from './events.js';
-
-const JWT_SECRET = Buffer.from(appConfig.supabase.jwtSecret, 'base64');
-
-function verifyToken(token: string): { sub: string; email: string } | null {
-  // Try base64-decoded secret (covers both HS256 and ES256 — Supabase migrated to ES256)
-  try {
-    return jwt.verify(token, JWT_SECRET) as { sub: string; email: string };
-  } catch {
-    // Fallback: try raw string secret
-    try {
-      return jwt.verify(token, appConfig.supabase.jwtSecret) as { sub: string; email: string };
-    } catch {
-      return null;
-    }
-  }
-}
 
 export async function handleWebSocketConnection(
   ws:       WebSocket,
   request:  FastifyRequest,
   registry: ConnectionRegistry,
   prisma:   PrismaClient,
+  supabase: FastifyInstance['supabase'],
 ): Promise<void> {
   const query = request.query as Record<string, string>;
   const token = query.token;
@@ -37,15 +20,16 @@ export async function handleWebSocketConnection(
     return;
   }
 
-  const decoded = verifyToken(token);
-  if (!decoded) {
+  // Use Supabase auth API — works for both HS256 and ES256 tokens
+  const { data: { user: supabaseUser }, error: authError } = await supabase.auth.getUser(token);
+  if (authError || !supabaseUser) {
     ws.send(JSON.stringify({ type: 'error', data: { code: 'UNAUTHORIZED', message: 'Invalid token' } }));
     ws.close();
     return;
   }
 
   const user = await prisma.user.findUnique({
-    where:  { id: decoded.sub },
+    where:  { id: supabaseUser.id },
     select: { id: true, email: true, role: true, isMentor: true },
   });
 

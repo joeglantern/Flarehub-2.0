@@ -75,6 +75,6 @@ export default async function routes(fastify: FastifyInstance) {
   }, { prefix: appConfig.apiPrefix });
 
   fastify.get('/ws', { websocket: true }, (socket, request) => {
-    handleWebSocketConnection(socket, request, fastify.wsRegistry, fastify.prisma);
+    handleWebSocketConnection(socket, request, fastify.wsRegistry, fastify.prisma, fastify.supabase);
   });
 }

@@ -109,7 +109,7 @@ export const formSchemaSchema = z.object({
 
 export const fileResponseValueSchema = z.object({
   fileName:  z.string().min(1),
-  filePath:  z.string().min(1),
+  filePath:  z.string(),           // empty string allowed during draft save (file may still be uploading)
   mimeType:  z.string().min(1),
   sizeBytes: z.number().int().nonnegative(),
 });

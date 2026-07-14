@@ -37,25 +37,29 @@ export async function buildApp() {
 
   fastify.setErrorHandler((error, request, reply) => {
     request.log.error(error);
+    // Cast to a plain Error so we can safely access .name for ESM class identity checks
+    const err = error as Error & Record<string, unknown>;
 
-    if (error instanceof ZodError) {
+    if (error instanceof ZodError || err.name === 'ZodError') {
+      const zodErr = error as ZodError;
       return reply.status(400).send({
         success: false,
         error: {
           code:    'VALIDATION_ERROR',
           message: 'Request validation failed',
-          details: error.flatten().fieldErrors,
+          details: zodErr.flatten?.().fieldErrors ?? zodErr.message,
         },
       });
     }
 
-    if (error instanceof AppError) {
-      return reply.status(error.statusCode).send({
+    if (error instanceof AppError || err.name === 'AppError') {
+      const appErr = error as AppError;
+      return reply.status(appErr.statusCode).send({
         success: false,
         error: {
-          code:    error.code,
-          message: error.message,
-          ...(error.details !== undefined ? { details: error.details } : {}),
+          code:    appErr.code,
+          message: appErr.message,
+          ...(appErr.details !== undefined ? { details: appErr.details } : {}),
         },
       });
     }

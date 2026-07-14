@@ -37,8 +37,12 @@ const BUCKET_ALLOWLISTS: Record<string, { types: string[]; maxBytes: number }> =
       'application/msword',
       'text/plain',
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      // Image types — for certificates, photos, etc.
+      'image/jpeg', 'image/png', 'image/webp', 'image/gif',
+      // Video types — for pitch videos, demo reels
+      'video/mp4', 'video/quicktime', 'video/webm',
     ],
-    maxBytes: 25 * 1024 * 1024,
+    maxBytes: 50 * 1024 * 1024,
   },
   templates: {
     types: [

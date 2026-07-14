@@ -1,8 +1,12 @@
+import { useState } from 'react'
 import type { FormField as FormFieldType, FieldResponseValue } from '@/types/applicationForm'
 import { FieldWrapper } from './FieldWrapper'
 import { inputCls } from './FieldWrapper'
 import { cn } from '@/lib/utils'
 import { Star, UploadSimple, Image, VideoCamera } from '@phosphor-icons/react'
+import { api } from '@/lib/api'
+import { Spinner } from '@/components/ui/Spinner'
+import type { SignedUploadResult } from '@/types/api'
 
 interface Props {
   field:    FormFieldType
@@ -13,6 +17,34 @@ interface Props {
 
 export function FormField({ field, value, error, onChange }: Props) {
   const id = `field-${field.id}`
+  const [fileUploading, setFileUploading] = useState(false)
+
+  /**
+   * Upload a file to Supabase Storage via the backend signed-URL flow
+   * and call onChange with the resolved filePath.
+   */
+  const uploadFileToStorage = async (file: File) => {
+    setFileUploading(true)
+    // Immediately store metadata so the UI updates
+    onChange({ fileName: file.name, filePath: '', mimeType: file.type, sizeBytes: file.size })
+    try {
+      const { data: signed } = await api.post<{ success: true; data: SignedUploadResult }>(
+        '/storage/signed-upload-url',
+        { bucket: 'submissions', filename: file.name, mimeType: file.type, fileSize: file.size },
+      )
+      await fetch(signed.data.uploadUrl, {
+        method:  'PUT',
+        body:    file,
+        headers: { 'Content-Type': file.type },
+      })
+      onChange({ fileName: file.name, filePath: signed.data.storagePath, mimeType: file.type, sizeBytes: file.size })
+    } catch {
+      // Clear the field if upload fails so the user can retry
+      onChange({ fileName: '', filePath: '', mimeType: '', sizeBytes: 0 })
+    } finally {
+      setFileUploading(false)
+    }
+  }
 
   // Checkbox renders its own label inline — bypasses FieldWrapper to avoid duplication
   if (field.type === 'checkbox') {
@@ -334,20 +366,24 @@ function FieldInput({ id, field, value, error, onChange }: Props & { id: string 
             type="file"
             accept={accept}
             className="sr-only"
+            disabled={fileUploading}
             onChange={(e) => {
               const file = e.target.files?.[0]
               if (!file) return
-              // Store file metadata — actual upload handled on submit
-              onChange({
-                fileName:  file.name,
-                filePath:  '',        // will be set after upload
-                mimeType:  file.type,
-                sizeBytes: file.size,
-              })
+              uploadFileToStorage(file)
             }}
           />
-          <Icon size={28} weight="duotone" className={hasFile ? 'text-[var(--color-green-500)]' : 'text-[var(--color-text-muted)]'} />
-          {hasFile ? (
+          {fileUploading ? (
+            <Spinner size="md" className="text-[var(--color-green-500)]" />
+          ) : (
+            <Icon size={28} weight="duotone" className={hasFile ? 'text-[var(--color-green-500)]' : 'text-[var(--color-text-muted)]'} />
+          )}
+          {fileUploading ? (
+            <div className="text-center">
+              <p className="text-sm font-medium text-[var(--color-green-600)]">Uploading…</p>
+              <p className="text-xs text-[var(--color-text-muted)] mt-0.5">Please wait</p>
+            </div>
+          ) : hasFile ? (
             <div className="text-center">
               <p className="text-sm font-medium text-[var(--color-green-600)]">
                 {(value as { fileName: string }).fileName}

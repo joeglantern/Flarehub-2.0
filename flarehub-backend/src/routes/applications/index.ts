@@ -17,8 +17,38 @@ import { exportApplications } from '../../services/csv.service.js';
 import { sendEmail, applicationApprovedEmail, applicationRejectedEmail, applicationUnderReviewEmail } from '../../services/email.service.js';
 import { sendSms, smsTemplates } from '../../services/sms.service.js';
 import { validateFormResponse } from '../../utils/validateFormResponse.js';
-import type { FormSchema, FormResponse } from '../../types/applicationForm.js';
+import { getSignedDownloadUrl } from '../../services/storage.service.js';
+import { appConfig } from '../../config/index.js';
+import type { FormSchema, FormResponse, FieldResponseValue, FileResponseValue } from '../../types/applicationForm.js';
 import { Prisma, type NotificationType } from '@prisma/client';
+
+function isFileResponse(v: unknown): v is FileResponseValue {
+  return typeof v === 'object' && v !== null && !Array.isArray(v) && 'filePath' in v && 'fileName' in v;
+}
+
+async function resolveApplicationFileUrls(
+  supabase: FastifyInstance['supabase'],
+  responses: Record<string, FieldResponseValue>,
+): Promise<Record<string, FieldResponseValue>> {
+  const resolved = { ...responses };
+  await Promise.all(
+    Object.entries(resolved).map(async ([key, val]) => {
+      if (isFileResponse(val) && val.filePath) {
+        try {
+          const signedUrl = await getSignedDownloadUrl(
+            supabase,
+            appConfig.storage.buckets.submissions,
+            val.filePath,
+          );
+          resolved[key] = { ...val, filePath: signedUrl };
+        } catch {
+          // If signing fails, leave the raw path — don't crash the request
+        }
+      }
+    }),
+  );
+  return resolved;
+}
 
 function statusToNotificationType(status: string): NotificationType | null {
   if (status === 'Approved')    return 'application_approved';
@@ -70,7 +100,21 @@ export default async function applicationRoutes(fastify: FastifyInstance) {
     if (!application) throw new AppError('NOT_FOUND', 'Application not found', 404);
     if (!isAdmin && application.userId !== currentUser.id) throw new AppError('FORBIDDEN', 'Access denied', 403);
 
-    return reply.send({ success: true, data: application });
+    // Resolve file storage paths → signed download URLs
+    let resolvedApplication: typeof application = application;
+    const rawResponses = application.responses as { version?: number; fields?: Record<string, unknown> } | null;
+    if (rawResponses?.fields) {
+      const resolvedFields = await resolveApplicationFileUrls(
+        fastify.supabase,
+        rawResponses.fields as Record<string, FieldResponseValue>,
+      );
+      resolvedApplication = {
+        ...application,
+        responses: { ...rawResponses, fields: resolvedFields } as typeof application.responses,
+      };
+    }
+
+    return reply.send({ success: true, data: resolvedApplication });
   });
 
   // ── POST /applications ────────────────────────────────────────────────────

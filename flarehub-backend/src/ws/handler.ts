@@ -9,11 +9,13 @@ import type { ClientEvent } from './events.js';
 const JWT_SECRET = Buffer.from(appConfig.supabase.jwtSecret, 'base64');
 
 function verifyToken(token: string): { sub: string; email: string } | null {
+  // Try base64-decoded secret (covers both HS256 and ES256 — Supabase migrated to ES256)
   try {
-    return jwt.verify(token, JWT_SECRET, { algorithms: ['HS256'] }) as { sub: string; email: string };
+    return jwt.verify(token, JWT_SECRET) as { sub: string; email: string };
   } catch {
+    // Fallback: try raw string secret
     try {
-      return jwt.verify(token, appConfig.supabase.jwtSecret, { algorithms: ['HS256'] }) as { sub: string; email: string };
+      return jwt.verify(token, appConfig.supabase.jwtSecret) as { sub: string; email: string };
     } catch {
       return null;
     }

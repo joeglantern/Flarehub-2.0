@@ -73,6 +73,7 @@ export default async function applicationRoutes(fastify: FastifyInstance) {
       programName: a.program.name,
       status:      a.status,
       isDraft:     a.isDraft,
+      responses:   a.responses,
       submittedAt: a.submittedAt,
       appliedAt:   a.appliedAt,
     }));

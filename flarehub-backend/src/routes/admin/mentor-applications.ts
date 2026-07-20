@@ -75,29 +75,31 @@ export default async function adminMentorApplicationRoutes(fastify: FastifyInsta
         }
       });
 
-      await createNotification(fastify.prisma, fastify.wsRegistry, {
-        userId:   application.userId,
-        type:     'mentor_application_approved',
-        title:    'Your mentor application was approved!',
-        body:     'Welcome to Afosihub as a mentor. You can now log in to your mentor dashboard.',
-        metadata: {},
-      });
-
-      await sendEmail({
-        to:      application.user.email,
-        subject: 'Your Afosihub mentor application has been approved',
-        html:    mentorApprovedEmail(application.user.firstName),
-      });
-
-      await logAdminAction(fastify.prisma, {
-        adminId:     request.user!.id,
-        action:      'approved_mentor_application',
-        targetType:  'user',
-        targetId:    application.userId,
-        description: `Approved mentor application for ${application.user.email}`,
-        ipAddress:   request.ip,
-        userAgent:   request.headers['user-agent'],
-      });
+      // Fire notifications after the transaction — swallow errors so a failed email
+      // doesn't roll back an already-committed approval.
+      await Promise.allSettled([
+        createNotification(fastify.prisma, fastify.wsRegistry, {
+          userId:   application.userId,
+          type:     'mentor_application_approved',
+          title:    'Your mentor application was approved!',
+          body:     'Welcome to Afosihub as a mentor. You can now log in to your mentor dashboard.',
+          metadata: {},
+        }),
+        sendEmail({
+          to:      application.user.email,
+          subject: 'Your Afosihub mentor application has been approved',
+          html:    mentorApprovedEmail(application.user.firstName),
+        }),
+        logAdminAction(fastify.prisma, {
+          adminId:     request.user!.id,
+          action:      'approved_mentor_application',
+          targetType:  'user',
+          targetId:    application.userId,
+          description: `Approved mentor application for ${application.user.email}`,
+          ipAddress:   request.ip,
+          userAgent:   request.headers['user-agent'],
+        }),
+      ]);
 
       return reply.send({ success: true });
     },

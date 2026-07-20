@@ -158,9 +158,12 @@ export function FormRenderer({
 
       {/* Submit error */}
       {submitMutation.isError && (
-        <p className="mt-4 text-sm text-[var(--color-error)] font-medium">
-          Submission failed — please check your answers and try again.
-        </p>
+        <div className="mt-4 rounded-[var(--radius-md)] border border-[var(--color-error)]/30 bg-[var(--color-error)]/5 px-4 py-3">
+          <p className="text-sm font-medium text-[var(--color-error)]">
+            {(submitMutation.error as { response?: { data?: { error?: { message?: string } } } })
+              ?.response?.data?.error?.message ?? 'Submission failed — please check your answers and try again.'}
+          </p>
+        </div>
       )}
 
       {/* Navigation */}

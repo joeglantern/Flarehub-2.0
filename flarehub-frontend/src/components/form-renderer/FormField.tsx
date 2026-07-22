@@ -87,10 +87,11 @@ export function FormField({ field, value, error, onChange }: Props) {
 
 function FieldInput({ id, field, value, error, onChange }: Props & { id: string }) {
   const [fileUploading, setFileUploading] = useState(false)
+  const [fileUploadError, setFileUploadError] = useState<string | null>(null)
 
   const uploadFileToStorage = async (file: File) => {
     setFileUploading(true)
-    onChange({ fileName: file.name, filePath: '', mimeType: file.type, sizeBytes: file.size })
+    setFileUploadError(null)
     try {
       const { data: signed } = await api.post<{ success: true; data: SignedUploadResult }>(
         '/storage/signed-upload-url',
@@ -103,7 +104,8 @@ function FieldInput({ id, field, value, error, onChange }: Props & { id: string 
       })
       onChange({ fileName: file.name, filePath: signed.data.storagePath, mimeType: file.type, sizeBytes: file.size })
     } catch {
-      onChange({ fileName: '', filePath: '', mimeType: '', sizeBytes: 0 })
+      setFileUploadError('Upload failed — please try again')
+      // Leave the field empty so auto-save does not send invalid data
     } finally {
       setFileUploading(false)
     }
@@ -344,62 +346,72 @@ function FieldInput({ id, field, value, error, onChange }: Props & { id: string 
       const hasFile = value && typeof value === 'object' && !Array.isArray(value) && 'fileName' in value
 
       return (
-        <label
-          className={cn(
-            'flex flex-col items-center justify-center gap-3 py-8 px-4',
-            'rounded-[var(--radius-xl)] border-2 border-dashed cursor-pointer',
-            'transition-all duration-[var(--duration-default)]',
-            hasFile
-              ? 'border-[var(--color-green-500)] bg-[var(--color-green-50)]'
-              : error
-              ? 'border-[var(--color-error)]/50 hover:border-[var(--color-error)]'
-              : 'border-[var(--color-border)] hover:border-[var(--color-green-500)] hover:bg-[var(--color-green-50)]',
+        <>
+          <label
+            className={cn(
+              'flex flex-col items-center justify-center gap-3 py-8 px-4',
+              'rounded-[var(--radius-xl)] border-2 border-dashed cursor-pointer',
+              'transition-all duration-[var(--duration-default)]',
+              hasFile
+                ? 'border-[var(--color-green-500)] bg-[var(--color-green-50)]'
+                : fileUploadError
+                ? 'border-[var(--color-error)]/50 hover:border-[var(--color-error)]'
+                : error
+                ? 'border-[var(--color-error)]/50 hover:border-[var(--color-error)]'
+                : 'border-[var(--color-border)] hover:border-[var(--color-green-500)] hover:bg-[var(--color-green-50)]',
+            )}
+          >
+            <input
+              id={id}
+              type="file"
+              accept={accept}
+              className="sr-only"
+              disabled={fileUploading}
+              onChange={(e) => {
+                const file = e.target.files?.[0]
+                if (!file) return
+                setFileUploadError(null)
+                uploadFileToStorage(file)
+              }}
+            />
+            {fileUploading ? (
+              <Spinner size="md" className="text-[var(--color-green-500)]" />
+            ) : (
+              <Icon size={28} weight="duotone" className={hasFile ? 'text-[var(--color-green-500)]' : fileUploadError ? 'text-[var(--color-error)]' : 'text-[var(--color-text-muted)]'} />
+            )}
+            {fileUploading ? (
+              <div className="text-center">
+                <p className="text-sm font-medium text-[var(--color-green-600)]">Uploading…</p>
+                <p className="text-xs text-[var(--color-text-muted)] mt-0.5">Please wait</p>
+              </div>
+            ) : hasFile ? (
+              <div className="text-center">
+                <p className="text-sm font-medium text-[var(--color-green-600)]">
+                  {(value as { fileName: string }).fileName}
+                </p>
+                <p className="text-xs text-[var(--color-text-muted)] mt-0.5">Click to change</p>
+              </div>
+            ) : (
+              <div className="text-center">
+                <p className="text-sm font-medium text-[var(--color-text-primary)]">
+                  {field.type === 'image_upload' ? 'Upload an image'
+                   : field.type === 'video_upload' ? 'Upload a video'
+                   : 'Upload a file'}
+                </p>
+                <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
+                  {field.validation.maxFileSizeMB
+                    ? `Max ${field.validation.maxFileSizeMB} MB`
+                    : 'Click to browse'}
+                </p>
+              </div>
+            )}
+          </label>
+          {fileUploadError && (
+            <p role="alert" className="text-xs font-medium text-[var(--color-error)] mt-1.5 flex items-center gap-1">
+              <span aria-hidden>●</span> {fileUploadError}
+            </p>
           )}
-        >
-          <input
-            id={id}
-            type="file"
-            accept={accept}
-            className="sr-only"
-            disabled={fileUploading}
-            onChange={(e) => {
-              const file = e.target.files?.[0]
-              if (!file) return
-              uploadFileToStorage(file)
-            }}
-          />
-          {fileUploading ? (
-            <Spinner size="md" className="text-[var(--color-green-500)]" />
-          ) : (
-            <Icon size={28} weight="duotone" className={hasFile ? 'text-[var(--color-green-500)]' : 'text-[var(--color-text-muted)]'} />
-          )}
-          {fileUploading ? (
-            <div className="text-center">
-              <p className="text-sm font-medium text-[var(--color-green-600)]">Uploading…</p>
-              <p className="text-xs text-[var(--color-text-muted)] mt-0.5">Please wait</p>
-            </div>
-          ) : hasFile ? (
-            <div className="text-center">
-              <p className="text-sm font-medium text-[var(--color-green-600)]">
-                {(value as { fileName: string }).fileName}
-              </p>
-              <p className="text-xs text-[var(--color-text-muted)] mt-0.5">Click to change</p>
-            </div>
-          ) : (
-            <div className="text-center">
-              <p className="text-sm font-medium text-[var(--color-text-primary)]">
-                {field.type === 'image_upload' ? 'Upload an image'
-                 : field.type === 'video_upload' ? 'Upload a video'
-                 : 'Upload a file'}
-              </p>
-              <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
-                {field.validation.maxFileSizeMB
-                  ? `Max ${field.validation.maxFileSizeMB} MB`
-                  : 'Click to browse'}
-              </p>
-            </div>
-          )}
-        </label>
+        </>
       )
     }
 

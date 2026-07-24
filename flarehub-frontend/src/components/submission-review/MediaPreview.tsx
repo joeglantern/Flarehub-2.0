@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { ArrowSquareOut, DownloadSimple, FilePdf, File, Image, VideoCamera, X } from '@phosphor-icons/react'
-import { cn } from '@/lib/utils'
+import { ArrowSquareOut, DownloadSimple, FilePdf, File, X } from '@phosphor-icons/react'
 import type { FileResponseValue } from '@/types/applicationForm'
 
 interface Props {

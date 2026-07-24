@@ -1,8 +1,7 @@
-import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   X, DownloadSimple, Star, EnvelopeSimple, Phone,
-  MapPin, Buildings, CalendarBlank, ArrowSquareOut,
+  MapPin, Buildings, ArrowSquareOut,
   CheckCircle, Clock, XCircle, Spinner,
 } from '@phosphor-icons/react'
 import { api } from '@/lib/api'

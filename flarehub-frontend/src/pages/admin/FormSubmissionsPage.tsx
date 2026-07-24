@@ -18,7 +18,7 @@ import { SubmissionReviewDrawer } from '@/components/submission-review/Submissio
 import { toast } from '@/store/ui.store'
 import { useDebounce } from '@/hooks/useDebounce'
 import { formatDate } from '@/lib/utils'
-import type { ApiPaginated, ApiSuccess, ApplicationStatus, Program } from '@/types/api'
+import type { ApiPaginated, ApplicationStatus, Program } from '@/types/api'
 
 interface SubmissionRow {
   id:          number

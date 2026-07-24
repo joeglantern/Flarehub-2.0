@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import {
   MagnifyingGlass, DownloadSimple, X, CalendarBlank,
@@ -14,7 +15,6 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { Pagination } from '@/components/ui/Pagination'
 import { PageHeader } from '@/components/layout/PageHeader'
-import { SubmissionReviewDrawer } from '@/components/submission-review/SubmissionReviewDrawer'
 import { toast } from '@/store/ui.store'
 import { useDebounce } from '@/hooks/useDebounce'
 import { formatDate } from '@/lib/utils'
@@ -56,11 +56,11 @@ async function triggerExport(params: Record<string, string | undefined>) {
 }
 
 export default function FormSubmissionsPage() {
+  const navigate                  = useNavigate()
   const [page, setPage]           = useState(1)
   const [search, setSearch]       = useState('')
   const [status, setStatus]       = useState<ApplicationStatus | ''>('')
   const [programId, setProgramId] = useState('')
-  const [activeId, setActiveId]   = useState<number | null>(null)
   const [exporting, setExporting] = useState(false)
   const debounced                 = useDebounce(search)
 
@@ -191,7 +191,7 @@ export default function FormSubmissionsPage() {
                 {data.data.map(row => (
                   <tr
                     key={row.id}
-                    onClick={() => setActiveId(row.id)}
+                    onClick={() => navigate(`/admin/form-submissions/${row.id}`)}
                     className="border-b border-[var(--color-line)] last:border-0 hover:bg-[var(--color-elev)] cursor-pointer group transition-colors"
                   >
                     <td className="px-5 py-3.5">
@@ -242,12 +242,6 @@ export default function FormSubmissionsPage() {
           />
         </>
       )}
-
-      {/* ── Review drawer ─────────────────────────────────────────────── */}
-      <SubmissionReviewDrawer
-        submissionId={activeId}
-        onClose={() => setActiveId(null)}
-      />
     </>
   )
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowSquareOut, DownloadSimple, FilePdf, File, X } from '@phosphor-icons/react'
+import { ArrowSquareOut, DownloadSimple, FilePdf, File, WarningCircle, X } from '@phosphor-icons/react'
 import type { FileResponseValue } from '@/types/applicationForm'
 
 interface Props {
@@ -25,6 +25,25 @@ function isVideo(file: FileResponseValue) {
   return file.mimeType?.startsWith('video/') || /\.(mp4|mov|webm|avi|mkv)$/i.test(file.fileName)
 }
 
+// A signed download URL always resolves to an absolute Supabase URL. If signing
+// failed server-side, filePath is left as the raw storage key — never usable as
+// a link (as a relative href it silently resolves under the current SPA route).
+function isUsableUrl(url: string | undefined): url is string {
+  return !!url && /^https?:\/\//i.test(url)
+}
+
+function UnavailableNotice({ fileName }: { fileName: string }) {
+  return (
+    <div className="flex items-center gap-2.5 px-3 py-2 rounded-[var(--radius-lg)] border border-dashed border-[var(--color-terra-200)] bg-[var(--color-terra-50)] max-w-sm">
+      <WarningCircle size={16} className="text-[var(--color-terra-500)] shrink-0" />
+      <div className="min-w-0">
+        <p className="text-xs font-medium text-[var(--color-terra-600)] truncate">{fileName}</p>
+        <p className="text-[11px] text-[var(--color-terra-500)]/80">File is unavailable in storage</p>
+      </div>
+    </div>
+  )
+}
+
 export function MediaPreview({ file, fieldType }: Props) {
   const [lightbox, setLightbox] = useState(false)
   const [pdfOpen, setPdfOpen]   = useState(false)
@@ -34,6 +53,11 @@ export function MediaPreview({ file, fieldType }: Props) {
   }
 
   const url = file.filePath
+  const usable = isUsableUrl(url)
+
+  if (!usable) {
+    return <UnavailableNotice fileName={file.fileName} />
+  }
 
   // ── Image ─────────────────────────────────────────────────────────────────
   if (fieldType === 'image_upload' || isImage(file)) {
@@ -113,7 +137,7 @@ export function MediaPreview({ file, fieldType }: Props) {
           <span className="ml-1 text-[var(--color-ink-faint)] text-xs">{pdfOpen ? '▲ Hide' : '▼ Preview'}</span>
         </button>
 
-        {pdfOpen && url && (
+        {pdfOpen && (
           <div className="rounded-[var(--radius-xl)] border border-[var(--color-line)] overflow-hidden">
             <iframe
               src={url}
@@ -124,27 +148,23 @@ export function MediaPreview({ file, fieldType }: Props) {
         )}
 
         <div className="flex items-center gap-2">
-          {url && (
-            <a
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs text-[var(--color-forest-600)] hover:underline"
-            >
-              <ArrowSquareOut size={13} />
-              Open in new tab
-            </a>
-          )}
-          {url && (
-            <a
-              href={url}
-              download={file.fileName}
-              className="inline-flex items-center gap-1.5 text-xs text-[var(--color-ink-mute)] hover:text-[var(--color-ink)] transition-colors"
-            >
-              <DownloadSimple size={13} />
-              Download
-            </a>
-          )}
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs text-[var(--color-forest-600)] hover:underline"
+          >
+            <ArrowSquareOut size={13} />
+            Open in new tab
+          </a>
+          <a
+            href={url}
+            download={file.fileName}
+            className="inline-flex items-center gap-1.5 text-xs text-[var(--color-ink-mute)] hover:text-[var(--color-ink)] transition-colors"
+          >
+            <DownloadSimple size={13} />
+            Download
+          </a>
         </div>
       </div>
     )
@@ -159,16 +179,14 @@ export function MediaPreview({ file, fieldType }: Props) {
           <p className="text-sm font-medium text-[var(--color-ink)] truncate">{file.fileName}</p>
           <p className="text-xs text-[var(--color-ink-faint)]">{formatBytes(file.sizeBytes)}</p>
         </div>
-        {url && (
-          <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-1.5 text-[var(--color-ink-mute)] hover:text-[var(--color-forest-600)] transition-colors rounded-lg hover:bg-[var(--color-forest-50)]"
-          >
-            <ArrowSquareOut size={15} />
-          </a>
-        )}
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="p-1.5 text-[var(--color-ink-mute)] hover:text-[var(--color-forest-600)] transition-colors rounded-lg hover:bg-[var(--color-forest-50)]"
+        >
+          <ArrowSquareOut size={15} />
+        </a>
       </div>
     </div>
   )
@@ -179,16 +197,14 @@ function FileMeta({ file, url }: { file: FileResponseValue; url: string }) {
     <div className="flex items-center gap-3">
       <span className="text-xs text-[var(--color-ink-faint)]">{file.fileName}</span>
       <span className="text-xs text-[var(--color-ink-faint)]">{formatBytes(file.sizeBytes)}</span>
-      {url && (
-        <a
-          href={url}
-          download={file.fileName}
-          className="inline-flex items-center gap-1 text-xs text-[var(--color-forest-600)] hover:underline"
-        >
-          <DownloadSimple size={12} />
-          Download
-        </a>
-      )}
+      <a
+        href={url}
+        download={file.fileName}
+        className="inline-flex items-center gap-1 text-xs text-[var(--color-forest-600)] hover:underline"
+      >
+        <DownloadSimple size={12} />
+        Download
+      </a>
     </div>
   )
 }

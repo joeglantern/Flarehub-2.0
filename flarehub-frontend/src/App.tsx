@@ -62,6 +62,7 @@ const AdminDocuments   = lazy(() => import('@/pages/admin/DocumentsAdminPage'))
 const AdminReports     = lazy(() => import('@/pages/admin/ReportsPage'))
 const AdminImport      = lazy(() => import('@/pages/admin/ImportUsersPage'))
 const AdminFormSubmissions = lazy(() => import('@/pages/admin/FormSubmissionsPage'))
+const AdminFormSubmissionDetail = lazy(() => import('@/pages/admin/FormSubmissionDetailPage'))
 
 export default function App() {
   useAuthInit()
@@ -142,7 +143,8 @@ export default function App() {
                 <Route path="/admin/documents"          element={<AdminDocuments />} />
                 <Route path="/admin/reports"            element={<AdminReports />} />
                 <Route path="/admin/import"             element={<AdminImport />} />
-                <Route path="/admin/form-submissions"  element={<AdminFormSubmissions />} />
+                <Route path="/admin/form-submissions"      element={<AdminFormSubmissions />} />
+                <Route path="/admin/form-submissions/:id"  element={<AdminFormSubmissionDetail />} />
               </Route>
 
             </Route>

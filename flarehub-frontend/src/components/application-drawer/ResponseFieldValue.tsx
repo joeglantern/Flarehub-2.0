@@ -1,6 +1,7 @@
-import { Star, File, ArrowSquareOut } from '@phosphor-icons/react'
+import { Star } from '@phosphor-icons/react'
 import type { FormField, FieldResponseValue, FileResponseValue } from '@/types/applicationForm'
 import { cn } from '@/lib/utils'
+import { MediaPreview } from '@/components/submission-review/MediaPreview'
 
 interface Props {
   field: FormField
@@ -116,30 +117,7 @@ export function ResponseFieldValue({ field, value }: Props) {
     case 'video_upload': {
       const file = value as FileResponseValue
       if (!file?.fileName) return <span className="text-sm text-[var(--color-text-muted)] italic">No file</span>
-      return (
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 px-3 py-2 rounded-[var(--radius-md)] bg-[var(--color-bg-elevated)] border border-[var(--color-border)]">
-            <File size={14} className="text-[var(--color-text-muted)] shrink-0" />
-            <span className="text-sm text-[var(--color-text-primary)] truncate max-w-[200px]">
-              {file.fileName}
-            </span>
-            <span className="text-xs text-[var(--color-text-muted)] shrink-0">
-              {(file.sizeBytes / 1024 / 1024).toFixed(1)} MB
-            </span>
-          </div>
-          {file.filePath && (
-            <a
-              href={file.filePath}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-1.5 rounded-[var(--radius-sm)] text-[var(--color-text-muted)] hover:text-[var(--color-green-500)] hover:bg-[var(--color-green-50)] transition-colors"
-              title="Download file"
-            >
-              <ArrowSquareOut size={14} />
-            </a>
-          )}
-        </div>
-      )
+      return <MediaPreview file={file} fieldType={field.type as 'file_upload' | 'image_upload' | 'video_upload'} />
     }
 
     // ── Long text ─────────────────────────────────────────────────────────

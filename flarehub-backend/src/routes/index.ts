@@ -35,6 +35,7 @@ import bulkImportRoutes              from './admin/bulk-import.js';
 import resendInvitesRoutes           from './admin/resend-invites.js';
 import mentorApplicationRoutes       from './mentor-applications/index.js';
 import adminMentorApplicationRoutes  from './admin/mentor-applications.js';
+import formSubmissionsRoutes         from './admin/form-submissions.js';
 
 export default async function routes(fastify: FastifyInstance) {
   await fastify.register(healthRoutes);
@@ -72,6 +73,7 @@ export default async function routes(fastify: FastifyInstance) {
     await api.register(resendInvitesRoutes);
     await api.register(mentorApplicationRoutes);
     await api.register(adminMentorApplicationRoutes);
+    await api.register(formSubmissionsRoutes);
   }, { prefix: appConfig.apiPrefix });
 
   fastify.get('/ws', { websocket: true }, (socket, request) => {

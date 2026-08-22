@@ -1,4 +1,5 @@
 import type { FastifyInstance } from 'fastify';
+import { randomInt, createHash } from 'crypto';
 import { requireAdmin } from '../../middleware/require-admin.js';
 import { requireSuperAdmin } from '../../middleware/require-super-admin.js';
 import {
@@ -12,6 +13,12 @@ import { getSignedDownloadUrl, getSignedDownloadUrls } from '../../services/stor
 import { logAdminAction } from '../../services/admin-log.service.js';
 import { exportUsers } from '../../services/csv.service.js';
 import { appConfig } from '../../config/index.js';
+
+const OTP_TTL_MINUTES = 15;
+
+function hashOtp(code: string): string {
+  return createHash('sha256').update(code).digest('hex');
+}
 
 export default async function adminUserRoutes(fastify: FastifyInstance) {
   fastify.get('/admin/users', { preHandler: requireAdmin }, async (request, reply) => {
@@ -181,5 +188,44 @@ export default async function adminUserRoutes(fastify: FastifyInstance) {
     });
 
     return reply.send({ success: true, data: user });
+  });
+
+  // Generate a one-time password reset code for a user that the admin relays
+  // by hand (e.g. over WhatsApp) — for when the user can't be reached by email.
+  fastify.post<{ Params: { id: string } }>('/admin/users/:id/reset-otp', { preHandler: requireAdmin }, async (request, reply) => {
+    const { id } = request.params;
+
+    const user = await fastify.prisma.user.findUnique({ where: { id }, select: { id: true, firstName: true, lastName: true, phone: true } });
+    if (!user) throw new AppError('NOT_FOUND', 'User not found', 404);
+
+    const code      = randomInt(100_000, 1_000_000).toString();
+    const expiresAt = new Date(Date.now() + OTP_TTL_MINUTES * 60_000);
+
+    await fastify.prisma.passwordResetOtp.create({
+      data: {
+        userId:      user.id,
+        codeHash:    hashOtp(code),
+        expiresAt,
+        createdById: request.user!.id,
+      },
+    });
+
+    await logAdminAction(fastify.prisma, {
+      adminId:    request.user!.id,
+      action:     'generated_password_reset_otp',
+      targetType: 'user',
+      targetId:   id,
+      ipAddress:  request.ip,
+      userAgent:  request.headers['user-agent'],
+    });
+
+    return reply.send({
+      success: true,
+      data: {
+        code,
+        expiresAt,
+        userPhone: user.phone,
+      },
+    });
   });
 }

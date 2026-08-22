@@ -1,7 +1,7 @@
 ﻿import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, UserCircle, MagnifyingGlass, Check } from '@phosphor-icons/react'
+import { ArrowLeft, UserCircle, MagnifyingGlass, Check, CopySimple, WhatsappLogo, Clock } from '@phosphor-icons/react'
 import { api } from '@/lib/api'
 import { Card, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Avatar } from '@/components/ui/Avatar'
@@ -58,6 +58,7 @@ export default function UserDetailPage() {
   const [mentorSearch, setMentorSearch] = useState('')
   const [selectedMentorId, setSelectedMentorId] = useState<string | null>(null)
   const debouncedSearch                 = useDebounce(mentorSearch)
+  const [otpResult, setOtpResult]       = useState<{ code: string; expiresAt: string; userPhone: string | null } | null>(null)
 
   const { data: user, isLoading } = useQuery({
     queryKey: ['admin', 'user', id],
@@ -104,6 +105,14 @@ export default function UserDetailPage() {
       setMentorSearch('')
     },
     onError: () => toast.error('Assignment failed'),
+  })
+
+  const generateOtp = useMutation({
+    mutationFn: () =>
+      api.post<ApiSuccess<{ code: string; expiresAt: string; userPhone: string | null }>>(`/admin/users/${id}/reset-otp`)
+        .then(r => r.data.data),
+    onSuccess: (data) => setOtpResult(data),
+    onError:   () => toast.error('Could not generate code'),
   })
 
   const removeMentor = useMutation({
@@ -247,6 +256,13 @@ export default function UserDetailPage() {
                 onClick={() => { setNewRole(user.role); setRoleOpen(true) }}
               >
                 Change role
+              </Button>
+              <Button
+                variant="secondary" size="sm"
+                onClick={() => generateOtp.mutate()}
+                loading={generateOtp.isPending}
+              >
+                Generate password reset code
               </Button>
             </div>
           </Card>
@@ -433,6 +449,62 @@ export default function UserDetailPage() {
         danger={user.isMentor}
         loading={setMentorStatus.isPending}
       />
+
+      {/* ── Reset code result ────────────────────────────────────────── */}
+      <Modal
+        open={!!otpResult}
+        onClose={() => setOtpResult(null)}
+        title="Password reset code"
+        description={`Send this code to ${user.firstName} yourself — it is not emailed or texted automatically.`}
+        size="sm"
+      >
+        {otpResult && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-center gap-3 py-6 rounded-[var(--radius-lg)] bg-[var(--color-elev)] border border-[var(--color-line)]">
+              <span className="text-3xl font-bold tracking-[0.2em] text-[var(--color-ink)]" style={{ fontFamily: 'var(--font-mono)' }}>
+                {otpResult.code}
+              </span>
+              <button
+                onClick={() => { navigator.clipboard.writeText(otpResult.code); toast.success('Code copied') }}
+                className="p-2 rounded-lg text-[var(--color-ink-mute)] hover:text-[var(--color-ink)] hover:bg-[var(--color-inset)] transition"
+                title="Copy code"
+              >
+                <CopySimple size={18} />
+              </button>
+            </div>
+
+            <p className="flex items-center justify-center gap-1.5 text-xs text-[var(--color-ink-faint)]">
+              <Clock size={13} />
+              Expires {formatDate(otpResult.expiresAt)} at {new Date(otpResult.expiresAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} — single use
+            </p>
+
+            <p className="text-xs text-[var(--color-ink-mute)] text-center">
+              Tell them to enter this code at{' '}
+              <span className="font-mono text-[var(--color-ink)]">app.afosihub.com/reset-with-code</span>{' '}
+              along with their email.
+            </p>
+
+            <div className="flex gap-2">
+              {otpResult.userPhone && (
+                <a
+                  href={`https://wa.me/${otpResult.userPhone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+                    `Hi ${user.firstName}, here's your Afosihub password reset code: ${otpResult.code}\n\nEnter it at app.afosihub.com/reset-with-code along with your email to set a new password. It expires soon and can only be used once.`,
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 inline-flex items-center justify-center gap-2 h-10 rounded-[var(--radius-md)] bg-[#25D366] text-white text-sm font-semibold hover:brightness-95 transition"
+                >
+                  <WhatsappLogo size={16} weight="fill" />
+                  Send via WhatsApp
+                </a>
+              )}
+              <Button variant="secondary" className={otpResult.userPhone ? '' : 'flex-1'} onClick={() => setOtpResult(null)}>
+                Done
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
     </>
   )
 }

@@ -62,6 +62,16 @@ export default function ForgotPasswordPage() {
         </p>
 
         <p className="text-sm text-[var(--color-text-secondary)] mt-4">
+          Have a code from an admin instead?{' '}
+          <Link
+            to="/reset-with-code"
+            className="font-semibold text-[var(--color-green-500)] hover:text-[var(--color-green-600)] transition-colors"
+          >
+            Enter it here
+          </Link>
+        </p>
+
+        <p className="text-sm text-[var(--color-text-secondary)] mt-4">
           <Link
             to="/login"
             className="font-semibold text-[var(--color-green-500)] hover:text-[var(--color-green-600)] transition-colors"

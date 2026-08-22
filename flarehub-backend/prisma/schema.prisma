@@ -194,8 +194,32 @@ model User {
   programMentorships        ProgramMentor[]         @relation("UserProgramMentors")
   mentorshipApplications    MentorshipApplication[] @relation("EntrepreneurMentorshipApplications")
   mentorApplication         MentorApplication?
+  passwordResetOtps         PasswordResetOtp[] @relation("otpTarget")
+  passwordResetOtpsIssued   PasswordResetOtp[] @relation("otpIssuer")
 
   @@map("users")
+}
+
+// ═══════════════════════════════════════════════════════
+//  PASSWORD RECOVERY
+// ═══════════════════════════════════════════════════════
+
+// Admin-generated one-time code for manually resetting a user's password
+// (e.g. relayed to the user over WhatsApp) when they can't be reached by email.
+model PasswordResetOtp {
+  id          Int       @id @default(autoincrement())
+  userId      String
+  codeHash    String
+  expiresAt   DateTime
+  usedAt      DateTime?
+  createdById String
+  createdAt   DateTime  @default(now())
+
+  user        User      @relation("otpTarget", fields: [userId], references: [id], onDelete: Cascade)
+  createdBy   User      @relation("otpIssuer", fields: [createdById], references: [id])
+
+  @@index([userId])
+  @@map("password_reset_otps")
 }
 
 // ═══════════════════════════════════════════════════════

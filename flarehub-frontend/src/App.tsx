@@ -12,6 +12,7 @@ const SignupPage   = lazy(() => import('@/pages/auth/SignupPage'))
 const AuthCallback      = lazy(() => import('@/pages/auth/AuthCallbackPage'))
 const UpdatePassword    = lazy(() => import('@/pages/auth/UpdatePasswordPage'))
 const ForgotPassword    = lazy(() => import('@/pages/auth/ForgotPasswordPage'))
+const ResetWithCode     = lazy(() => import('@/pages/auth/ResetWithCodePage'))
 const Onboarding        = lazy(() => import('@/pages/onboarding/OnboardingPage'))
 const MentorOnboarding  = lazy(() => import('@/pages/onboarding/MentorOnboardingPage'))
 const MentorPending     = lazy(() => import('@/pages/mentor/MentorPendingPage'))
@@ -79,6 +80,7 @@ export default function App() {
           <Route path="/auth/callback"      element={<AuthCallback />} />
           <Route path="/update-password"  element={<UpdatePassword />} />
           <Route path="/forgot-password"  element={<ForgotPassword />} />
+          <Route path="/reset-with-code"  element={<ResetWithCode />} />
           <Route path="/onboarding"       element={<Onboarding />} />
           <Route path="/mentor-onboarding" element={<MentorOnboarding />} />
           <Route path="/mentor-pending"   element={<MentorPending />} />

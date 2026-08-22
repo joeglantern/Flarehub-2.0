@@ -201,6 +201,21 @@ export function announcementEmail(firstName: string, title: string, bodyText: st
   `);
 }
 
+export function passwordResetEmail(firstName: string, resetLink: string): string {
+  const greeting = firstName ? `Hi ${firstName},` : 'Hi,';
+  return shell(`
+    ${badge('Password Reset', '#fef9ee', '#d97706')}
+    ${heading('Reset your password')}
+    ${body(greeting)}
+    ${body('We received a request to reset the password for your Afosihub account. Click the button below to choose a new password.')}
+    ${cta('Reset Password', resetLink)}
+    ${body('<span style="font-size:13px;color:#a39e98;">This link expires after a short time. If it has expired, you can request a new one from the sign-in page.</span>')}
+    ${divider()}
+    ${body('<span style="font-size:13px;color:#a39e98;">If you did not request this, you can safely ignore this email — your password will not be changed.</span>')}
+    ${sig()}
+  `);
+}
+
 export function newProgramEmail(firstName: string, programName: string): string {
   return shell(`
     ${badge('New Program', '#edf7f1', '#1d6f42')}

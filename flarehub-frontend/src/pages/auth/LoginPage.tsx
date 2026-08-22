@@ -68,14 +68,24 @@ export default function LoginPage() {
           error={errors.email?.message}
           {...register('email')}
         />
-        <AuthInput
-          label="Password"
-          type="password"
-          placeholder="Your password"
-          autoComplete="current-password"
-          error={errors.password?.message}
-          {...register('password')}
-        />
+        <div>
+          <AuthInput
+            label="Password"
+            type="password"
+            placeholder="Your password"
+            autoComplete="current-password"
+            error={errors.password?.message}
+            {...register('password')}
+          />
+          <div className="flex justify-end mt-2">
+            <Link
+              to="/forgot-password"
+              className="text-xs font-semibold text-[var(--color-green-500)] hover:text-[var(--color-green-600)] transition-colors"
+            >
+              Forgot password?
+            </Link>
+          </div>
+        </div>
 
         <button
           type="submit"

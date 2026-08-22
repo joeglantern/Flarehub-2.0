@@ -11,26 +11,48 @@ import type { User } from '@/types/api'
 export default function UpdatePasswordPage() {
   const navigate      = useNavigate()
   const { setUser }   = useAuthStore()
-  const [ready, setReady]       = useState(false)
-  const [password, setPassword] = useState('')
-  const [confirm, setConfirm]   = useState('')
-  const [showPw, setShowPw]     = useState(false)
-  const [loading, setLoading]   = useState(false)
-  const [error, setError]       = useState<string | null>(null)
+  const [ready, setReady]         = useState(false)
+  const [linkError, setLinkError] = useState<string | null>(null)
+  const [password, setPassword]   = useState('')
+  const [confirm, setConfirm]     = useState('')
+  const [showPw, setShowPw]       = useState(false)
+  const [loading, setLoading]     = useState(false)
+  const [error, setError]         = useState<string | null>(null)
 
-  // Supabase processes the #access_token hash and fires PASSWORD_RECOVERY
+  // Supabase processes the #access_token hash and fires PASSWORD_RECOVERY.
+  // Expired/invalid links arrive as #error=...&error_description=... instead.
   useEffect(() => {
+    const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''))
+    if (hash.get('error')) {
+      const description = hash.get('error_description')
+      setLinkError(
+        hash.get('error_code') === 'otp_expired'
+          ? 'This link has expired.'
+          : description?.replace(/\+/g, ' ') ?? 'This link is invalid.',
+      )
+      return
+    }
+
+    let verified = false
+    const markReady = () => { verified = true; setReady(true); setLinkError(null) }
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && session)) {
         if (session?.access_token) primeToken(session.access_token)
-        setReady(true)
+        markReady()
       }
     })
     // Also check if already signed in via the hash
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) setReady(true)
+      if (data.session) markReady()
     })
-    return () => subscription.unsubscribe()
+
+    // If nothing verified after 10s, the link was likely consumed or malformed
+    const timer = setTimeout(() => {
+      if (!verified) setLinkError('We could not verify this link.')
+    }, 10_000)
+
+    return () => { subscription.unsubscribe(); clearTimeout(timer) }
   }, [])
 
   async function handleSubmit(e: React.FormEvent) {
@@ -72,10 +94,22 @@ export default function UpdatePasswordPage() {
         <div className="card p-7">
           <h1 className="text-[22px] font-bold text-[var(--color-ink)] mb-1">Set your password</h1>
           <p className="text-sm text-[var(--color-ink-soft)] mb-6">
-            Welcome to Afosihub. Choose a password to access your account.
+            Choose a new password to access your Afosihub account.
           </p>
 
-          {!ready ? (
+          {!ready && linkError ? (
+            <div className="py-2">
+              <p className="text-sm text-[var(--color-error)] bg-[var(--color-error)]/8 px-3 py-2.5 rounded-lg mb-4">
+                {linkError}
+              </p>
+              <p className="text-sm text-[var(--color-ink-soft)]">
+                Password reset links can only be used once and expire quickly.{' '}
+                <a href="/forgot-password" className="text-[var(--color-ink)] font-medium hover:underline">
+                  Request a new link
+                </a>
+              </p>
+            </div>
+          ) : !ready ? (
             <div className="flex items-center justify-center py-6 gap-2 text-[var(--color-ink-faint)]">
               <Spinner size="sm" />
               <span className="text-sm">Verifying your link…</span>
